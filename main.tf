@@ -32,7 +32,8 @@ module "floating_ip" {
 }
 
 module "master" {
-  source = "./modules/master"
+  source     = "./modules/master"
+  depends_on = [hcloud_network.private, hcloud_network_subnet.subnet]
 
   cluster_name = var.cluster_name
   datacenter   = var.datacenter
@@ -41,6 +42,7 @@ module "master" {
   ssh_keys     = var.ssh_keys
 
   hcloud_network_id = hcloud_network.private.id
+  hcloud_network_ip = var.master_internal_ipv4
   hcloud_subnet_id  = hcloud_network_subnet.subnet.id
 
   k3s_token   = random_string.k3s_token.result

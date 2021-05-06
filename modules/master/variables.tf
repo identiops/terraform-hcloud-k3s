@@ -48,6 +48,10 @@ variable "hcloud_subnet_id" {
   description = "IP Subnet id used to assign internal IP addresses to nodes"
 }
 
+variable "hcloud_network_ip" {
+  description = "Herzner cloud private network ip address"
+}
+
 variable "hcloud_network_id" {
   description = "Herzner cloud private network Id"
 }

@@ -18,6 +18,11 @@ resource "hcloud_server" "master" {
   )
   keep_disk    = true
   firewall_ids = var.firewall_ids
+
+  network {
+    network_id = var.hcloud_network_id
+    ip         = var.hcloud_network_ip
+  }
 }
 
 resource "hcloud_server_network" "master" {

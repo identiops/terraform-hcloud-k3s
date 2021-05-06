@@ -37,6 +37,11 @@ variable "master_type" {
   type        = string
 }
 
+variable "master_internal_ipv4" {
+  description = "Internal IP address of the master node"
+  default     = "10.0.0.2" # Note that .1 is reserved by the gateway
+}
+
 variable "ssh_keys" {
   type        = list(any)
   description = "List of public ssh_key ids"
