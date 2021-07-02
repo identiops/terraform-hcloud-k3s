@@ -7,7 +7,7 @@ metadata:
   namespace: kube-system
 ---
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: system:cloud-controller-manager
 roleRef:
@@ -50,11 +50,13 @@ spec:
         # cloud controller manages should be able to run on masters
         - key: "node-role.kubernetes.io/master"
           effect: NoSchedule
+        - key: "node-role.kubernetes.io/control-plane"
+          effect: NoSchedule
         - key: "node.kubernetes.io/not-ready"
           effect: "NoSchedule"
       hostNetwork: true
       containers:
-        - image: hetznercloud/hcloud-cloud-controller-manager:v1.8.1
+        - image: hetznercloud/hcloud-cloud-controller-manager:v1.11.1
           name: hcloud-cloud-controller-manager
           command:
             - "/bin/hcloud-cloud-controller-manager"
@@ -62,7 +64,7 @@ spec:
             - "--leader-elect=false"
             - "--allow-untagged-cloud"
             - "--allocate-node-cidrs=true"
-            - "--cluster-cidr=10.42.0.0/16"
+            - "--cluster-cidr=10.244.0.0/16"
           resources:
             requests:
               cpu: 100m
@@ -82,5 +84,3 @@ spec:
                 secretKeyRef:
                   name: hcloud
                   key: network
-            - name: HCLOUD_LOAD_BALANCERS_ENABLED
-              value: "true"

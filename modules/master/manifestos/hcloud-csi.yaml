@@ -1,5 +1,5 @@
 ---
-apiVersion: storage.k8s.io/v1beta1
+apiVersion: storage.k8s.io/v1
 kind: CSIDriver
 metadata:
   name: csi.hetzner.cloud
@@ -103,13 +103,6 @@ spec:
       labels:
         app: hcloud-csi-controller
     spec:
-      tolerations:
-        - effect: NoExecute
-          operator: Exists
-        - effect: NoSchedule
-          operator: Exists
-        - key: CriticalAddonsOnly
-          operator: Exists
       serviceAccount: hcloud-csi
       containers:
         - name: csi-attacher
@@ -154,7 +147,7 @@ spec:
               add: ["SYS_ADMIN"]
             allowPrivilegeEscalation: true
         - name: hcloud-csi-driver
-          image: hetznercloud/hcloud-csi-driver:1.5.1
+          image: hetznercloud/hcloud-csi-driver:1.5.3
           imagePullPolicy: Always
           env:
             - name: CSI_ENDPOINT
@@ -250,7 +243,7 @@ spec:
           securityContext:
             privileged: true
         - name: hcloud-csi-driver
-          image: hetznercloud/hcloud-csi-driver:1.5.1
+          image: hetznercloud/hcloud-csi-driver:1.5.3
           imagePullPolicy: Always
           env:
             - name: CSI_ENDPOINT
