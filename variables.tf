@@ -44,3 +44,13 @@ variable "floating_ips" {
   type        = map(string)
   default = { }
 }
+
+variable "master_user_data" {
+  description = "Additional user_data that gets executed on the master in bash format"
+  default     = ""
+}
+
+variable "node_user_data" {
+  description = "Additional user_data that gets executed on the nodes in bash format"
+  default     = ""
+}

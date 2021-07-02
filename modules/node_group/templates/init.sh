@@ -14,3 +14,6 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_channel} K3S_URL=https:
 %{ for ip in floating_ips ~}
 ip addr add ${ip} dev eth0
 %{ endfor ~}
+
+# additional user_data
+${additional_user_data}

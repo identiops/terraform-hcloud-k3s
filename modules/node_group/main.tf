@@ -25,6 +25,8 @@ resource "hcloud_server" "node" {
       master_internal_ipv4 = var.master_internal_ipv4
 
       floating_ips =  local.floating_ips
+
+      additional_user_data = var.additional_user_data
     }
   )
 }

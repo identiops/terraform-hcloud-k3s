@@ -51,3 +51,7 @@ variable "ssh_keys" {
 variable "hcloud_subnet_id" {
   description = "IP Subnet id used to assign internal IP addresses to nodes"
 }
+
+variable "additional_user_data" {
+  description = "Additional user_data that gets executed on the host"
+}

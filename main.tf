@@ -47,6 +47,8 @@ module "master" {
   k3s_channel = var.k3s_channel
 
   hcloud_token = var.hcloud_token
+
+  additional_user_data = var.master_user_data
 }
 
 module "node_group" {
@@ -67,6 +69,8 @@ module "node_group" {
   for_each   = var.node_groups
   node_type  = each.key
   node_count = each.value
+
+  additional_user_data = var.node_user_data
 }
 
 module "kubeconfig" {

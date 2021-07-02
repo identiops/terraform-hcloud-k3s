@@ -46,3 +46,7 @@ variable "hcloud_subnet_id" {
 variable "hcloud_network_id" {
   description = "Herzner cloud private network Id"
 }
+
+variable "additional_user_data" {
+  description = "Additional user_data that gets executed on the host"
+}

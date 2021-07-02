@@ -6,27 +6,26 @@ data "template_file" "csi_manifest" {
   template = file("${path.module}/manifestos/hcloud-csi.yaml")
 }
 
-data "template_file" "master_init" {
-  template = file("${path.module}/templates/init.sh")
-  vars = {
-    hcloud_token   = var.hcloud_token
-    hcloud_network = var.hcloud_network_id
-
-    k3s_token   = var.k3s_token
-    k3s_channel = var.k3s_channel
-
-    ccm_manifest = data.template_file.ccm_manifest.rendered
-    csi_manifest = data.template_file.csi_manifest.rendered
-  }
-}
-
 resource "hcloud_server" "master" {
   name        = "${var.cluster_name}-master"
   datacenter  = var.datacenter
   image       = var.image
   server_type = var.node_type
   ssh_keys    = var.ssh_keys
-  user_data   = data.template_file.master_init.rendered
+  user_data   = templatefile(
+    "${path.module}/templates/init.sh", {
+      hcloud_token   = var.hcloud_token
+      hcloud_network = var.hcloud_network_id
+
+      k3s_token   = var.k3s_token
+      k3s_channel = var.k3s_channel
+
+      ccm_manifest = data.template_file.ccm_manifest.rendered
+      csi_manifest = data.template_file.csi_manifest.rendered
+
+      additional_user_data = var.additional_user_data
+    }
+  )
   keep_disk   = true
 }
 
