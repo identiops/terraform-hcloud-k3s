@@ -38,3 +38,9 @@ variable "node_groups" {
     "cx21" = 1
   }
 }
+
+variable "floating_ips" {
+  description = "Map of floating IPs, key is ip_type (ipv4, ipv6), value is count of IPs in group"
+  type        = map(string)
+  default = { }
+}

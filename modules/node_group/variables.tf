@@ -40,6 +40,10 @@ variable "master_ipv4" {
   description = "IP address (v4) of master node"
 }
 
+variable "floating_ips" {
+  description = "Floating IP addresses"
+}
+
 variable "ssh_keys" {
   description = "Public SSH keys ids (list) used to login"
 }

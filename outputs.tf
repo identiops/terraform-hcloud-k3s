@@ -13,3 +13,12 @@ output "nodes_ipv4" {
     type => n.node_ipv4
   }
 }
+
+output "floating_ips" {
+  depends_on  = [module.floating_ip]
+  description = "Floating IP addresses that can be used for ingress"
+  value = {
+    for type, ip in module.floating_ip :
+    type => ip.floating_ip
+  }
+}
