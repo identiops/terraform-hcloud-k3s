@@ -50,13 +50,14 @@ module "master" {
 }
 
 module "node_group" {
-  source       = "./modules/node_group"
-  cluster_name = var.cluster_name
-  datacenter   = var.datacenter
-  image        = var.image
-  ssh_keys     = var.ssh_keys
-  master_ipv4  = module.master.master_ipv4
-  floating_ips = module.floating_ip
+  source = "./modules/node_group"
+
+  cluster_name         = var.cluster_name
+  datacenter           = var.datacenter
+  image                = var.image
+  ssh_keys             = var.ssh_keys
+  master_internal_ipv4 = module.master.master_internal_ipv4
+  floating_ips         = module.floating_ip
 
   hcloud_subnet_id = hcloud_network_subnet.subnet.id
 

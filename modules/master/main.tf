@@ -38,3 +38,7 @@ resource "hcloud_server_network" "master" {
 output "master_ipv4" {
   value = hcloud_server.master.ipv4_address
 }
+
+output "master_internal_ipv4" {
+  value = hcloud_server_network.master.ip
+}
