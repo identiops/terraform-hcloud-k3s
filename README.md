@@ -61,6 +61,12 @@ output "nodes_ipv4" {
   description = "Public IP Address of the worker nodes"
   value       = module.cluster.nodes_ipv4
 }
+
+output "floating_IPs" {
+  depends_on  = [module.cluster]
+  description = "Floating IP Addresses for ingress"
+  value       = module.cluster.floating_ips
+}
 ```
 
 That's all it takes to get started!

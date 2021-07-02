@@ -24,6 +24,10 @@ module "cluster" {
     "cx41" = 3
     "cx51" = 2
   }
+
+  floating_ips = {
+    "ipv4" = 1
+  }
 }
 
 output "master_ipv4" {
@@ -36,4 +40,10 @@ output "nodes_ipv4" {
   depends_on  = [module.cluster]
   description = "Public IP Address of the worker nodes"
   value       = module.cluster.nodes_ipv4
+}
+
+output "floating_IPs" {
+  depends_on  = [module.cluster]
+  description = "Floating IP Addresses for ingress"
+  value       = module.cluster.floating_ips
 }
