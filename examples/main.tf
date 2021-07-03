@@ -28,6 +28,9 @@ module "cluster" {
   floating_ips = {
     "ipv4" = 1
   }
+
+  master_user_data = file("${path.module}/script-to-run-on-master.sh")
+  node_user_data   = file("${path.module}/script-to-run-on-node.sh")
 }
 
 output "master_ipv4" {
