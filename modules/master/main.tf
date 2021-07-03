@@ -1,11 +1,3 @@
-data "template_file" "ccm_manifest" {
-  template = file("${path.module}/manifestos/hcloud-ccm-net.yaml")
-}
-
-data "template_file" "csi_manifest" {
-  template = file("${path.module}/manifestos/hcloud-csi.yaml")
-}
-
 resource "hcloud_server" "master" {
   name        = "${var.cluster_name}-master"
   datacenter  = var.datacenter
@@ -20,8 +12,8 @@ resource "hcloud_server" "master" {
       k3s_token   = var.k3s_token
       k3s_channel = var.k3s_channel
 
-      ccm_manifest = data.template_file.ccm_manifest.rendered
-      csi_manifest = data.template_file.csi_manifest.rendered
+      ccm_manifest = file("${path.module}/manifestos/hcloud-ccm-net.yaml")
+      csi_manifest = file("${path.module}/manifestos/hcloud-csi.yaml")
 
       additional_user_data = var.additional_user_data
     }
