@@ -4,7 +4,7 @@ resource "hcloud_server" "master" {
   image       = var.image
   server_type = var.node_type
   ssh_keys    = var.ssh_keys
-  user_data   = templatefile(
+  user_data = templatefile(
     "${path.module}/templates/init.sh", {
       hcloud_token   = var.hcloud_token
       hcloud_network = var.hcloud_network_id
@@ -18,7 +18,7 @@ resource "hcloud_server" "master" {
       additional_user_data = var.additional_user_data
     }
   )
-  keep_disk   = true
+  keep_disk = true
 }
 
 resource "hcloud_server_network" "master" {
@@ -28,6 +28,10 @@ resource "hcloud_server_network" "master" {
 
 output "master_ipv4" {
   value = hcloud_server.master.ipv4_address
+}
+
+output "master_ipv6" {
+  value = hcloud_server.master.ipv6_address
 }
 
 output "master_internal_ipv4" {

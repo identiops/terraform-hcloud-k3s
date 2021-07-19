@@ -78,4 +78,3 @@ module "kubeconfig" {
   cluster_name = var.cluster_name
   master_ipv4  = module.master.master_ipv4
 }
-

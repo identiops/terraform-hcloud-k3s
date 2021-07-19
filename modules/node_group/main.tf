@@ -1,8 +1,8 @@
 locals {
   floating_ips = flatten([
-    for type in var.floating_ips: [
-      for output in type: [
-        for floating_ip in output: [
+    for type in var.floating_ips : [
+      for output in type : [
+        for floating_ip in output : [
           "${floating_ip}"
         ]
       ]
@@ -17,14 +17,14 @@ resource "hcloud_server" "node" {
   datacenter  = var.datacenter
   image       = var.image
   ssh_keys    = var.ssh_keys
-  user_data   = templatefile(
+  user_data = templatefile(
     "${path.module}/templates/init.sh", {
       k3s_token   = var.k3s_token
       k3s_channel = var.k3s_channel
 
       master_internal_ipv4 = var.master_internal_ipv4
 
-      floating_ips =  local.floating_ips
+      floating_ips = local.floating_ips
 
       additional_user_data = var.additional_user_data
     }
@@ -39,6 +39,10 @@ resource "hcloud_server_network" "node" {
 
 output "node_ipv4" {
   value = hcloud_server.node.*.ipv4_address
+}
+
+output "node_ipv6" {
+  value = hcloud_server.node.*.ipv6_address
 }
 
 output "node_internal_ipv4" {
