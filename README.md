@@ -8,10 +8,10 @@ Cluster size and instance types are configurable through Terraform variables.
 
 ### Prerequisites
 
-* Terraform must be installed
-* Bash must be installed
-* SSH should be installed and configured with an SSH Key and Agent (Recommended)
-* Having `kubectl`/`jq` installed is recommended
+- Terraform must be installed
+- Bash must be installed
+- SSH should be installed and configured with an SSH Key and Agent (Recommended)
+- Having `kubectl`/`jq` installed is recommended
 
 Note that you'll need Terraform v0.12 or newer to run this project.
 
@@ -71,8 +71,7 @@ output "floating_IPs" {
 
 That's all it takes to get started!
 
-Pin to a specific module version using `version = "..."` to avoid upgrading to a version with breaking changes.  Upgrades to this module could potentially replace all master and worker nodes resulting in data loss.  The `terraform plan` will report this, but it may not be obvious.
-
+Pin to a specific module version using `version = "..."` to avoid upgrading to a version with breaking changes. Upgrades to this module could potentially replace all master and worker nodes resulting in data loss. The `terraform plan` will report this, but it may not be obvious.
 
 Create an Hetzner Cloud Kubernetes cluster with one master and a node:
 
@@ -82,13 +81,13 @@ terraform apply
 
 This will do the following:
 
-* provisions Hetzner Cloud Instances with Ubuntu 20.04 (the instance type/size of the `master` and the `node` may be different)
-* installs K3S components and supporting binaries
-* joins the nodes in the cluster
-  * installs Hetzner Cloud add-ons:
-    * [CSI](https://github.com/hetznercloud/csi-driver) (Container Storage Interface driver for Hetzner Cloud Volumes)
-    * [CCM](https://github.com/hetznercloud/hcloud-cloud-controller-manager) (Kubernetes cloud-controller-manager for Hetzner Cloud)
-* creates two bash scripts to setup/destroy new context in the kubectl admin config file for local `kubectl`
+- provisions Hetzner Cloud Instances with Ubuntu 20.04 (the instance type/size of the `master` and the `node` may be different)
+- installs K3S components and supporting binaries
+- joins the nodes in the cluster
+  - installs Hetzner Cloud add-ons:
+    - [CSI](https://github.com/hetznercloud/csi-driver) (Container Storage Interface driver for Hetzner Cloud Volumes)
+    - [CCM](https://github.com/hetznercloud/hcloud-cloud-controller-manager) (Kubernetes cloud-controller-manager for Hetzner Cloud)
+- creates two bash scripts to setup/destroy new context in the kubectl admin config file for local `kubectl`
 
 After applying the Terraform plan you'll see several output variables like the master public IP and nodes IPs.
 
@@ -97,7 +96,6 @@ terraform destroy -force
 ```
 
 Be sure to clean-up any CSI created Block Storage Volumes, and CCM created NodeBalancers that you no longer require.
-
 
 ## Addons Included
 
@@ -113,7 +111,6 @@ Read more about kubernetes cloud controller managers in the [kubernetes document
 - **Private Networks**: allows to use Hetzner Cloud Private Networks for your pods traffic.
 - **Load Balancers**: allows to use Hetzner Cloud Load Balancers with Kubernetes Services
 
-
 ### [**Container Storage Interface driver for Hetzner Cloud (CSI)**](https://github.com/hetznercloud/csi-driver)
 
 This is a Container Storage Interface driver for Hetzner Cloud enabling you to use Volumes within Kubernetes.
@@ -121,4 +118,3 @@ This is a Container Storage Interface driver for Hetzner Cloud enabling you to u
 When a `PV` is deleted, the Hetzner Block Storage Volume will be deleted as well, based on the `ReclaimPolicy`.
 
 [Learn More about Persistent Volumes on kubernetes.io.](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
-
