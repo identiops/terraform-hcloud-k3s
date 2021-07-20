@@ -16,15 +16,15 @@ variable "load_balancer_type" {
   description = "Load balancer type"
   default     = "lb11"
   validation {
-    condition     = can(regex("^lb[1-3]1$", var.type))
+    condition     = can(regex("^lb[1-3]1$", var.load_balancer_type))
     error_message = "Load balancer type is not valid."
   }
 }
 
 variable "service" {
   description = "Load balancer services"
-  type        = object({ destination_port = number, protocol = string })
-  default     = {}
+  # type        = object({ destination_port = number, protocol = string })
+  default = {}
 }
 
 variable "target" {
