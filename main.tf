@@ -84,7 +84,7 @@ module "load_balancer" {
   load_balancer_type = each.value.type
   hcloud_network     = hcloud_network.private
   service            = each.value.service
-  target_servers     = each.value.target == "both" ? concat(module.master.master_ids, module.node_group.node_ids) : each.value.target == "master" ? module.master.master_ids : module.node_group.node_ids
+  target             = each.value.target == "both" ? concat(module.master.master_ids, module.node_group.node_ids) : each.value.target == "master" ? module.master.master_ids : module.node_group.node_ids
 }
 
 
