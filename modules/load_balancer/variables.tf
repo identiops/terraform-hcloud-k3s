@@ -29,7 +29,7 @@ variable "service" {
 
 variable "target" {
   description = "Load balancer targets"
-  type        = list(number)
+  type        = list(string)
   default     = []
 }
 
