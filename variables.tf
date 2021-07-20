@@ -53,7 +53,7 @@ variable "floating_ips" {
 
 variable "load_balancers" {
   description = "Load balancer services, target = server, agent or both"
-  type        = map(object({ service = object({ destination_port = number, protocol = string }), target = string, type = string }))
+  type        = map(object({ service = object(object({ destination_port = number, protocol = string })), target = string, type = string }))
   default     = {}
 }
 
