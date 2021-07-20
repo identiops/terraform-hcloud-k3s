@@ -37,6 +37,10 @@ resource "hcloud_server_network" "node" {
   subnet_id = var.hcloud_subnet_id
 }
 
+output "node_ids" {
+  value = hcloud_server.node.*.id
+}
+
 output "node_ipv4" {
   value = hcloud_server.node.*.ipv4_address
 }

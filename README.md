@@ -67,6 +67,12 @@ output "floating_IPs" {
   description = "Floating IP Addresses for ingress"
   value       = module.cluster.floating_ips
 }
+
+output "load_balancers" {
+  depends_on  = [module.cluster]
+  description = "Load balancers that can be used for ingress"
+  value       = module.cluster.load_balancers
+}
 ```
 
 That's all it takes to get started!

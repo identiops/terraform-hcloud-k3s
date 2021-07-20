@@ -51,6 +51,12 @@ variable "floating_ips" {
   default     = {}
 }
 
+variable "load_balancers" {
+  description = "Load balancer services, target = server, agent or both"
+  type        = map(object({ service = object({ destination_port = number, protocol = string }), target = string, type = string }))
+  default     = {}
+}
+
 variable "master_user_data" {
   description = "Additional user_data that gets executed on the master in bash format"
   default     = ""

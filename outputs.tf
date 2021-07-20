@@ -36,3 +36,17 @@ output "floating_ips" {
     type => ip.floating_ip
   }
 }
+
+output "load_balancers" {
+  depends_on  = [module.load_balancer]
+  description = "Load balancers that can be used for ingress"
+  value = {
+    for type, lb in module.load_balancer :
+    type => {
+      ipv4 : lb.load_balancer_ipv4
+      ipv6 : lb.load_balancer_ipv6
+      targets : lb.load_balancer_target
+      services : lb.load_balancer_service
+    }
+  }
+}
