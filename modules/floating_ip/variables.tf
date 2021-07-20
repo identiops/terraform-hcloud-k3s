@@ -4,7 +4,7 @@ variable "cluster_name" {
 }
 
 variable "home_location" {
-  description = "Hetzner location where resources resides, hel1 (Helsinki) or fsn1 (Falkenstein)"
+  description = "Hetzner location where resources reside: hel1 (Helsinki), nbg1 (Nürnberg), or fsn1 (Falkenstein)"
   default     = "hel1"
 }
 
