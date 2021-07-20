@@ -42,6 +42,6 @@ output "load_balancer_target" {
   value = hcloud_load_balancer.load_balancer.target
 }
 
-output "load_balancer_service" {
-  value = hcloud_load_balancer.load_balancer.service
-}
+# output "load_balancer_service" {
+#   value = hcloud_load_balancer.load_balancer.service
+# }

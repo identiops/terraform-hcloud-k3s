@@ -46,7 +46,7 @@ output "load_balancers" {
       ipv4 : lb.load_balancer_ipv4
       ipv6 : lb.load_balancer_ipv6
       targets : lb.load_balancer_target
-      services : lb.load_balancer_service
+      # services : lb.load_balancer_service
     }
   }
 }
