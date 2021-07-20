@@ -95,6 +95,11 @@ module "load_balancer" {
   hcloud_network     = hcloud_network.private
   service            = each.value.service
   target             = each.value.target == "both" ? concat(module.master.master_ids, local.node_group_ids) : each.value.target == "master" ? module.master.master_ids : local.node_group_ids
+
+  depends_on = [
+    module.master,
+    module.node_group
+  ]
 }
 
 module "kubeconfig" {
