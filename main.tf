@@ -73,6 +73,16 @@ module "node_group" {
   additional_user_data = var.node_user_data
 }
 
+locals {
+  node_group_ids = flatten([
+    for group in module.node_group : [
+      for id in group : [
+        "${id}"
+      ]
+    ]
+  ])
+}
+
 module "load_balancer" {
   source = "./modules/load_balancer"
 
@@ -84,9 +94,8 @@ module "load_balancer" {
   load_balancer_type = each.value.type
   hcloud_network     = hcloud_network.private
   service            = each.value.service
-  target             = each.value.target == "both" ? concat(module.master.master_ids, module.node_group.node_ids) : each.value.target == "master" ? module.master.master_ids : module.node_group.node_ids
+  target             = each.value.target == "both" ? concat(module.master.master_ids, node_group_ids) : each.value.target == "master" ? module.master.master_ids : node_group_ids
 }
-
 
 module "kubeconfig" {
   source       = "./modules/kubeconfig"
