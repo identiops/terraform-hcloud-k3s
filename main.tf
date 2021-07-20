@@ -94,7 +94,7 @@ module "load_balancer" {
   load_balancer_type = each.value.type
   hcloud_network     = hcloud_network.private
   service            = each.value.service
-  target             = toset(each.value.target == "both" ? concat(module.master.master_ids, local.node_group_ids) : each.value.target == "master" ? module.master.master_ids : local.node_group_ids)
+  target             = each.value.target == "both" ? concat(module.master.master_ids, local.node_group_ids) : each.value.target == "master" ? module.master.master_ids : local.node_group_ids
 }
 
 module "kubeconfig" {
