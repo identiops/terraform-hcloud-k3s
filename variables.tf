@@ -21,6 +21,16 @@ variable "image" {
   type        = string
 }
 
+variable "network_cidr" {
+  description = "CIDR of the private network"
+  default     = "10.0.0.0/8"
+}
+
+variable "subnet_cidr" {
+  description = "CIDR of the private network"
+  default     = "10.0.0.0/24"
+}
+
 variable "master_type" {
   description = "Master node type (size)"
   default     = "cx21" # 2 vCPU, 4 GB RAM, 40 GB Disk space
@@ -28,7 +38,7 @@ variable "master_type" {
 }
 
 variable "ssh_keys" {
-  type        = list
+  type        = list(any)
   description = "List of public ssh_key ids"
 }
 
@@ -59,4 +69,16 @@ variable "master_user_data" {
 variable "node_user_data" {
   description = "Additional user_data that gets executed on the nodes in bash format"
   default     = ""
+}
+
+variable "master_firewall_ids" {
+  description = "A list of firewall IDs to apply on the master"
+  type        = list(number)
+  default     = []
+}
+
+variable "node_group_firewall_ids" {
+  description = "A list of firewall IDs to apply on the node group servers"
+  type        = list(number)
+  default     = []
 }

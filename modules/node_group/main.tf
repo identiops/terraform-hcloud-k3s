@@ -29,6 +29,7 @@ resource "hcloud_server" "node" {
       additional_user_data = var.additional_user_data
     }
   )
+  firewall_ids = var.firewall_ids
 }
 
 resource "hcloud_server_network" "node" {

@@ -55,3 +55,9 @@ variable "hcloud_subnet_id" {
 variable "additional_user_data" {
   description = "Additional user_data that gets executed on the host"
 }
+
+variable "firewall_ids" {
+  description = "A list of firewall IDs to apply on the node_group"
+  type        = list(number)
+  default     = []
+}

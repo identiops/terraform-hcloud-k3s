@@ -18,7 +18,8 @@ resource "hcloud_server" "master" {
       additional_user_data = var.additional_user_data
     }
   )
-  keep_disk = true
+  keep_disk    = true
+  firewall_ids = var.firewall_ids
 }
 
 resource "hcloud_server_network" "master" {

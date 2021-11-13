@@ -4,14 +4,14 @@ provider "hcloud" {
 
 resource "hcloud_network" "private" {
   name     = var.cluster_name
-  ip_range = "10.0.0.0/8"
+  ip_range = var.network_cidr
 }
 
 resource "hcloud_network_subnet" "subnet" {
   network_id   = hcloud_network.private.id
   type         = "cloud"
   network_zone = "eu-central"
-  ip_range     = "10.0.0.0/24"
+  ip_range     = var.subnet_cidr
 }
 
 resource "random_string" "k3s_token" {
@@ -47,6 +47,7 @@ module "master" {
   k3s_channel = var.k3s_channel
 
   hcloud_token = var.hcloud_token
+  firewall_ids = var.master_firewall_ids
 
   additional_user_data = var.master_user_data
 }
@@ -66,9 +67,10 @@ module "node_group" {
   k3s_token   = random_string.k3s_token.result
   k3s_channel = var.k3s_channel
 
-  for_each   = var.node_groups
-  node_type  = each.key
-  node_count = each.value
+  for_each     = var.node_groups
+  node_type    = each.key
+  node_count   = each.value
+  firewall_ids = var.node_group_firewall_ids
 
   additional_user_data = var.node_user_data
 }

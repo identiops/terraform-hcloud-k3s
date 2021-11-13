@@ -50,3 +50,9 @@ variable "hcloud_network_id" {
 variable "additional_user_data" {
   description = "Additional user_data that gets executed on the host"
 }
+
+variable "firewall_ids" {
+  description = "A list of firewall rules to apply"
+  type        = list(number)
+  default     = []
+}
