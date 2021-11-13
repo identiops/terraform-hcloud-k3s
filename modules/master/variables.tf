@@ -31,7 +31,7 @@ variable "k3s_token" {
 }
 
 variable "k3s_channel" {
-  description = "k3s channel (stable, latest, v1.19 and so on)"
+  description = "k3s channel (stable, latest, v1.19 and so on, see https://update.k3s.io/v1-release/channels)"
   default     = "stable"
 }
 
