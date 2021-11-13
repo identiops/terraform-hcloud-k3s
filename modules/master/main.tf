@@ -12,9 +12,6 @@ resource "hcloud_server" "master" {
       k3s_token   = var.k3s_token
       k3s_channel = var.k3s_channel
 
-      ccm_manifest = file("${path.module}/manifestos/hcloud-ccm-net.yaml")
-      csi_manifest = file("${path.module}/manifestos/hcloud-csi.yaml")
-
       additional_user_data = var.additional_user_data
     }
   )

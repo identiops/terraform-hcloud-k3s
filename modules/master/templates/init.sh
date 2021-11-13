@@ -6,7 +6,6 @@ apt-get install -yq \
     curl \
     ntp
 
-
 # k3s
 curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_channel} K3S_TOKEN=${k3s_token} sh -s - \
     --flannel-backend=host-gw \
@@ -25,15 +24,11 @@ done
 
 # ccm
 kubectl -n kube-system create secret generic hcloud --from-literal=token=${hcloud_token} --from-literal=network=${hcloud_network}
-cat <<'EOF' | sudo tee /var/lib/rancher/k3s/server/manifests/hcloud-ccm.yaml
-${ccm_manifest}
-EOF
+curl -Lo /var/lib/rancher/k3s/server/manifests/hcloud-ccm.yaml https://github.com/hetznercloud/hcloud-cloud-controller-manager/releases/download/v1.12.1/ccm-networks.yaml
 
 # csi
 kubectl -n kube-system create secret generic hcloud-csi --from-literal=token=${hcloud_token}
-cat <<'EOF' | sudo tee /var/lib/rancher/k3s/server/manifests/hcloud-csi.yaml
-${csi_manifest}
-EOF
+curl -Lo /var/lib/rancher/k3s/server/manifests/hcloud-csi.yaml https://raw.githubusercontent.com/hetznercloud/csi-driver/v1.6.0/deploy/kubernetes/hcloud-csi.yml
 
 # additional user_data
 ${additional_user_data}
