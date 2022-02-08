@@ -2,7 +2,7 @@ terraform {
   required_providers {
     hcloud = {
       source  = "hetznercloud/hcloud"
-      version = "1.32.0"
+      version = "1.32.2"
     }
     local = {
       source = "hashicorp/local"
@@ -14,5 +14,5 @@ terraform {
       source = "hashicorp/template"
     }
   }
-  required_version = ">= 0.12"
+  required_version = ">= 0.13"
 }
