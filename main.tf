@@ -48,6 +48,9 @@ module "master" {
   hcloud_csi_driver_version = var.hcloud_csi_driver_version
   hcloud_ccm_driver_version = var.hcloud_ccm_driver_version
 
+  cluster_cidr_network = cidrsubnet(var.network_cidr, var.cluster_cidr_network_bits, var.cluster_cidr_network_offset)
+  service_cidr_network = cidrsubnet(var.network_cidr, var.service_cidr_network_bits, var.service_cidr_network_offset)
+
   k3s_token   = random_string.k3s_token.result
   k3s_version = var.k3s_version
   k3s_channel = var.k3s_channel

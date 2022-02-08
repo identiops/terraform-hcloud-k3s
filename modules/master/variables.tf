@@ -48,6 +48,16 @@ variable "hcloud_subnet_id" {
   description = "IP Subnet id used to assign internal IP addresses to nodes"
 }
 
+variable "cluster_cidr_network" {
+  description = "Cluster network"
+  type        = string
+}
+
+variable "service_cidr_network" {
+  description = "Service network"
+  type        = string
+}
+
 variable "hcloud_network_ip" {
   description = "Herzner cloud private network ip address"
 }

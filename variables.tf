@@ -26,6 +26,30 @@ variable "network_cidr" {
   default     = "10.0.0.0/8"
 }
 
+variable "cluster_cidr_network_bits" {
+  description = "Cluster network CIDR bits"
+  default     = 16
+  type        = number
+}
+
+variable "cluster_cidr_network_offset" {
+  description = "Cluster network offset"
+  default     = 42
+  type        = number
+}
+
+variable "service_cidr_network_bits" {
+  description = "Service network CIDR bits"
+  default     = 16
+  type        = number
+}
+
+variable "service_cidr_network_offset" {
+  description = "Service CIDR"
+  default     = 43
+  type        = number
+}
+
 variable "subnet_cidr" {
   description = "CIDR of the private network"
   default     = "10.0.0.0/24"
