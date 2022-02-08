@@ -45,6 +45,9 @@ module "master" {
   hcloud_network_ip = var.master_internal_ipv4
   hcloud_subnet_id  = hcloud_network_subnet.subnet.id
 
+  hcloud_csi_driver_version = var.hcloud_csi_driver_version
+  hcloud_ccm_driver_version = var.hcloud_ccm_driver_version
+
   k3s_token   = random_string.k3s_token.result
   k3s_version = var.k3s_version
   k3s_channel = var.k3s_channel

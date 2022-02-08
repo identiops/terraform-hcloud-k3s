@@ -65,3 +65,13 @@ variable "firewall_ids" {
   type        = list(number)
   default     = []
 }
+
+variable "hcloud_csi_driver_version" {
+  description = "Hetzner CSI driver version, see https://github.com/hetznercloud/csi-driver"
+  type        = string
+}
+
+variable "hcloud_ccm_driver_version" {
+  description = "Hetzner CCM version, see https://github.com/hetznercloud/hcloud-cloud-controller-manager"
+  type        = string
+}

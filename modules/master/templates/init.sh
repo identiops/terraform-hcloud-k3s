@@ -24,11 +24,11 @@ done
 
 # ccm
 kubectl -n kube-system create secret generic hcloud --from-literal=token=${hcloud_token} --from-literal=network=${hcloud_network}
-curl -Lo /var/lib/rancher/k3s/server/manifests/hcloud-ccm.yaml https://github.com/hetznercloud/hcloud-cloud-controller-manager/releases/download/v1.12.1/ccm-networks.yaml
+curl -Lo /var/lib/rancher/k3s/server/manifests/hcloud-ccm.yaml https://github.com/hetznercloud/hcloud-cloud-controller-manager/releases/download/v${hcloud_ccm_driver_version}/ccm-networks.yaml
 
 # csi
 kubectl -n kube-system create secret generic hcloud-csi --from-literal=token=${hcloud_token}
-curl -Lo /var/lib/rancher/k3s/server/manifests/hcloud-csi.yaml https://raw.githubusercontent.com/hetznercloud/csi-driver/v1.6.0/deploy/kubernetes/hcloud-csi.yml
+curl -Lo /var/lib/rancher/k3s/server/manifests/hcloud-csi.yaml https://raw.githubusercontent.com/hetznercloud/csi-driver/v${hcloud_csi_driver_version}/deploy/kubernetes/hcloud-csi.yml
 
 # additional user_data
 ${additional_user_data}

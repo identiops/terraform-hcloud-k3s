@@ -9,6 +9,9 @@ resource "hcloud_server" "master" {
       hcloud_token   = var.hcloud_token
       hcloud_network = var.hcloud_network_id
 
+      hcloud_csi_driver_version = var.hcloud_csi_driver_version
+      hcloud_ccm_driver_version = var.hcloud_ccm_driver_version
+
       k3s_token   = var.k3s_token
       k3s_channel = var.k3s_channel
       k3s_version = var.k3s_version
