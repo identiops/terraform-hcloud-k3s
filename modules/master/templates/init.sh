@@ -7,7 +7,7 @@ apt-get install -yq \
     ntp
 
 # k3s
-curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_channel} K3S_TOKEN=${k3s_token} sh -s - \
+curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_channel} INSTALL_K3S_VERSION=${k3s_version} K3S_TOKEN=${k3s_token} sh -s - \
     --flannel-backend=host-gw \
     --disable local-storage \
     --disable-cloud-controller \

@@ -20,6 +20,7 @@ resource "hcloud_server" "node" {
   user_data = templatefile(
     "${path.module}/templates/init.sh", {
       k3s_token   = var.k3s_token
+      k3s_version = var.k3s_version
       k3s_channel = var.k3s_channel
 
       master_internal_ipv4 = var.master_internal_ipv4

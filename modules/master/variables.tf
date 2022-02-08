@@ -30,6 +30,11 @@ variable "k3s_token" {
   description = "k3s initialization token"
 }
 
+variable "k3s_version" {
+  description = "k3s version, if set, takes presedence over k3s_channel"
+  default     = ""
+}
+
 variable "k3s_channel" {
   description = "k3s channel (stable, latest, v1.19 and so on, see https://update.k3s.io/v1-release/channels)"
   default     = "stable"

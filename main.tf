@@ -44,6 +44,7 @@ module "master" {
   hcloud_subnet_id  = hcloud_network_subnet.subnet.id
 
   k3s_token   = random_string.k3s_token.result
+  k3s_version = var.k3s_version
   k3s_channel = var.k3s_channel
 
   hcloud_token = var.hcloud_token
@@ -65,6 +66,7 @@ module "node_group" {
   hcloud_subnet_id = hcloud_network_subnet.subnet.id
 
   k3s_token   = random_string.k3s_token.result
+  k3s_version = var.k3s_version
   k3s_channel = var.k3s_channel
 
   for_each     = var.node_groups

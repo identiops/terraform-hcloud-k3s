@@ -11,6 +11,7 @@ resource "hcloud_server" "master" {
 
       k3s_token   = var.k3s_token
       k3s_channel = var.k3s_channel
+      k3s_version = var.k3s_version
 
       additional_user_data = var.additional_user_data
     }

@@ -42,6 +42,12 @@ variable "ssh_keys" {
   description = "List of public ssh_key ids"
 }
 
+variable "k3s_version" {
+  description = "k3s version, if set, takes presedence over k3s_channel"
+  default     = ""
+  type        = string
+}
+
 variable "k3s_channel" {
   default = "stable"
   type    = string
