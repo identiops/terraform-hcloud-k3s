@@ -118,10 +118,22 @@ variable "node_group_firewall_ids" {
   default     = []
 }
 
+variable "hcloud_csi_driver_install" {
+  description = "Install Hetzner CSI driver"
+  type        = bool
+  default     = true
+}
+
 variable "hcloud_csi_driver_version" {
   description = "Hetzner CSI driver version, see https://github.com/hetznercloud/csi-driver"
   type        = string
   default     = "1.6.0"
+}
+
+variable "hcloud_ccm_driver_install" {
+  description = "Install Hetzner CCM"
+  type        = bool
+  default     = true
 }
 
 variable "hcloud_ccm_driver_version" {

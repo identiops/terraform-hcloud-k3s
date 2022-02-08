@@ -45,7 +45,9 @@ module "master" {
   hcloud_network_ip = var.master_internal_ipv4
   hcloud_subnet_id  = hcloud_network_subnet.subnet.id
 
+  hcloud_csi_driver_install = var.hcloud_csi_driver_install
   hcloud_csi_driver_version = var.hcloud_csi_driver_version
+  hcloud_ccm_driver_install = var.hcloud_ccm_driver_install
   hcloud_ccm_driver_version = var.hcloud_ccm_driver_version
 
   cluster_cidr_network = cidrsubnet(var.network_cidr, var.cluster_cidr_network_bits, var.cluster_cidr_network_offset)

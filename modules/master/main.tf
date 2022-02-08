@@ -12,7 +12,9 @@ resource "hcloud_server" "master" {
       cluster_cidr_network = var.cluster_cidr_network
       service_cidr_network = var.service_cidr_network
 
+      hcloud_csi_driver_install = var.hcloud_csi_driver_install
       hcloud_csi_driver_version = var.hcloud_csi_driver_version
+      hcloud_ccm_driver_install = var.hcloud_ccm_driver_install
       hcloud_ccm_driver_version = var.hcloud_ccm_driver_version
 
       k3s_token   = var.k3s_token
