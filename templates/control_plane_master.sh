@@ -96,7 +96,7 @@ if [ "${hcloud_csi_driver_install}" = "true" ]; then
     curl -Lo /tmp/csi/csi.yaml https://raw.githubusercontent.com/hetznercloud/csi-driver/${hcloud_csi_driver_version}/deploy/kubernetes/hcloud-csi.yml
     cat >/tmp/csi/kustomization.yaml <<EOF
 # Documentation: https://kubectl.docs.kubernetes.io/guides/config_management/components/
-apiVersion: kustomize.config.k8s.io/v1alpha1
+apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
