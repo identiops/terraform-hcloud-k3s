@@ -1,4 +1,9 @@
 resource "hcloud_server" "master" {
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes  = [user_data]
+  }
+
   name        = "${var.cluster_name}-master"
   datacenter  = var.datacenter
   image       = var.image

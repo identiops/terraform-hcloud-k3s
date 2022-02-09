@@ -11,6 +11,11 @@ locals {
 }
 
 resource "hcloud_server" "node" {
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes  = [user_data]
+  }
+
   count       = var.node_count
   name        = "${var.cluster_name}-${var.node_type}-${count.index}"
   server_type = var.node_type
