@@ -1,6 +1,8 @@
 #!/bin/bash
 # Initialization steps, see https://github.com/hetznercloud/hcloud-cloud-controller-manager
 
+set -e
+
 apt-get -yq update
 apt-get install -yq \
     ca-certificates \
@@ -84,12 +86,35 @@ EOF
 kubectl -n kube-system create secret generic hcloud --from-literal=token=${hcloud_token} --from-literal=network=${hcloud_network}
 
 ## 7. Deploy the hcloud-cloud-controller-manager
-[ "${hcloud_ccm_driver_install}" = "true" ] && curl -Lo /var/lib/rancher/k3s/server/manifests/hcloud-ccm.yaml https://github.com/hetznercloud/hcloud-cloud-controller-manager/releases/download/v${hcloud_ccm_driver_version}/ccm-networks.yaml
+[ "${hcloud_ccm_driver_install}" = "true" ] && curl -Lo /var/lib/rancher/k3s/server/manifests/hcloud-ccm.yaml https://github.com/hetznercloud/hcloud-cloud-controller-manager/releases/download/${hcloud_ccm_driver_version}/ccm-networks.yaml
 
 # csi
 kubectl -n kube-system create secret generic hcloud-csi --from-literal=token=${hcloud_token}
 
-[ "${hcloud_csi_driver_install}" = "true" ] && curl -Lo /var/lib/rancher/k3s/server/manifests/hcloud-csi.yaml https://raw.githubusercontent.com/hetznercloud/csi-driver/v${hcloud_csi_driver_version}/deploy/kubernetes/hcloud-csi.yml
+if [ "${hcloud_csi_driver_install}" = "true" ]; then
+    mkdir /tmp/csi
+    curl -Lo /tmp/csi/csi.yaml https://raw.githubusercontent.com/hetznercloud/csi-driver/${hcloud_csi_driver_version}/deploy/kubernetes/hcloud-csi.yml
+    cat >/tmp/csi/kustomization.yaml <<EOF
+# Documentation: https://kubectl.docs.kubernetes.io/guides/config_management/components/
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Kustomization
+
+resources:
+  - csi.yaml
+
+patchesJson6902:
+  - target:
+      version: v1
+      kind: StorageClass
+      name: hcloud-volumes
+    patch: |-
+      - op: add
+        path: /reclaimPolicy
+        value: Retain
+EOF
+    kubectl kustomize /tmp/csi >/var/lib/rancher/k3s/server/manifests/hcloud-csi.yaml
+    rm -rf /tmp/csi
+fi
 
 # additional user_data
 ${additional_user_data}

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 apt-get -yq update
 apt-get install -yq \
     ca-certificates \

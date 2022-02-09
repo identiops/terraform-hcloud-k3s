@@ -1,6 +1,8 @@
 #!/bin/bash
 # Initialization steps, see https://github.com/hetznercloud/hcloud-cloud-controller-manager
 
+set -e
+
 apt-get -yq update
 apt-get install -yq \
     ca-certificates \

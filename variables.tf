@@ -143,7 +143,7 @@ variable "hcloud_csi_driver_install" {
 variable "hcloud_csi_driver_version" {
   description = "Hetzner CSI driver version, see https://github.com/hetznercloud/csi-driver"
   type        = string
-  default     = "1.6.0"
+  default     = "v1.6.0"
 }
 
 variable "hcloud_ccm_driver_install" {
@@ -155,7 +155,7 @@ variable "hcloud_ccm_driver_install" {
 variable "hcloud_ccm_driver_version" {
   description = "Hetzner CCM version, see https://github.com/hetznercloud/hcloud-cloud-controller-manager"
   type        = string
-  default     = "1.12.1"
+  default     = "v1.12.1"
 }
 
 variable "allow_server_deletion" {
