@@ -1,6 +1,6 @@
 resource "hcloud_server" "control_plane_master" {
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
     ignore_changes  = [user_data]
   }
   depends_on = [hcloud_network.private, hcloud_network_subnet.subnet]

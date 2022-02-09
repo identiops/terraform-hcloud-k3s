@@ -12,7 +12,7 @@ locals {
 
 resource "hcloud_server" "node" {
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
     ignore_changes  = [user_data]
   }
 
