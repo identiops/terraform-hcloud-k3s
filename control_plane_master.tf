@@ -8,7 +8,7 @@ resource "hcloud_server" "control_plane_master" {
   name        = "${var.cluster_name}-control-plane-master"
   datacenter  = var.datacenter
   image       = var.image
-  server_type = var.master_type
+  server_type = var.control_plane_server_type
   ssh_keys    = var.ssh_keys
   user_data = templatefile(
     "${path.module}/templates/control_plane_master.sh", {
@@ -27,19 +27,19 @@ resource "hcloud_server" "control_plane_master" {
       k3s_channel = var.k3s_channel
       k3s_version = var.k3s_version
 
-      additional_user_data = var.master_user_data
+      additional_user_data = var.control_plane_master_user_data
     }
   )
-  keep_disk    = true
-  firewall_ids = var.master_firewall_ids
+  firewall_ids = var.control_plane_firewall_ids
 
   network {
     network_id = hcloud_network.private.id
-    ip         = var.master_internal_ipv4
+    ip         = cidrhost(hcloud_network_subnet.subnet.ip_range, 2)
   }
 }
 
 resource "hcloud_server_network" "control_plane_master" {
   server_id = hcloud_server.control_plane_master.id
   subnet_id = hcloud_network_subnet.subnet.id
+  ip        = cidrhost(hcloud_network_subnet.subnet.ip_range, 2)
 }

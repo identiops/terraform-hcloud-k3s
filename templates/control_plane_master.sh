@@ -14,6 +14,8 @@ apt-get install -yq \
 #     --flannel-backend=host-gw \
 
 curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_channel} INSTALL_K3S_VERSION=${k3s_version} K3S_TOKEN=${k3s_token} sh -s - \
+    server \
+    --cluster-init \
     --flannel-backend=none \
     --disable-network-policy \
     --cluster-cidr=${cluster_cidr_network} \

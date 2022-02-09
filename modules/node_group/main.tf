@@ -28,20 +28,27 @@ resource "hcloud_server" "node" {
       k3s_version = var.k3s_version
       k3s_channel = var.k3s_channel
 
-      master_internal_ipv4 = var.master_internal_ipv4
+      control_plane_master_internal_ipv4 = var.control_plane_master_internal_ipv4
 
       floating_ips = local.floating_ips
 
       additional_user_data = var.additional_user_data
     }
   )
+
   firewall_ids = var.firewall_ids
+
+  network {
+    network_id = var.hcloud_network_id
+    ip         = cidrhost(var.subnet_ip_range, var.ip_offset + count.index)
+  }
 }
 
 resource "hcloud_server_network" "node" {
   count     = var.node_count
   server_id = hcloud_server.node[count.index].id
   subnet_id = var.hcloud_subnet_id
+  ip        = cidrhost(var.subnet_ip_range, var.ip_offset + count.index)
 }
 
 output "node_ipv4" {

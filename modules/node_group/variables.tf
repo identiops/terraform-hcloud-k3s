@@ -41,7 +41,7 @@ variable "k3s_channel" {
   default     = "stable"
 }
 
-variable "master_internal_ipv4" {
+variable "control_plane_master_internal_ipv4" {
   description = "Internal IP address (v4) of master node"
 }
 
@@ -53,9 +53,22 @@ variable "ssh_keys" {
   description = "Public SSH keys ids (list) used to login"
 }
 
+variable "hcloud_network_id" {
+  description = "IP Network id"
+}
+
 variable "hcloud_subnet_id" {
   description = "IP Subnet id used to assign internal IP addresses to nodes"
 }
+
+variable "subnet_ip_range" {
+  description = "CIDR block of the subnet"
+}
+
+variable "ip_offset" {
+  description = "Offset from which agents are IPs are counted upwards. Needs to be adjusted to not cause collisions!"
+}
+
 
 variable "additional_user_data" {
   description = "Additional user_data that gets executed on the host"
