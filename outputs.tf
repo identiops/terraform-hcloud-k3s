@@ -1,13 +1,11 @@
 output "master_ipv4" {
-  depends_on  = [module.master]
   description = "Public IPv4 Address of the master node"
-  value       = module.master.master_ipv4
+  value       = hcloud_server.control_plane_master.ipv4_address
 }
 
 output "master_ipv6" {
-  depends_on  = [module.master]
   description = "Public IPv6 Address of the master node"
-  value       = module.master.master_ipv6
+  value       = hcloud_server.control_plane_master.ipv6_address
 }
 
 output "nodes_ipv4" {

@@ -1,9 +1,9 @@
 resource "local_file" "setkubeconfig" {
   filename = "./setkubeconfig"
   content = templatefile(
-    "${path.module}/templates/setkubeconfig", {
+    "${path.module}/templates/kubeconfig_setkubeconfig", {
       cluster_name = var.cluster_name
-      master_ipv4  = var.master_ipv4
+      master_ipv4  = hcloud_server.control_plane_master.ipv4_address
     }
   )
 
@@ -13,7 +13,7 @@ resource "local_file" "setkubeconfig" {
 resource "local_file" "unsetkubeconfig" {
   filename = "./unsetkubeconfig"
   content = templatefile(
-    "${path.module}/templates/unsetkubeconfig", {
+    "${path.module}/templates/kubeconfig_unsetkubeconfig", {
       cluster_name = var.cluster_name
     }
   )
