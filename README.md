@@ -150,3 +150,16 @@ When a `PV` is deleted, the Hetzner Block Storage Volume will be deleted as
 well, based on the `ReclaimPolicy`.
 
 [Learn More about Persistent Volumes on kubernetes.io.](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+
+## Related Projects
+
+- [k-andy](https://github.com/StarpTech/k-andy) Zero friction Kubernetes stack
+  on Hetzner Cloud
+  - terraform-based stack
+  - Distributed across multiple Hetzner sites and data centers
+  - Support for multiple control-plane servers
+- [hetzner-cloud-k3s](https://github.com/vitobotta/hetzner-cloud-k3s) A fully
+  functional, super cheap Kubernetes cluster in Hetzner Cloud in 1m30s or less
+  - Not terraform-based
+  - Scripts that make it easy to manage a cluster
+- [Rancher system-upgrade-controller](https://rancher.com/docs/k3s/latest/en/upgrades/automated/)
