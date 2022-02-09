@@ -57,6 +57,12 @@ variable "subnet_cidr" {
   default     = "10.0.0.0/24"
 }
 
+variable "control_plane_k3s_addtional_options" {
+  description = "Additional options passed to k3s during installation"
+  type        = string
+  default     = "--node-taint node-role.kubernetes.io/master:NoSchedule"
+}
+
 variable "control_plane_server_type" {
   description = "Control plane node type (size)"
   type        = string

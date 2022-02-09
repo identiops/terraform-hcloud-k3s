@@ -12,8 +12,9 @@ resource "hcloud_server" "control_plane_master" {
   ssh_keys    = var.ssh_keys
   user_data = templatefile(
     "${path.module}/templates/control_plane_master.sh", {
-      hcloud_token   = var.hcloud_token
-      hcloud_network = hcloud_network.private.id
+      hcloud_token                        = var.hcloud_token
+      hcloud_network                      = hcloud_network.private.id
+      control_plane_k3s_addtional_options = var.control_plane_k3s_addtional_options
 
       cluster_cidr_network = cidrsubnet(var.network_cidr, var.cluster_cidr_network_bits, var.cluster_cidr_network_offset)
       service_cidr_network = cidrsubnet(var.network_cidr, var.service_cidr_network_bits, var.service_cidr_network_offset)

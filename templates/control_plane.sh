@@ -25,8 +25,7 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_channel} INSTALL_K3S_VE
     --disable-cloud-controller \
     --disable traefik \
     --disable servicelb \
-    --node-taint node-role.kubernetes.io/master:NoSchedule \
-    --kubelet-arg 'cloud-provider=external'
+    ${control_plane_k3s_addtional_options} --kubelet-arg 'cloud-provider=external'
 
 # additional user_data
 ${additional_user_data}
