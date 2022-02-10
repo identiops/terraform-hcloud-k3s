@@ -19,7 +19,8 @@ apt-get install -yq \
 
 curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=${k3s_channel} INSTALL_K3S_VERSION=${k3s_version} K3S_URL=https://${control_plane_master_internal_ipv4}:6443 K3S_TOKEN=${k3s_token} sh -s - \
     server \
-    --flannel-backend=host-gw \
+    --flannel-backend=none \
+    --disable-network-policy \
     --cluster-cidr=${cluster_cidr_network} \
     --service-cidr=${service_cidr_network} \
     --node-ip="$(ip -4 -j a s dev ens10 | jq '.[0].addr_info[0].local' -r)" \

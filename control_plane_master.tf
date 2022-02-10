@@ -16,8 +16,8 @@ resource "hcloud_server" "control_plane_master" {
       hcloud_network                      = hcloud_network.private.id
       control_plane_k3s_addtional_options = var.control_plane_k3s_addtional_options
 
-      cluster_cidr_network = cidrsubnet(var.network_cidr, var.cluster_cidr_network_bits, var.cluster_cidr_network_offset)
-      service_cidr_network = cidrsubnet(var.network_cidr, var.service_cidr_network_bits, var.service_cidr_network_offset)
+      cluster_cidr_network = cidrsubnet(var.network_cidr, var.cluster_cidr_network_bits - 8, var.cluster_cidr_network_offset)
+      service_cidr_network = cidrsubnet(var.network_cidr, var.service_cidr_network_bits - 8, var.service_cidr_network_offset)
 
       hcloud_csi_driver_install = var.hcloud_csi_driver_install
       hcloud_csi_driver_version = var.hcloud_csi_driver_version
@@ -35,12 +35,12 @@ resource "hcloud_server" "control_plane_master" {
 
   network {
     network_id = hcloud_network.private.id
-    ip         = cidrhost(hcloud_network_subnet.subnet.ip_range, 2)
+    ip         = cidrhost(hcloud_network_subnet.subnet.ip_range, 10 + 2)
   }
 }
 
 resource "hcloud_server_network" "control_plane_master" {
   server_id = hcloud_server.control_plane_master.id
   subnet_id = hcloud_network_subnet.subnet.id
-  ip        = cidrhost(hcloud_network_subnet.subnet.ip_range, 2)
+  ip        = cidrhost(hcloud_network_subnet.subnet.ip_range, 10 + 2)
 }

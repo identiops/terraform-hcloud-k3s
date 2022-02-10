@@ -27,22 +27,22 @@ variable "network_cidr" {
   default     = "10.0.0.0/8"
 }
 
-variable "cluster_cidr_network_bits" {
-  description = "Cluster network CIDR bits"
-  type        = number
-  default     = 16
+variable "subnet_cidr" {
+  description = "CIDR of the private network"
+  type        = string
+  default     = "10.0.1.0/24"
 }
 
 variable "cluster_cidr_network_offset" {
   description = "Cluster network offset"
   type        = number
-  default     = 42
+  default     = 244 # CCM has this network preconfigured - don't change it without adjust CCM
 }
 
-variable "service_cidr_network_bits" {
-  description = "Service network CIDR bits"
+variable "cluster_cidr_network_bits" {
+  description = "Cluster network CIDR bits"
   type        = number
-  default     = 16
+  default     = 16 # CCM has this network preconfigured - don't change it without adjust CCM
 }
 
 variable "service_cidr_network_offset" {
@@ -51,10 +51,10 @@ variable "service_cidr_network_offset" {
   default     = 43
 }
 
-variable "subnet_cidr" {
-  description = "CIDR of the private network"
-  type        = string
-  default     = "10.0.0.0/24"
+variable "service_cidr_network_bits" {
+  description = "Service network CIDR bits"
+  type        = number
+  default     = 16
 }
 
 variable "control_plane_k3s_addtional_options" {
