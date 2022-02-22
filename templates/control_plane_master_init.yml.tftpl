@@ -1,0 +1,52 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+packages:
+%{ for package in apt_packages ~}
+  - ${package}
+%{ endfor ~} 
+
+write_files:
+  - path: /run/csi/kustomization.yaml
+    content: |
+      ${indent(6, "${kustomization_manifest}")}
+  - path: /run/calico.yml
+    content: |
+      ${indent(6, "${calico_manifest}")}
+runcmd:
+  - >
+    curl -sfL https://get.k3s.io |
+    INSTALL_K3S_CHANNEL=${k3s_channel}
+    INSTALL_K3S_VERSION=${k3s_version}
+    K3S_TOKEN=${k3s_token}
+    sh -s - server
+    --cluster-init
+    --flannel-backend=none
+    --disable-network-policy
+    --cluster-cidr=${cluster_cidr_network}
+    --service-cidr=${service_cidr_network}
+    --node-ip=${cmd_node_ip}
+    --node-external-ip=${cmd_node_external_ip}
+    --disable local-storage
+    --disable-cloud-controller
+    --disable traefik
+    --disable servicelb
+    --kubelet-arg 'cloud-provider=external'
+    ${control_plane_k3s_addtional_options}
+  - |
+    while ! test -d /var/lib/rancher/k3s/server/manifests; do
+      echo "Waiting for '/var/lib/rancher/k3s/server/manifests'"
+      sleep 1
+    done
+  - kubectl create -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml
+  - kubectl apply -f /run/calico.yaml
+  - kubectl -n kube-system create secret generic hcloud --from-literal=token=${hcloud_token} --from-literal=network=${hcloud_network}
+  - '[ "${hcloud_ccm_driver_install}" = "true" ] && curl -Lo /var/lib/rancher/k3s/server/manifests/hcloud-ccm.yaml https://github.com/hetznercloud/hcloud-cloud-controller-manager/releases/download/${hcloud_ccm_driver_version}/ccm-networks.yaml'
+  - kubectl -n kube-system create secret generic hcloud-csi --from-literal=token=${hcloud_token}
+  - |
+    if [ "${hcloud_csi_driver_install}" = "true" ]; then
+      curl -Lo /run/csi/csi.yaml https://raw.githubusercontent.com/hetznercloud/csi-driver/${hcloud_csi_driver_version}/deploy/kubernetes/hcloud-csi.yml
+      kubectl kustomize /run/csi >/var/lib/rancher/k3s/server/manifests/hcloud-csi.yaml
+    fi
+  # additional user_data
+  - ${additional_user_data}

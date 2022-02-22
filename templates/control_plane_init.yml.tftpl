@@ -1,0 +1,33 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+packages:
+%{ for package in apt_packages ~}
+  - ${package}
+%{ endfor ~} 
+
+runcmd:
+  - >
+    curl -sfL https://get.k3s.io |
+    INSTALL_K3S_CHANNEL=${k3s_channel}
+    INSTALL_K3S_VERSION=${k3s_version}
+    K3S_TOKEN=${k3s_token}
+    K3S_URL=https://${control_plane_master_internal_ipv4}:6443
+    sh -s - server
+    --flannel-backend=none
+    --disable-network-policy
+    --cluster-cidr=${cluster_cidr_network}
+    --service-cidr=${service_cidr_network}
+    --node-ip=${cmd_node_ip}
+    --node-external-ip=${cmd_node_external_ip}
+    --disable local-storage
+    --disable-cloud-controller
+    --disable traefik
+    --disable servicelb
+    --kubelet-arg 'cloud-provider=external'
+    ${control_plane_k3s_addtional_options}
+%{ for key, value in kube-apiserver-args ~}
+    --kube-apiserver-arg=${key}=${value}
+%{ endfor ~}
+  # additional user_data
+  - ${additional_user_data}

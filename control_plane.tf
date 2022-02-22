@@ -18,13 +18,16 @@ resource "hcloud_server" "control_plane" {
   server_type = var.control_plane_server_type
   ssh_keys    = var.ssh_keys
   user_data = templatefile(
-    "${path.module}/templates/control_plane.sh", {
+    "${path.module}/templates/control_plane_init.yml.tftpl", {
+      apt_packages                        = var.apt_packages
       hcloud_token                        = var.hcloud_token
       control_plane_master_internal_ipv4  = hcloud_server_network.control_plane_master.ip
       control_plane_k3s_addtional_options = var.control_plane_k3s_addtional_options
 
       cluster_cidr_network = cidrsubnet(var.network_cidr, var.cluster_cidr_network_bits - 8, var.cluster_cidr_network_offset)
       service_cidr_network = cidrsubnet(var.network_cidr, var.service_cidr_network_bits - 8, var.service_cidr_network_offset)
+      cmd_node_ip          = "$(ip -4 -j a s dev ens10 | jq '.[0].addr_info[0].local' -r)"
+      cmd_node_external_ip = "$(ip -4 -j a s dev eth0 | jq '.[0].addr_info[0].local' -r),$(ip -6 -j a s dev eth0 | jq '.[0].addr_info[0].local' -r)"
 
       k3s_token   = random_string.k3s_token.result
       k3s_channel = var.k3s_channel

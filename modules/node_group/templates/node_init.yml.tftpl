@@ -1,0 +1,26 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+packages:
+%{ for package in apt_packages ~}
+  - ${package}
+%{ endfor ~} 
+
+runcmd:
+  - >
+    curl -sfL https://get.k3s.io |
+    INSTALL_K3S_CHANNEL=${k3s_channel}
+    INSTALL_K3S_VERSION=${k3s_version}
+    K3S_TOKEN=${k3s_token}
+    K3S_URL=https://${control_plane_master_internal_ipv4}:6443
+    sh -s - agent
+    --node-ip=${cmd_node_ip}
+    --node-external-ip=${cmd_node_external_ip}
+    --kubelet-arg 'cloud-provider=external'
+  # floating IPs
+%{ for ip in floating_ips ~}
+  - ip addr add ${ip} dev eth0
+%{ endfor ~}
+
+  # additional user_data
+  - ${additional_user_data}

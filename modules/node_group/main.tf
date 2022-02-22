@@ -23,12 +23,15 @@ resource "hcloud_server" "node" {
   image       = var.image
   ssh_keys    = var.ssh_keys
   user_data = templatefile(
-    "${path.module}/templates/init.sh", {
-      k3s_token   = var.k3s_token
-      k3s_version = var.k3s_version
-      k3s_channel = var.k3s_channel
+    "${path.module}/templates/node_init.yml.tftpl", {
+      apt_packages = var.apt_packages
+      k3s_token    = var.k3s_token
+      k3s_version  = var.k3s_version
+      k3s_channel  = var.k3s_channel
 
       control_plane_master_internal_ipv4 = var.control_plane_master_internal_ipv4
+      cmd_node_ip          = "$(ip -4 -j a s dev ens10 | jq '.[0].addr_info[0].local' -r)"
+      cmd_node_external_ip = "$(ip -4 -j a s dev eth0 | jq '.[0].addr_info[0].local' -r),$(ip -6 -j a s dev eth0 | jq '.[0].addr_info[0].local' -r)"
 
       floating_ips = local.floating_ips
 

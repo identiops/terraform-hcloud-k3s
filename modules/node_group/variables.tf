@@ -79,3 +79,9 @@ variable "firewall_ids" {
   type        = list(number)
   default     = []
 }
+
+variable "apt_packages" {
+  description = "List of packages to install using apt."
+  type        = list(string)
+  default     = []
+}

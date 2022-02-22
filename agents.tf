@@ -8,6 +8,8 @@ module "node_group" {
   control_plane_master_internal_ipv4 = hcloud_server_network.control_plane_master.ip
   floating_ips                       = module.floating_ip
 
+  apt_packages = var.apt_packages
+
   hcloud_network_id = hcloud_network.private.id
   hcloud_subnet_id  = hcloud_network_subnet.subnet.id
   subnet_ip_range   = hcloud_network_subnet.subnet.ip_range

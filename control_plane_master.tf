@@ -11,13 +11,23 @@ resource "hcloud_server" "control_plane_master" {
   server_type = var.control_plane_server_type
   ssh_keys    = var.ssh_keys
   user_data = templatefile(
-    "${path.module}/templates/control_plane_master.sh", {
+    "${path.module}/templates/control_plane_master_init.yml.tftpl", {
+      path_module  = path.module
+      apt_packages = var.apt_packages
+
       hcloud_token                        = var.hcloud_token
       hcloud_network                      = hcloud_network.private.id
       control_plane_k3s_addtional_options = var.control_plane_k3s_addtional_options
 
       cluster_cidr_network = cidrsubnet(var.network_cidr, var.cluster_cidr_network_bits - 8, var.cluster_cidr_network_offset)
       service_cidr_network = cidrsubnet(var.network_cidr, var.service_cidr_network_bits - 8, var.service_cidr_network_offset)
+      cmd_node_ip          = "$(ip -4 -j a s dev ens10 | jq '.[0].addr_info[0].local' -r)"
+      cmd_node_external_ip = "$(ip -4 -j a s dev eth0 | jq '.[0].addr_info[0].local' -r),$(ip -6 -j a s dev eth0 | jq '.[0].addr_info[0].local' -r)"
+
+      kustomization_manifest = file("${path.module}/templates/kustomization.yml")
+      calico_manifest = templatefile("${path.module}/templates/calico.yml", {
+        cluster_cidr_network = local.cluster_cidr_network
+      })
 
       hcloud_csi_driver_install = var.hcloud_csi_driver_install
       hcloud_csi_driver_version = var.hcloud_csi_driver_version
