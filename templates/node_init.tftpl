@@ -1,0 +1,15 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+# package_reboot_if_required: true
+packages:
+%{ for package in apt_packages ~}
+  - ${package}
+%{ endfor ~}
+
+${additional_yaml}
+
+runcmd:
+  ${indent(2, cmd_install_k3s)}
+  # additional user_data
+  ${indent(2, additional_user_data)}

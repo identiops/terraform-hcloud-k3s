@@ -85,3 +85,9 @@ variable "apt_packages" {
   type        = list(string)
   default     = []
 }
+
+variable "additional_yaml" {
+  description = "Additional sections to append to the cloud-init file."
+  type = string
+  default = ""
+}

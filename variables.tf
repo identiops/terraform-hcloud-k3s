@@ -168,4 +168,9 @@ variable "apt_packages" {
   description = "List of packages to install using apt."
   type        = list(string)
   default     = ["ca-certificates", "ntp", "jq"]
+
+variable "additional_yaml" {
+  description = "Additional sections to append to the cloud-init file."
+  type = string
+  default = ""
 }
