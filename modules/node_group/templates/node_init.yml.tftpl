@@ -4,11 +4,11 @@ package_upgrade: true
 packages:
 %{ for package in apt_packages ~}
   - ${package}
-%{ endfor ~} 
+%{ endfor ~}
 
 runcmd:
   - >
-    curl -sfL https://get.k3s.io |
+    wget -qO- https://get.k3s.io |
     INSTALL_K3S_CHANNEL=${k3s_channel}
     INSTALL_K3S_VERSION=${k3s_version}
     K3S_TOKEN=${k3s_token}

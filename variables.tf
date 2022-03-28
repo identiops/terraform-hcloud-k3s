@@ -167,5 +167,5 @@ variable "allow_server_deletion" {
 variable "apt_packages" {
   description = "List of packages to install using apt."
   type        = list(string)
-  default     = ["ca-certificates", "curl", "ntp", "jq"]
+  default     = ["ca-certificates", "ntp", "jq"]
 }
