@@ -23,6 +23,11 @@ module "cluster" {
 
   control_plane_server_type = "cx21"
 
+  control_plane_labels = {
+  }
+  node_labels = {
+  }
+
   nodes = {
     "node1" = {
       server_type = "cx21"

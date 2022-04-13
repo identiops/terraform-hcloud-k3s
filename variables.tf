@@ -183,6 +183,16 @@ variable "allow_server_deletion" {
   default     = false
 }
 
+variable "control_plane_labels" {
+  description = "Hetzner server labels for control plane."
+  type        = map(string)
+}
+
+variable "node_labels" {
+  description = "Hetzner server labels for worker nodes."
+  type        = map(string)
+}
+
 variable "apt_packages" {
   description = "List of packages to install using apt."
   type        = list(string)

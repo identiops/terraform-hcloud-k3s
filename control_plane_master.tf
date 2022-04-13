@@ -44,6 +44,7 @@ resource "hcloud_server" "control_plane_master" {
   image       = var.image
   server_type = var.control_plane_server_type
   ssh_keys    = var.ssh_keys
+  labels      = var.control_plane_labels
   user_data = templatefile(
     "${path.module}/templates/node_init.tftpl", {
       apt_packages = var.apt_packages
