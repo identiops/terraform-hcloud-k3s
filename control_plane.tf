@@ -7,7 +7,7 @@ resource "hcloud_server" "control_plane" {
     prevent_destroy = false
     ignore_changes  = [user_data]
   }
-  depends_on = [hcloud_server.control_plane_master]
+  depends_on = [hcloud_server.control_plane_master, hcloud_network_subnet.subnet]
 
   for_each = { for i in range(1, var.control_plane_server_count) : "#${i}" => i }
 

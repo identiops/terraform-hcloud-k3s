@@ -57,6 +57,11 @@ variable "service_cidr_network_bits" {
   default     = 16
 }
 
+variable "ip_offset" {
+  description = "Offset from which agents are IPs are counted upwards. Needs to be adjusted to not cause collisions!"
+  default     = 20
+}
+
 variable "control_plane_k3s_addtional_options" {
   description = "Additional options passed to k3s during installation"
   type        = string
@@ -98,10 +103,18 @@ variable "node_groups" {
   default     = { "cx21" = 1 }
 }
 
-variable "floating_ips" {
-  description = "Map of floating IPs, key is ip_type (ipv4, ipv6), value is count of IPs in group"
-  type        = map(string)
-  default     = {}
+variable "nodes" {
+  description = "Map of worker node groups, key is node_id, value is the server type"
+  type = map(object({
+    server_type = string
+    ip_index = number
+  }))
+  default = {
+    "name" = {
+      server_type = "cx21"
+      ip_index = 0
+    }
+  }
 }
 
 variable "control_plane_master_user_data" {
@@ -130,6 +143,12 @@ variable "control_plane_firewall_ids" {
 
 variable "node_group_firewall_ids" {
   description = "A list of firewall IDs to apply on the node group servers"
+  default     = []
+  type        = list(number)
+}
+
+variable "node_firewall_ids" {
+  description = "A list of firewall IDs to apply on the node servers"
   default     = []
   type        = list(number)
 }

@@ -30,56 +30,7 @@ export TF_VAR_hcloud_token
 
 ## Usage
 
-Create a `main.tf` file in a new directory with the following contents:
-
-```hcl
-terraform {
-  required_providers {
-    hcloud = {
-      source = "hetznercloud/hcloud"
-      version = "1.32.2"
-    }
-  }
-}
-variable "hcloud_token" {
-  type = string
-}
-
-provider "hcloud" {
-  token = var.hcloud_token
-}
-
-# Create a new SSH key
-resource "hcloud_ssh_key" "default" {
-  name = "Terraform Example"
-  public_key = file("~/.ssh/id_rsa.pub")
-}
-
-module "cluster" {
-  source  = "cicdteam/k3s/hcloud"
-  version = "0.1.2"
-  hcloud_token = var.hcloud_token
-  ssh_keys = [hcloud_ssh_key.default.id]
-}
-
-output "master_ipv4" {
-  depends_on  = [module.cluster]
-  description = "Public IP Address of the master node"
-  value       = module.cluster.master_ipv4
-}
-
-output "nodes_ipv4" {
-  depends_on  = [module.cluster]
-  description = "Public IP Address of the worker nodes"
-  value       = module.cluster.nodes_ipv4
-}
-
-output "floating_IPs" {
-  depends_on  = [module.cluster]
-  description = "Floating IP Addresses for ingress"
-  value       = module.cluster.floating_ips
-}
-```
+Create a new directory and copy `examples/main.tf` there.
 
 That's all it takes to get started!
 
