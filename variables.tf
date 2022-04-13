@@ -183,6 +183,25 @@ variable "allow_server_deletion" {
   default     = false
 }
 
+variable "oidc_issuer_url" {
+  description = "URL of the provider which allows the API server to discover public signing keys. Only URLs which use the https:// scheme are accepted. This is typically the provider's discovery URL without a path, for example \"https://accounts.google.com\" or \"https://login.salesforce.com\". This URL should point to the level below .well-known/openid-configuration"
+  type        = string
+  default     = ""
+}
+
+variable "oidc_client_id" {
+  description = "The OpenID Connect client id, a public identifier of this application/cluster."
+  type        = string
+  default     = ""
+}
+
+variable "oidc_client_secret" {
+  description = "The OpenID Connect client secret of this application/cluster."
+  sensitive   = true
+  type        = string
+  default     = ""
+}
+
 variable "control_plane_labels" {
   description = "Hetzner server labels for control plane."
   type        = map(string)
