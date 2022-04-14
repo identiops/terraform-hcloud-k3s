@@ -183,6 +183,12 @@ variable "allow_server_deletion" {
   default     = false
 }
 
+variable "oidc_enabled" {
+  description = "Configure OpenID Connect authentication for the cluster."
+  type        = bool
+  default     = false
+}
+
 variable "oidc_issuer_url" {
   description = "URL of the provider which allows the API server to discover public signing keys. Only URLs which use the https:// scheme are accepted. This is typically the provider's discovery URL without a path, for example \"https://accounts.google.com\" or \"https://login.salesforce.com\". This URL should point to the level below .well-known/openid-configuration"
   type        = string

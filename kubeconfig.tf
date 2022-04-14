@@ -3,6 +3,10 @@ resource "local_file" "setkubeconfig" {
   content = templatefile(
     "${path.module}/templates/kubeconfig_setkubeconfig", {
       cluster_name = var.cluster_name
+      oidc_enabled = var.oidc_enabled
+      oidc_issuer_url = var.oidc_issuer_url
+      oidc_client_id = var.oidc_client_id
+      oidc_client_secret = var.oidc_client_secret
       master_ipv4  = hcloud_server.control_plane_master.ipv4_address
     }
   )
