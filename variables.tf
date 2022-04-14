@@ -221,7 +221,7 @@ variable "node_labels" {
 variable "apt_packages" {
   description = "List of packages to install using apt."
   type        = list(string)
-  default     = ["ca-certificates", "ntp", "jq"]
+  default     = ["ca-certificates", "jq"]
 }
 
 variable "additional_yaml" {
