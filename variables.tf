@@ -107,12 +107,12 @@ variable "nodes" {
   description = "Map of worker node groups, key is node_id, value is the server type"
   type = map(object({
     server_type = string
-    ip_index = number
+    ip_index    = number
   }))
   default = {
     "name" = {
       server_type = "cx21"
-      ip_index = 0
+      ip_index    = 0
     }
   }
 }
@@ -222,9 +222,10 @@ variable "apt_packages" {
   description = "List of packages to install using apt."
   type        = list(string)
   default     = ["ca-certificates", "ntp", "jq"]
+}
 
 variable "additional_yaml" {
   description = "Additional sections to append to the cloud-init file."
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
