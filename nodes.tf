@@ -13,26 +13,20 @@ resource "hcloud_server" "node" {
   image       = var.image
   ssh_keys    = var.ssh_keys
   labels      = var.node_labels
-  user_data = templatefile(
-    "${path.module}/templates/node_init.tftpl", {
-      apt_packages = var.apt_packages
-
-      cmd_install_k3s = <<-EOT
-      - >
-        wget -qO- https://get.k3s.io |
-        INSTALL_K3S_CHANNEL=${var.k3s_channel}
-        INSTALL_K3S_VERSION=${var.k3s_version}
-        K3S_TOKEN=${random_string.k3s_token.result}
-        K3S_URL=https://${hcloud_server_network.control_plane_master.ip}:6443
-        sh -s - agent
-        --node-ip=${local.cmd_node_ip}
-        --node-external-ip=${local.cmd_node_external_ip}
-        --kubelet-arg 'cloud-provider=external'
+  user_data = format("%s\n%s\n%s", "#cloud-config", yamlencode({
+    package_update  = true
+    package_upgrade = true
+    packages        = concat(local.server_base_packages, var.server_additional_packages)
+    runcmd = concat([
+      <<-EOT
+      ${local.k3s_install}
+      K3S_URL=https://${hcloud_server_network.control_plane_master.ip}:6443 \
+      sh -s - agent \
+      ${local.common_arguments}
       EOT
-
-      additional_yaml      = var.additional_yaml
-      additional_user_data = var.node_user_data
-    }
+    ], var.additional_runcmd)
+    }),
+    yamlencode(var.additional_cloud_init)
   )
 
   firewall_ids = var.node_firewall_ids
@@ -45,7 +39,7 @@ resource "hcloud_server" "node" {
 
 resource "hcloud_server_network" "node" {
   depends_on = [hcloud_server.node]
-  for_each  = hcloud_server.node
-  server_id = each.value.id
-  subnet_id = hcloud_network_subnet.subnet.id
+  for_each   = hcloud_server.node
+  server_id  = each.value.id
+  subnet_id  = hcloud_network_subnet.subnet.id
 }

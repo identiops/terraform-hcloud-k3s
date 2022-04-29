@@ -18,38 +18,21 @@ resource "hcloud_server" "control_plane" {
   server_type = var.control_plane_server_type
   ssh_keys    = var.ssh_keys
   labels      = var.control_plane_labels
-  user_data = templatefile(
-    "${path.module}/templates/node_init.tftpl", {
-      apt_packages = var.apt_packages
-
-      cmd_install_k3s = <<-EOT
-      - >
-        wget -qO- https://get.k3s.io |
-        INSTALL_K3S_CHANNEL=${var.k3s_channel}
-        INSTALL_K3S_VERSION=${var.k3s_version}
-        K3S_TOKEN=${random_string.k3s_token.result}
-        K3S_URL=https://${hcloud_server_network.control_plane_master.ip}:6443
-        sh -s - server
-        --flannel-backend=none
-        --disable-network-policy
-        --cluster-cidr=${local.cluster_cidr_network}
-        --service-cidr=${local.service_cidr_network}
-        --node-ip=${local.cmd_node_ip}
-        --node-external-ip=${local.cmd_node_external_ip}
-        --disable local-storage
-        --disable-cloud-controller
-        --disable traefik
-        --disable servicelb
-        --kubelet-arg 'cloud-provider=external'
-        ${var.control_plane_k3s_addtional_options}
-        %{for key, value in local.kube-apiserver-args~}
---kube-apiserver-arg=${key}=${value}
-        %{endfor~}
+  user_data = format("%s\n%s\n%s", "#cloud-config", yamlencode({
+    package_update  = true
+    package_upgrade = true
+    packages        = concat(local.server_base_packages, var.server_additional_packages)
+    runcmd = concat([
+      <<-EOT
+      ${local.k3s_install}
+      K3S_URL=https://${hcloud_server_network.control_plane_master.ip}:6443 \
+      sh -s - server \
+      ${local.control_plane_arguments} \
+      ${var.control_plane_k3s_additional_options} %{for key, value in local.kube-apiserver-args~} --kube-apiserver-arg=${key}=${value} %{~endfor~}
       EOT
-
-      additional_yaml      = var.additional_yaml
-      additional_user_data = var.control_plane_user_data
-    }
+    ], var.additional_runcmd)
+    }),
+    yamlencode(var.additional_cloud_init)
   )
 
   firewall_ids = var.control_plane_firewall_ids

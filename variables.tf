@@ -62,7 +62,7 @@ variable "ip_offset" {
   default     = 20
 }
 
-variable "control_plane_k3s_addtional_options" {
+variable "control_plane_k3s_additional_options" {
   description = "Additional options passed to k3s during installation"
   type        = string
   default     = "--node-taint node-role.kubernetes.io/master:NoSchedule"
@@ -115,24 +115,6 @@ variable "nodes" {
       ip_index    = 0
     }
   }
-}
-
-variable "control_plane_master_user_data" {
-  description = "Additional user_data that gets executed on the master in bash format"
-  type        = string
-  default     = ""
-}
-
-variable "control_plane_user_data" {
-  description = "Additional user_data that gets executed on the other control plane nodes in bash format"
-  type        = string
-  default     = ""
-}
-
-variable "node_user_data" {
-  description = "Additional user_data that gets executed on the nodes in bash format"
-  type        = string
-  default     = ""
 }
 
 variable "control_plane_firewall_ids" {
@@ -218,16 +200,38 @@ variable "node_labels" {
   type        = map(string)
 }
 
-variable "apt_packages" {
-  description = "List of packages to install using apt."
+variable "server_additional_packages" {
+  description = "List of packages to install on the servers."
   type        = list(string)
-  default     = ["ca-certificates", "jq"]
+  default     = []
 }
 
-variable "additional_yaml" {
-  description = "Additional sections to append to the cloud-init file."
-  type        = string
-  default     = ""
+variable "additional_cloud_init" {
+  description = "Additional cloud-init configuration as a map that will be appended to user_data on all servers. You can use this to supply additional configuration or override existing keys."
+  type = object({
+    timezone = string
+    locale   = string
+    users = list(object({
+      name          = string
+      gecos         = string
+      groups        = string
+      lock_passwd   = bool
+      shell         = string
+      ssh_import_id = list(string)
+      sudo          = list(string)
+    }))
+  })
+  default = {
+    timezone = ""
+    locale   = ""
+    users    = []
+  }
+}
+
+variable "additional_runcmd" {
+  description = "List of additional shell commands to append to the cloud-init runcmd section."
+  type        = list(any)
+  default     = []
 }
 
 variable "create_scripts" {
