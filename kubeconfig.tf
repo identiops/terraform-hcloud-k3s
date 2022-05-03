@@ -1,4 +1,5 @@
 resource "local_file" "setkubeconfig" {
+  count = var.create_scripts ? 1 : 0
   filename = "./setkubeconfig"
   content = templatefile(
     "${path.module}/templates/kubeconfig_setkubeconfig", {
@@ -15,6 +16,7 @@ resource "local_file" "setkubeconfig" {
 }
 
 resource "local_file" "unsetkubeconfig" {
+  count = var.create_scripts ? 1 : 0
   filename = "./unsetkubeconfig"
   content = templatefile(
     "${path.module}/templates/kubeconfig_unsetkubeconfig", {

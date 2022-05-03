@@ -229,3 +229,9 @@ variable "additional_yaml" {
   type        = string
   default     = ""
 }
+
+variable "create_scripts" {
+  description = "Create scripts to configure the kubectl context for the cluster."
+  type        = bool
+  default     = true
+}
