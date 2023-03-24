@@ -3,7 +3,7 @@ resource "hcloud_server" "node" {
 
   lifecycle {
     prevent_destroy = false
-    ignore_changes  = [user_data]
+    ignore_changes  = [user_data, image]
   }
 
   for_each    = var.nodes
