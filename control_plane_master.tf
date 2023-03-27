@@ -18,10 +18,10 @@ resource "hcloud_server" "control_plane_master" {
     packages        = concat(local.server_base_packages, var.server_additional_packages)
     runcmd = concat([
       <<-EOT
-      ${local.k3s_install}
+      ${local.k3s_install~} \
       sh -s - server \
       --cluster-init \
-      ${local.control_plane_arguments} \
+      ${local.control_plane_arguments~} \
       ${var.control_plane_k3s_additional_options} %{for key, value in local.kube-apiserver-args~} --kube-apiserver-arg=${key}=${value} %{~endfor~}
       EOT
       ,

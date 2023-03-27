@@ -24,7 +24,7 @@ resource "hcloud_server" "control_plane" {
     packages        = concat(local.server_base_packages, var.server_additional_packages)
     runcmd = concat([
       <<-EOT
-      ${local.k3s_install}
+      ${local.k3s_install~} \
       K3S_URL=https://${hcloud_server_network.control_plane_master.ip}:6443 \
       sh -s - server \
       ${local.control_plane_arguments} \
