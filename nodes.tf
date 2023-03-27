@@ -10,7 +10,7 @@ resource "hcloud_server" "node" {
   name        = "${var.cluster_name}-${each.key}"
   server_type = each.value.server_type
   datacenter  = var.datacenter
-  image       = var.image
+  image       = each.value.image
   ssh_keys    = var.ssh_keys
   labels      = var.node_labels
   user_data = format("%s\n%s\n%s", "#cloud-config", yamlencode({

@@ -108,11 +108,13 @@ variable "nodes" {
   type = map(object({
     server_type = string
     ip_index    = number
+    image       = string
   }))
   default = {
     "name" = {
       server_type = "cx21"
       ip_index    = 0
+      image       = "ubuntu-22.04"
     }
   }
 }
