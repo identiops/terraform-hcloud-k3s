@@ -18,7 +18,8 @@ locals {
   EOT
   common_arguments = <<-EOT
   --node-ip=${local.cmd_node_ip} \
-  --node-external-ip=${local.cmd_node_external_ip~}
+  --node-external-ip=${local.cmd_node_external_ip} \
+  --kubelet-arg 'cloud-provider=external'
   EOT
   control_plane_arguments = <<-EOT
   --flannel-backend=none \
