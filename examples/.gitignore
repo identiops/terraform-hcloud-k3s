@@ -3,7 +3,7 @@
 
 ### Terraform ###
 # Local .terraform directories
-**/.terraform/*
+.terraform
 
 # .tfstate files
 *.tfstate
@@ -34,3 +34,12 @@ override.tf.json
 # End of https://www.toptal.com/developers/gitignore/api/terraform
 
 .terraform.lock.hcl
+
+.kube
+setkubeconfig
+unsetkubeconfig
+
+.ssh
+ssh-node
+scp-node
+ls-nodes

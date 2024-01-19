@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -eEuo pipefail
+
+sed -ne "s/^Host //p" "${cwd}/.ssh/config"

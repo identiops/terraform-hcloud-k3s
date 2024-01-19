@@ -9,11 +9,11 @@ spec:
   calicoNetwork:
     # Note: The ipPools section cannot be modified post-install.
     ipPools:
-    - blockSize: 26
-      cidr: ${cluster_cidr_network}
-      encapsulation: VXLANCrossSubnet
-      natOutgoing: Enabled
-      nodeSelector: all()
+      - blockSize: 26
+        cidr: ${cluster_cidr_network}
+        encapsulation: VXLANCrossSubnet
+        natOutgoing: Enabled
+        nodeSelector: all()
     nodeAddressAutodetectionV4:
       firstFound: true
     nodeAddressAutodetectionV6:

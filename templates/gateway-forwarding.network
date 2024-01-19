@@ -1,0 +1,9 @@
+[Match]
+Name=ens10
+
+[Network]
+DHCP=yes
+IPForward=ipv4
+IPMasquerade=ipv4
+
+# vi: ft=ini:tw=80:sw=2:ts=4:sts=4:et

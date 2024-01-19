@@ -3,14 +3,14 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
- - csi.yaml
+  - csi.yaml
 
-patchesJson6902:
- - target:
-     version: v1
-     kind: StorageClass
-     name: hcloud-volumes
-   patch: |-
-     - op: add
-       path: /reclaimPolicy
-       value: Retain
+patches:
+  - target:
+      version: v1
+      kind: StorageClass
+      name: hcloud-volumes
+    patch: |-
+      - op: add
+        path: /reclaimPolicy
+        value: Retain

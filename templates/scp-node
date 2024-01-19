@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -eEuo pipefail
+
+scp -F "${cwd}/.ssh/config" "$@"

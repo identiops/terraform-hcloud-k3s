@@ -1,0 +1,14 @@
+[Match]
+Name=ens10
+
+[Network]
+DHCP=yes
+DNS=1.1.1.1#cloudflare-dns.com 1.0.0.1#cloudflare-dns.com
+
+[Route]
+# ATTENTION: hard coded!
+Gateway=10.0.0.1
+Destination=0.0.0.0/0
+GatewayOnlink=yes
+
+# vi: ft=ini:tw=80:sw=2:ts=4:sts=4:et
