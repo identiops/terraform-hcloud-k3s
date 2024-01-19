@@ -18,7 +18,7 @@ variable "datacenter" {
 variable "image" {
   description = "Node boot image"
   type        = string
-  default     = "ubuntu-20.04"
+  default     = "ubuntu-22.04"
 }
 
 variable "network_cidr" {
@@ -57,7 +57,12 @@ variable "service_cidr_network_bits" {
   default     = 16
 }
 
-variable "control_plane_k3s_addtional_options" {
+variable "ip_offset" {
+  description = "Offset from which agents are IPs are counted upwards. Needs to be adjusted to not cause collisions!"
+  default     = 20
+}
+
+variable "control_plane_k3s_additional_options" {
   description = "Additional options passed to k3s during installation"
   type        = string
   default     = "--node-taint node-role.kubernetes.io/master:NoSchedule"
@@ -98,28 +103,20 @@ variable "node_groups" {
   default     = { "cx21" = 1 }
 }
 
-variable "floating_ips" {
-  description = "Map of floating IPs, key is ip_type (ipv4, ipv6), value is count of IPs in group"
-  type        = map(string)
-  default     = {}
-}
-
-variable "control_plane_master_user_data" {
-  description = "Additional user_data that gets executed on the master in bash format"
-  type        = string
-  default     = ""
-}
-
-variable "control_plane_user_data" {
-  description = "Additional user_data that gets executed on the other control plane nodes in bash format"
-  type        = string
-  default     = ""
-}
-
-variable "node_user_data" {
-  description = "Additional user_data that gets executed on the nodes in bash format"
-  type        = string
-  default     = ""
+variable "nodes" {
+  description = "Map of worker node groups, key is node_id, value is the server type"
+  type = map(object({
+    server_type = string
+    ip_index    = number
+    image       = string
+  }))
+  default = {
+    "name" = {
+      server_type = "cx21"
+      ip_index    = 0
+      image       = "ubuntu-22.04"
+    }
+  }
 }
 
 variable "control_plane_firewall_ids" {
@@ -130,6 +127,12 @@ variable "control_plane_firewall_ids" {
 
 variable "node_group_firewall_ids" {
   description = "A list of firewall IDs to apply on the node group servers"
+  default     = []
+  type        = list(number)
+}
+
+variable "node_firewall_ids" {
+  description = "A list of firewall IDs to apply on the node servers"
   default     = []
   type        = list(number)
 }
@@ -162,4 +165,79 @@ variable "allow_server_deletion" {
   description = "Allow server deletion"
   type        = bool
   default     = false
+}
+
+variable "oidc_enabled" {
+  description = "Configure OpenID Connect authentication for the cluster."
+  type        = bool
+  default     = false
+}
+
+variable "oidc_issuer_url" {
+  description = "URL of the provider which allows the API server to discover public signing keys. Only URLs which use the https:// scheme are accepted. This is typically the provider's discovery URL without a path, for example \"https://accounts.google.com\" or \"https://login.salesforce.com\". This URL should point to the level below .well-known/openid-configuration"
+  type        = string
+  default     = ""
+}
+
+variable "oidc_client_id" {
+  description = "The OpenID Connect client id, a public identifier of this application/cluster."
+  type        = string
+  default     = ""
+}
+
+variable "oidc_client_secret" {
+  description = "The OpenID Connect client secret of this application/cluster."
+  sensitive   = true
+  type        = string
+  default     = ""
+}
+
+variable "control_plane_labels" {
+  description = "Hetzner server labels for control plane."
+  type        = map(string)
+}
+
+variable "node_labels" {
+  description = "Hetzner server labels for worker nodes."
+  type        = map(string)
+}
+
+variable "server_additional_packages" {
+  description = "List of packages to install on the servers."
+  type        = list(string)
+  default     = []
+}
+
+variable "additional_cloud_init" {
+  description = "Additional cloud-init configuration as a map that will be appended to user_data on all servers. You can use this to supply additional configuration or override existing keys."
+  type = object({
+    timezone = string
+    locale   = string
+    users = list(object({
+      name          = string
+      gecos         = string
+      groups        = string
+      lock_passwd   = bool
+      shell         = string
+      ssh_import_id = list(string)
+      sudo          = list(string)
+    }))
+  })
+  default = {
+    timezone = ""
+    locale   = ""
+    users    = []
+  }
+}
+
+variable "additional_runcmd" {
+  description = "List of additional shell commands to append to the cloud-init runcmd section."
+  type        = list(any)
+  default     = []
+}
+
+variable "create_scripts" {
+  description = "Create scripts to configure the kubectl context for the cluster."
+  type        = bool
+  default     = true
 }

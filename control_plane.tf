@@ -5,9 +5,9 @@
 resource "hcloud_server" "control_plane" {
   lifecycle {
     prevent_destroy = false
-    ignore_changes  = [user_data]
+    ignore_changes  = [user_data, image]
   }
-  depends_on = [hcloud_server.control_plane_master]
+  depends_on = [hcloud_server.control_plane_master, hcloud_network_subnet.subnet]
 
   for_each = { for i in range(1, var.control_plane_server_count) : "#${i}" => i }
 
@@ -17,21 +17,22 @@ resource "hcloud_server" "control_plane" {
   image       = var.image
   server_type = var.control_plane_server_type
   ssh_keys    = var.ssh_keys
-  user_data = templatefile(
-    "${path.module}/templates/control_plane.sh", {
-      hcloud_token                        = var.hcloud_token
-      control_plane_master_internal_ipv4  = hcloud_server_network.control_plane_master.ip
-      control_plane_k3s_addtional_options = var.control_plane_k3s_addtional_options
-
-      cluster_cidr_network = cidrsubnet(var.network_cidr, var.cluster_cidr_network_bits - 8, var.cluster_cidr_network_offset)
-      service_cidr_network = cidrsubnet(var.network_cidr, var.service_cidr_network_bits - 8, var.service_cidr_network_offset)
-
-      k3s_token   = random_string.k3s_token.result
-      k3s_channel = var.k3s_channel
-      k3s_version = var.k3s_version
-
-      additional_user_data = var.control_plane_user_data
-    }
+  labels      = var.control_plane_labels
+  user_data = format("%s\n%s\n%s", "#cloud-config", yamlencode({
+    package_update  = true
+    package_upgrade = true
+    packages        = concat(local.server_base_packages, var.server_additional_packages)
+    runcmd = concat([
+      <<-EOT
+      ${local.k3s_install~} \
+      K3S_URL=https://${hcloud_server_network.control_plane_master.ip}:6443 \
+      sh -s - server \
+      ${local.control_plane_arguments} \
+      ${var.control_plane_k3s_additional_options} %{for key, value in local.kube-apiserver-args~} --kube-apiserver-arg=${key}=${value} %{~endfor~}
+      EOT
+    ], var.additional_runcmd)
+    }),
+    yamlencode(var.additional_cloud_init)
   )
 
   firewall_ids = var.control_plane_firewall_ids

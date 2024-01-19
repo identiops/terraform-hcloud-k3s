@@ -1,7 +1,7 @@
 resource "hcloud_server" "control_plane_master" {
   lifecycle {
     prevent_destroy = false
-    ignore_changes  = [user_data]
+    ignore_changes  = [user_data, image]
   }
   depends_on = [hcloud_network.private, hcloud_network_subnet.subnet]
 
@@ -10,26 +10,59 @@ resource "hcloud_server" "control_plane_master" {
   image       = var.image
   server_type = var.control_plane_server_type
   ssh_keys    = var.ssh_keys
-  user_data = templatefile(
-    "${path.module}/templates/control_plane_master.sh", {
-      hcloud_token                        = var.hcloud_token
-      hcloud_network                      = hcloud_network.private.id
-      control_plane_k3s_addtional_options = var.control_plane_k3s_addtional_options
-
-      cluster_cidr_network = cidrsubnet(var.network_cidr, var.cluster_cidr_network_bits - 8, var.cluster_cidr_network_offset)
-      service_cidr_network = cidrsubnet(var.network_cidr, var.service_cidr_network_bits - 8, var.service_cidr_network_offset)
-
-      hcloud_csi_driver_install = var.hcloud_csi_driver_install
-      hcloud_csi_driver_version = var.hcloud_csi_driver_version
-      hcloud_ccm_driver_install = var.hcloud_ccm_driver_install
-      hcloud_ccm_driver_version = var.hcloud_ccm_driver_version
-
-      k3s_token   = random_string.k3s_token.result
-      k3s_channel = var.k3s_channel
-      k3s_version = var.k3s_version
-
-      additional_user_data = var.control_plane_master_user_data
-    }
+  labels      = var.control_plane_labels
+  # Generate cloud-init configuration
+  user_data = format("%s\n%s\n%s", "#cloud-config", yamlencode({
+    package_update  = true
+    package_upgrade = true
+    packages        = concat(local.server_base_packages, var.server_additional_packages)
+    runcmd = concat([
+      <<-EOT
+      ${local.k3s_install~} \
+      sh -s - server \
+      --cluster-init \
+      ${local.control_plane_arguments~} \
+      ${var.control_plane_k3s_additional_options} %{for key, value in local.kube-apiserver-args~} --kube-apiserver-arg=${key}=${value} %{~endfor~}
+      EOT
+      ,
+      <<-EOT
+      while ! test -d /var/lib/rancher/k3s/server/manifests; do
+        echo "Waiting for '/var/lib/rancher/k3s/server/manifests'"
+        sleep 1
+      done
+      EOT
+      ,
+      "kubectl create -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml",
+      "kubectl apply -f /run/calico.yml",
+      "kubectl -n kube-system create secret generic hcloud --from-literal=token=${var.hcloud_token} --from-literal=network=${hcloud_network.private.id}",
+      <<-EOT
+      if [ "${var.hcloud_ccm_driver_install}" = "true" ]; then
+        wget -qO /var/lib/rancher/k3s/server/manifests/hcloud-ccm.yaml https://github.com/hetznercloud/hcloud-cloud-controller-manager/releases/download/${var.hcloud_ccm_driver_version}/ccm-networks.yaml
+      fi
+      EOT
+      ,
+      "kubectl -n kube-system create secret generic hcloud-csi --from-literal=token=${var.hcloud_token}",
+      <<-EOT
+      if [ "${var.hcloud_csi_driver_install}" = "true" ]; then
+        wget -qO /run/csi/csi.yaml https://raw.githubusercontent.com/hetznercloud/csi-driver/${var.hcloud_csi_driver_version}/deploy/kubernetes/hcloud-csi.yml
+        kubectl kustomize /run/csi >/var/lib/rancher/k3s/server/manifests/hcloud-csi.yaml
+      fi
+      EOT
+    ], var.additional_runcmd)
+    write_files = [
+      {
+        path    = "/run/csi/kustomization.yml"
+        content = file("${path.module}/templates/kustomization.yml")
+      },
+      {
+        path = "/run/calico.yml"
+        content = templatefile("${path.module}/templates/calico.yml", {
+          cluster_cidr_network = local.cluster_cidr_network
+        })
+      }
+    ]
+    }),
+    yamlencode(var.additional_cloud_init)
   )
   firewall_ids = var.control_plane_firewall_ids
 
