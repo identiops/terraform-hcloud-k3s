@@ -26,7 +26,9 @@ Note that you'll need Terraform v1.0 or newer to run this project.
 ### Hetzner Cloud API Token
 
 Before running the project you'll have to create an access token for Terraform
-to connect to the Hetzner Cloud API.
+to connect to the Hetzner Cloud API. Connect to the
+[Hetzner cloud](https://console.hetzner.cloud), navigate to your project, select
+security settings - API tokens and create a new token.
 
 ```bash
 read -sp "Hetzner Cloud API Token: " HCLOUD_TOKEN # Enter your Hetzner Cloud API Token (it will be hidden)
@@ -76,6 +78,47 @@ This will do the following:
   setup/destroy new context in the kubectl admin config file.
 - Creates `ssh-node`, `scp-node`, and `ls-nodes` bash script and an ssh
   configuration to quickly connect to all servers.
+
+### Maintenance
+
+### Add Nodes or Node Pools
+
+The number of nodes in a node pool can be increased at any point. Just increase
+the count and apply the new configuration via `terraform apply`. After a few
+minutes the additional nodes will appear in the cluster.
+
+In the same way, node pools cann be added to the configuration without any
+precaution.
+
+### Remove Nodes or Node Pools
+
+Removing a nodes requires the following steps:
+
+1. Identify the nodes and node pools that shall be removed. If the number of
+   nodes in a node pool needs to be decreased, the nodes will be removed from
+   the highest to the lowest number. Example: when the number of nodes in pool
+   `system` is decreased from `3` to `2`, node `cluster-system-02` will be
+   removed and nodes `cluster-system-01` and `cluster-system-00` will remain.
+2. Drain all nodes that will be removed of pods:
+   `kubectl drain cluster-system-02`
+3. Wait until all pods have been migrated to other nodes before continuing.
+   - If the wrong node was drained, reactivate the node:
+     `kubectl uncordon cluster-system-02`
+4. Update the terrafrom configuration and apply it: `terraform apply`
+   - Review the plan to verify that the drained nodes will be deleted.
+5. Delete nodes from cluster: `kubectl delete node cluster-system-02`
+
+### Update Kubernetes
+
+TODO
+
+### Update Hetzner CCM and CSI
+
+TODO
+
+### Update Hetzner Calico
+
+TODO
 
 ### Deletion
 
@@ -278,10 +321,14 @@ sh -x PATH_TO_RUNCMD
   distribution k3s by Rancher. Successor of
   [hetzner-cloud-k3s](https://github.com/vitobotta/hetzner-cloud-k3s).
   - Not terraform-based.
+- [terraform-hcloud-kube-hetzner](https://github.com/kube-hetzner/terraform-hcloud-kube-hetzner).
+  Optimized and Maintenance-free Kubernetes on Hetzner Cloud in one command!
 - [Rancher system-upgrade-controller](https://rancher.com/docs/k3s/latest/en/upgrades/automated/)
 
 ## Related Documentation
 
+- [Cloud-init](https://cloudinit.readthedocs.io/)
+- [Hetzner API Docs](https://docs.hetzner.cloud/)
+- [Hetzner Cloud platform Docs](https://docs.hetzner.com/cloud)
 - [Terraform Documentation](https://www.terraform.io/docs/)
 - [Terraform Module Registry](https://registry.terraform.io/)
-- [Cloud-init](https://cloudinit.readthedocs.io/)
