@@ -219,21 +219,33 @@ k3s kubectl get nodes
 # ...
 ```
 
+#### Inspect cluster status and logs
+
+```bash
+systemctl status k3s.service
+
+journalctl -u k3s.service
+```
+
+### Nodes
+
 #### Inspect local firewall settings
 
 ```bash
 ufw status
 ```
 
-#### Inspect cloud-init logs
-
-Documentation: https://cloudinit.readthedocs.io/
+#### Verify correctness of date/timezone and locale
 
 ```bash
-# Verify correctness of date/timezone and locale
 date
-echo $LANG
 
+echo $LANG
+```
+
+#### Inspect cloud-init logs
+
+```bash
 # Retrieve status
 cloud-init status
 
