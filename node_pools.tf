@@ -5,9 +5,9 @@ module "node_pools" {
   # for_each          = { for k, v in var.node_pools : k => v if !v.is_control_plane }
   for_each               = var.node_pools
   cluster_name           = var.cluster_name
+  name                   = each.key
   location               = var.location
   delete_protection      = var.delete_protection
-  pool                   = each.key
   node_type              = each.value.type
   node_count             = each.value.count
   node_labels            = each.value.labels

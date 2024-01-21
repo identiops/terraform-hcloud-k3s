@@ -1,4 +1,4 @@
-resource "hcloud_server" "node" {
+resource "hcloud_server" "pool" {
   depends_on = [hcloud_placement_group.pool]
 
   lifecycle {
@@ -7,7 +7,7 @@ resource "hcloud_server" "node" {
   }
 
   count              = var.node_count
-  name               = "${var.cluster_name}-${var.pool}-${format("%02d", count.index)}"
+  name               = "${var.cluster_name}-${var.name}-${format("%02d", count.index)}"
   delete_protection  = var.delete_protection
   rebuild_protection = var.delete_protection
   server_type        = var.node_type
@@ -64,9 +64,20 @@ resource "hcloud_server" "node" {
 }
 
 resource "hcloud_placement_group" "pool" {
-  name   = "${var.cluster_name}-${var.pool}"
+  name   = "${var.cluster_name}-${var.name}"
   type   = "spread"
   labels = var.node_labels
+}
+
+variable "name" {
+  description = "Name of node pool."
+  type        = string
+  validation {
+    condition = (
+      can(regex("^[a-z0-9-]+$", var.name))
+    )
+    error_message = "Node pool can't be named control-plane and must only contain characters allowed in DNS names (`^[a-z0-9-]+$`)."
+  }
 }
 
 variable "delete_protection" {
@@ -115,18 +126,6 @@ variable "cluster_name" {
   validation {
     condition     = can(regex("^[a-z0-9-]+$", var.cluster_name))
     error_message = "Cluster name must only contain characters allowed in DNS names (`^[a-z0-9-]+$`)."
-  }
-}
-
-variable "pool" {
-  description = "Name of node pool."
-  type        = string
-  validation {
-    condition = (
-      # !can(regex("^control-plane$", var.pool)) &&
-      can(regex("^[a-z0-9-]+$", var.pool))
-    )
-    error_message = "Node pool can't be named control-plane and must only contain characters allowed in DNS names (`^[a-z0-9-]+$`)."
   }
 }
 
@@ -205,7 +204,7 @@ output "type" {
 
 output "nodes" {
   value = {
-    for n in hcloud_server.node :
+    for n in hcloud_server.pool :
     n.name => {
       public = {
         ipv4 = var.enable_public_net_ipv4 ? n.ipv4_address : "",

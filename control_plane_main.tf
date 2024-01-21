@@ -18,8 +18,6 @@ resource "hcloud_server" "control_plane_main" {
   firewall_ids = var.control_plane_firewall_ids
 
   public_net {
-    # ipv4_enabled = true # force control plane server to be exposed to the internet
-    # ipv6_enabled = true
     ipv4_enabled = var.enable_public_net_ipv4
     ipv6_enabled = var.enable_public_net_ipv6
   }
