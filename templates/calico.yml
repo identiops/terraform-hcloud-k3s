@@ -16,8 +16,8 @@ spec:
         nodeSelector: all()
     nodeAddressAutodetectionV4:
       firstFound: true
-    nodeAddressAutodetectionV6:
-      firstFound: true
+    # nodeAddressAutodetectionV6:
+    #   firstFound: true
 ---
 # This section configures the Calico API server.
 # For more information, see: https://projectcalico.docs.tigera.io/v3.22/reference/installation/api#operator.tigera.io/v1.APIServer
