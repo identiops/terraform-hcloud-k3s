@@ -49,7 +49,7 @@ module "cluster" {
   # Control Plane Settings
   # ----------------------
   control_plane_main_schedule_workloads = true
-  control_plane_main_server_type        = "cx21"
+  control_plane_main_server_type        = "cx41"
   additional_cloud_init = {
     timezone = "Europe/Berlin"
   }
@@ -61,7 +61,7 @@ module "cluster" {
     system = {
       is_control_plane   = true
       schedule_workloads = true
-      type               = "cx21"
+      type               = "cx41"
       count              = 2
       labels = {
         # "control-plane" = "yes"
@@ -73,7 +73,7 @@ module "cluster" {
     workers = {
       is_control_plane   = false
       schedule_workloads = true
-      type               = "cx21"
+      type               = "cx41"
       count              = 3
       labels             = {}
       taints             = {}
