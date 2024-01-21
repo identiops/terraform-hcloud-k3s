@@ -133,12 +133,6 @@ variable "enable_public_net_ipv6" {
   default     = false
 }
 
-# variable "enable_load_balancer" {
-#   description = "Deploy a load balancer for accessing SSH and Kubernetes from the outside. Required if enable_public_net_ipv4 and enable_public_net_ipv6 are set to false."
-#   type        = bool
-#   default     = true
-# }
-
 variable "ssh_keys" {
   description = "Map of public ssh keys."
   type        = map(string)

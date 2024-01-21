@@ -13,9 +13,8 @@ resource "hcloud_server" "control_plane_main" {
   server_type        = var.control_plane_main_server_type
   ssh_keys           = [for k in hcloud_ssh_key.pub_keys : k.name]
   labels             = var.control_plane_main_labels
-  # placement_group_id = hcloud_placement_group.control_plane.id
-  user_data    = local.control_plane_main_user_data
-  firewall_ids = var.control_plane_firewall_ids
+  user_data          = local.control_plane_main_user_data
+  firewall_ids       = var.control_plane_firewall_ids
 
   public_net {
     ipv4_enabled = var.enable_public_net_ipv4
@@ -133,67 +132,3 @@ resource "local_file" "control_plane_main_user_data" {
   content         = local.control_plane_main_user_data
   file_permission = "0600"
 }
-
-# Placement group
-
-# resource "hcloud_placement_group" "control_plane" {
-#   name   = "${var.cluster_name}-control-plane"
-#   type   = "spread"
-#   labels = var.control_plane_main_labels
-# }
-
-# # Load balancer
-#
-# resource "hcloud_load_balancer" "control_plane_load_balancer" {
-#   count              = var.enable_load_balancer ? 1 : 0
-#   name               = "${var.cluster_name}-main-lb"
-#   delete_protection  = var.delete_protection
-#   load_balancer_type = "lb11"
-#   location           = var.location
-# }
-#
-# resource "hcloud_load_balancer_target" "load_balancer_target" {
-#   depends_on       = [hcloud_load_balancer.control_plane_load_balancer[0], hcloud_server.control_plane_main]
-#   count            = var.enable_load_balancer ? 1 : 0
-#   type             = "server"
-#   load_balancer_id = hcloud_load_balancer.control_plane_load_balancer[0].id
-#   server_id        = hcloud_server.control_plane_main.id
-#   use_private_ip   = true
-# }
-#
-# resource "hcloud_load_balancer_network" "network" {
-#   depends_on       = [hcloud_network.private]
-#   count            = var.enable_load_balancer ? 1 : 0
-#   load_balancer_id = hcloud_load_balancer.control_plane_load_balancer[0].id
-#   network_id       = hcloud_network.private.id
-# }
-#
-# resource "hcloud_load_balancer_service" "ssh" {
-#   count            = var.enable_load_balancer ? 1 : 0
-#   load_balancer_id = hcloud_load_balancer.control_plane_load_balancer[0].id
-#   protocol         = "tcp"
-#   listen_port      = 22222 # use non-standard SSH port to reduce attack vector
-#   destination_port = 22
-#   health_check {
-#     protocol = "tcp"
-#     port     = 22
-#     interval = 10
-#     timeout  = 5
-#     retries  = 5
-#   }
-# }
-#
-# resource "hcloud_load_balancer_service" "kubernetes_api" {
-#   count            = var.enable_load_balancer ? 1 : 0
-#   load_balancer_id = hcloud_load_balancer.control_plane_load_balancer[0].id
-#   protocol         = "tcp"
-#   listen_port      = 6443
-#   destination_port = 6443
-#   health_check {
-#     protocol = "tcp"
-#     port     = 6443
-#     interval = 10
-#     timeout  = 5
-#     retries  = 5
-#   }
-# }

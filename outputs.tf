@@ -1,17 +1,3 @@
-# output "control_plane_load_balancer" {
-#   depends_on  = [hcloud_load_balancer.control_plane_load_balancer]
-#   description = "IP Addresses of the load balancer"
-#   value = {
-#     public = {
-#       ipv4 = var.enable_load_balancer ? hcloud_load_balancer.control_plane_load_balancer[0].ipv4 : "",
-#       ipv6 = var.enable_load_balancer ? hcloud_load_balancer.control_plane_load_balancer[0].ipv6 : "",
-#     },
-#     private = [
-#       var.enable_load_balancer ? hcloud_load_balancer.control_plane_load_balancer[0].network_ip : "",
-#     ]
-#   }
-# }
-
 output "gateway" {
   depends_on  = [hcloud_server.gateway]
   description = "IP Addresses of the gateway"

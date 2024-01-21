@@ -3,7 +3,6 @@ resource "local_file" "setkubeconfig" {
   filename = "./setkubeconfig"
   content = templatefile(
     "${path.module}/templates/kubeconfig_setkubeconfig", {
-      # cluster_ip         = var.enable_load_balancer ? hcloud_load_balancer.control_plane_load_balancer[0].ipv4 : (var.enable_public_net_ipv4 ? hcloud_server.control_plane_main.ipv4_address : "[${hcloud_server.control_plane_main.ipv6_address}]")
       cluster_name       = var.cluster_name
       cluster_ip         = hcloud_server.gateway.ipv4_address
       oidc_enabled       = var.oidc_enabled
