@@ -2,12 +2,15 @@
 
 This Terraform module creates a Kubernetes Cluster on
 [Hetzner Cloud](https://console.hetzner.cloud/) infrastructure running Ubuntu
-22.04. The cluster is fully operated inside a private network and is equipped
-with Hetzner specific cluster enhancements.
+22.04. The cluster is fully operated inside a private network that is connected
+to the internet via gateway and is equipped with Hetzner specific cluster
+enhancements. For
 
 Cluster size and instance types are configurable through Terraform variables.
 System updates are installed automatically the servers also restart
-automatically if [kured](https://kured.dev) is set up.
+automatically if [kured](https://kured.dev) is set up. Thanks to Ubuntu's LTS
+versions you get up to 5 years of peace and quiet before having to upgrade your
+cluster's operating system.
 
 ![infrastructure](./infrastructure.png)
 
@@ -81,7 +84,7 @@ This will do the following:
 
 ### Maintenance
 
-### Add Nodes or Node Pools
+#### Add Nodes or Node Pools
 
 The number of nodes in a node pool can be increased at any point. Just increase
 the count and apply the new configuration via `terraform apply`. After a few
@@ -90,7 +93,7 @@ minutes the additional nodes will appear in the cluster.
 In the same way, node pools cann be added to the configuration without any
 precaution.
 
-### Remove Nodes or Node Pools
+#### Remove Nodes or Node Pools
 
 Removing a nodes requires the following steps:
 
@@ -108,15 +111,19 @@ Removing a nodes requires the following steps:
    - Review the plan to verify that the drained nodes will be deleted.
 5. Delete nodes from cluster: `kubectl delete node cluster-system-02`
 
-### Update Kubernetes
+#### Upgrade Operating System
 
 TODO
 
-### Update Hetzner CCM and CSI
+#### Update Kubernetes
 
 TODO
 
-### Update Hetzner Calico
+#### Update Hetzner CCM and CSI
+
+TODO
+
+#### Update Hetzner Calico
 
 TODO
 
@@ -327,8 +334,16 @@ sh -x PATH_TO_RUNCMD
 
 ## Related Documentation
 
+- [Calico](https://docs.tigera.io/calico/)
 - [Cloud-init](https://cloudinit.readthedocs.io/)
-- [Hetzner API Docs](https://docs.hetzner.cloud/)
-- [Hetzner Cloud platform Docs](https://docs.hetzner.com/cloud)
-- [Terraform Documentation](https://www.terraform.io/docs/)
+- [Hetzner API](https://docs.hetzner.cloud/)
+- [Hetzner Cloud Platform](https://docs.hetzner.com/cloud)
 - [Terraform Module Registry](https://registry.terraform.io/)
+- [Terraform](https://www.terraform.io/docs/)
+
+## Special Thanks
+
+- The initiators of and contributors to this project for getting the k3s cluster
+  running via terraform.
+- And to God for providing and enabling me to do my share of this work. Solo Deo
+  Gloria.
