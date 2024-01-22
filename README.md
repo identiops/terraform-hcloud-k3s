@@ -1,18 +1,44 @@
-# Kubernetes (k3s) Terraform installer for Hetzner Cloud
+# Kubernetes Terraform installer for Hetzner Cloud
 
 This Terraform module creates a Kubernetes Cluster on
 [Hetzner Cloud](https://console.hetzner.cloud/) infrastructure running Ubuntu
-22.04. The cluster is fully operated inside a private network that is connected
-to the internet via gateway and is equipped with Hetzner specific cluster
-enhancements. For
-
-Cluster size and instance types are configurable through Terraform variables.
-System updates are installed automatically the servers also restart
-automatically if [kured](https://kured.dev) is set up. Thanks to Ubuntu's LTS
-versions you get up to 5 years of peace and quiet before having to upgrade your
-cluster's operating system.
+22.04. The module aims to be simple to use while providing an out-of-the-box
+secure and maintainable setup. Thanks to Ubuntu's LTS version we get up to 5
+years of peace and quiet before having to upgrade the cluster's operating
+system!
 
 ![infrastructure](./infrastructure.png)
+
+## Features
+
+- [k3s](https://k3s.io/) based kubernetes cluster.
+- Secured default configuration:
+  - Cluster nodes have no public network interface.
+  - SSH key required for remote access.
+  - `fail2ban` limits SSH brute force attacks.
+  - Internal firewall on all nodes with minimal exposure.
+  - Cluster is not exposed to incoming traffic from the internet after the
+    initiral setup. The cluster administrator starts exposing the cluster by
+    deploying a load balancer, e.g. by annotating an installed ingress
+    controller.
+- Convenience scripts for downloading the kubernetes configuration and accessing
+  nodes via SSH/SCP.
+- Automatic operating system updates with optional automatic reboots via
+  [kured](https://kured.dev).
+- Node pools for managing cluster resources effictively.
+- Calculation of monthly costs for every part of the deployment (see
+  `terraform output`).
+- Support for network policies via
+  [Calico](https://www.tigera.io/project-calico/).
+- Hetzner Cloud Controller Manager for managing cloud resources from the within
+  the cluster.
+- Hetzner Cloud Storage Interface for managing volumes from the within the
+  cluster.
+- Documentation of common administrative tasks and debugging tools.
+
+TODO:
+
+- Kubernetes update managment.
 
 ## Install
 
@@ -83,6 +109,10 @@ This will do the following:
   configuration to quickly connect to all servers.
 
 ### Maintenance
+
+#### Add Load Balancer
+
+TODO
 
 #### Add Nodes or Node Pools
 
