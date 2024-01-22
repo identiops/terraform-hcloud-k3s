@@ -123,3 +123,9 @@ output "node_pools" {
   description = "IP Addresses of the worker node pools"
   value       = module.cluster.node_pools
 }
+
+output "total_monthly_costs" {
+  depends_on  = [module.cluster]
+  description = "Total monthly costs for running the cluster"
+  value       = module.cluster.total_monthly_costs
+}
