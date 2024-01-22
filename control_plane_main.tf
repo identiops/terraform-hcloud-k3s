@@ -95,29 +95,25 @@ locals {
       "cilium install --version '${var.cilium_version}' --set-string routingMode=native,ipv4NativeRoutingCIDR=${var.network_cidr},ipam.operator.clusterPoolIPv4PodCIDRList=${local.cluster_cidr_network},k8sServiceHost=${local.cmd_node_ip}",
       # "rm /usr/local/bin/cilium",
       "kubectl -n kube-system create secret generic hcloud --from-literal='token=${var.hcloud_token}' --from-literal='network=${hcloud_network.private.id}'",
+      "curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash -",
+      "helm repo add hcloud https://charts.hetzner.cloud",
       <<-EOT
       if [ "${var.hcloud_ccm_driver_install}" = "true" ]; then
-        wget -qO /var/lib/rancher/k3s/server/manifests/hcloud-ccm.yaml "https://github.com/hetznercloud/hcloud-cloud-controller-manager/releases/download/${var.hcloud_ccm_driver_version}/ccm-networks.yaml"
+        helm install hcloud-ccm hcloud/hcloud-cloud-controller-manager -n kube-system --version "${var.hcloud_ccm_driver_version}" --set "networking.enabled=true,networking.clusterCIDR=${local.cluster_cidr_network}"
       fi
       EOT
       ,
       <<-EOT
       if [ "${var.hcloud_csi_driver_install}" = "true" ]; then
-        wget -qO /run/csi/csi.yaml "https://raw.githubusercontent.com/hetznercloud/csi-driver/${var.hcloud_csi_driver_version}/deploy/kubernetes/hcloud-csi.yml"
-        kubectl kustomize /run/csi >/var/lib/rancher/k3s/server/manifests/hcloud-csi.yaml
+        helm install hcloud-csi hcloud/hcloud-csi -n kube-system --version '${var.hcloud_csi_driver_version}' --set ""storageClasses[0].name=hcloud-volumes,storageClasses[0].defaultStorageClass=true,storageClasses[0].retainPolicy=Retain""
       fi
       EOT
       ,
-      "curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash -",
       "helm repo add kubereboot https://kubereboot.github.io/charts",
-      "helm install -n kube-system kured kubereboot/kured --version '${var.kured_version}' --set 'configuration.timeZone=${var.additional_cloud_init.timezone},configuration.startTime=${var.kured_start_time},configuration.endTime=${var.kured_end_time},configuration.rebootDays=${var.kured_reboot_days}'"
+      "helm install -n kube-system kured kubereboot/kured --version '${var.kured_version}' --set 'configuration.timeZone=${var.additional_cloud_init.timezone},configuration.startTime=${var.kured_start_time},configuration.endTime=${var.kured_end_time},configuration.rebootDays={${var.kured_reboot_days}}"
       # "rm /usr/local/bin/helm",
     ], var.additional_runcmd)
     write_files = [
-      {
-        path    = "/run/csi/kustomization.yml"
-        content = file("${path.module}/templates/kustomization.yml")
-      },
       {
         path    = "/etc/systemd/network/default-route.network"
         content = file("${path.module}/templates/default-route.network")

@@ -96,13 +96,13 @@ variable "subnet_cidr" {
 variable "cluster_cidr_network_offset" {
   description = "Cluster network offset."
   type        = number
-  default     = 244 # WRRNING: CCM has this network preconfigured - don't change it without adjust CCM
+  default     = 244
 }
 
 variable "cluster_cidr_network_bits" {
   description = "Cluster network CIDR bits."
   type        = number
-  default     = 16 # WRRNING: CCM has this network preconfigured - don't change it without adjust CCM
+  default     = 16
 }
 
 variable "service_cidr_network_offset" {
