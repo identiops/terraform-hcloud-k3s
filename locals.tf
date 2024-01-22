@@ -19,7 +19,6 @@ locals {
   systemctl restart sshd
   # Firewall - all other ports are opened automatically by kubernetes
   ufw allow proto tcp from any to any port 22,6443
-  ufw allow proto tcp from ${var.subnet_cidr} to any port 2379,2380,10250
   ufw default deny incoming
   ufw default allow outgoing
   ufw --force enable

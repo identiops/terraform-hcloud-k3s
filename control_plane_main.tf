@@ -65,6 +65,8 @@ locals {
     # packages        = concat(local.base_packages, var.additional_packages) # netcat is required for acting as an ssh jump jost
     runcmd = concat([
       local.security_setup,
+      # Required open ports, see https://docs.k3s.io/installation/requirements#inbound-rules-for-k3s-server-nodeshttps://docs.k3s.io/installation/requirements#inbound-rules-for-k3s-server-nodes
+      "ufw allow proto tcp from ${var.subnet_cidr} to any port 2379,2380,10250",
       <<-EOT
       killall apt-get || true
       apt-get update
