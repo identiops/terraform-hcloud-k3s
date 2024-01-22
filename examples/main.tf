@@ -44,6 +44,7 @@ module "cluster" {
   hcloud_ccm_driver_version = "v1.19.0" # Check k8s compatibility https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy
   hcloud_csi_driver_version = "v2.6.0"  # Check k8s compatibility https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy
   cilium_version            = "1.14.5"  # See available version https://github.com/cilium/cilium
+  kured_version             = "5.4.1"   # See available version https://artifacthub.io/packages/helm/kured/kured
 
   # Control Plane Settings
   # ----------------------

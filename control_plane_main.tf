@@ -101,13 +101,17 @@ locals {
       fi
       EOT
       ,
-      "kubectl -n kube-system create secret generic hcloud-csi --from-literal=token=${var.hcloud_token}",
       <<-EOT
       if [ "${var.hcloud_csi_driver_install}" = "true" ]; then
         wget -qO /run/csi/csi.yaml "https://raw.githubusercontent.com/hetznercloud/csi-driver/${var.hcloud_csi_driver_version}/deploy/kubernetes/hcloud-csi.yml"
         kubectl kustomize /run/csi >/var/lib/rancher/k3s/server/manifests/hcloud-csi.yaml
       fi
       EOT
+      ,
+      "curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash -",
+      "helm repo add kubereboot https://kubereboot.github.io/charts",
+      "helm install -n kube-system kured kubereboot/kured --version '${var.kured_version}' --set 'configuration.timeZone=${var.additional_cloud_init.timezone},configuration.startTime=${var.kured_start_time},configuration.endTime=${var.kured_end_time},configuration.rebootDays=${var.kured_reboot_days}'"
+      # "rm /usr/local/bin/helm",
     ], var.additional_runcmd)
     write_files = [
       {

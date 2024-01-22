@@ -151,6 +151,29 @@ variable "cilium_version" {
   type        = string
 }
 
+variable "kured_version" {
+  description = "Kured version, see https://artifacthub.io/packages/helm/kured/kured"
+  type        = string
+}
+
+variable "kured_reboot_days" {
+  description = "Kured system reboot days, see https://kured.dev/docs/configuration/#setting-a-schedule"
+  type        = string
+  default     = "mo,tu,we,th,fr,sa,su"
+}
+
+variable "kured_start_time" {
+  description = "Kured system reboot start time, see https://kured.dev/docs/configuration/#setting-a-schedule"
+  type        = string
+  default     = "2am"
+}
+
+variable "kured_end_time" {
+  description = "Kured system reboot end time, see https://kured.dev/docs/configuration/#setting-a-schedule"
+  type        = string
+  default     = "5am"
+}
+
 variable "hcloud_csi_driver_version" {
   description = "Hetzner CSI driver version, see https://github.com/hetznercloud/csi-driver"
   type        = string

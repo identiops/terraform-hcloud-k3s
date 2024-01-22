@@ -142,6 +142,13 @@ Removing a nodes requires the following steps:
    - Review the plan to verify that the drained nodes will be deleted.
 5. Delete nodes from cluster: `kubectl delete node cluster-system-02`
 
+#### Stop Automated Node Reboots
+
+Nodes are rebooting automatically when they receive updates that require a
+reboot. The kured service triggers the reboots of nodes one by one. Reboots can
+be disabled system wide by annotating the Daemonset, see
+https://kured.dev/docs/operation/.
+
 #### Upgrade Operating System
 
 TODO
