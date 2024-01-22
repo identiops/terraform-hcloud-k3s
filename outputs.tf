@@ -9,6 +9,7 @@ output "gateway" {
       ipv6 = hcloud_server.gateway.ipv6_address,
     },
     private = [for network in hcloud_server.gateway.network : network.ip]
+    costs   = local.costs_gateway
   }
 }
 
@@ -23,6 +24,7 @@ output "control_plane_main" {
       ipv6 = hcloud_server.control_plane_main.ipv6_address
     },
     private = [for network in hcloud_server.control_plane_main.network : network.ip]
+    costs   = local.costs_main
   }
 }
 
@@ -30,4 +32,15 @@ output "node_pools" {
   depends_on  = [module.node_pools]
   description = "IP Addresses of the worker node pools"
   value       = module.node_pools
+}
+
+output "total_monthly_costs" {
+  depends_on  = [module.node_pools]
+  description = "Total monthly costs for running the cluster"
+  value = {
+    net      = sum(concat([local.costs_gateway.net, local.costs_main.net], [for pool in module.node_pools : pool.costs.net]))
+    gross    = sum(concat([local.costs_gateway.gross, local.costs_main.gross], [for pool in module.node_pools : pool.costs.gross]))
+    currency = local.prices.currency
+    vat_rate = tonumber(local.prices.vat_rate)
+  }
 }

@@ -47,4 +47,21 @@ locals {
   --disable servicelb \
   ${local.common_arguments~}
   EOT
+  prices                  = jsondecode(data.http.prices.response_body).pricing
+  costs_gateway           = [for server_type in local.prices.server_types : [for price in server_type.prices : { net = tonumber(price.price_monthly.net), gross = tonumber(price.price_monthly.gross) } if price.location == var.location][0] if server_type.name == var.gateway_server_type][0]
+  costs_main              = [for server_type in local.prices.server_types : [for price in server_type.prices : { net = tonumber(price.price_monthly.net), gross = tonumber(price.price_monthly.gross) } if price.location == var.location][0] if server_type.name == var.control_plane_main_server_type][0]
+}
+
+data "http" "prices" {
+  url = "https://api.hetzner.cloud/v1/pricing"
+  request_headers = {
+    Accept        = "application/json"
+    Authorization = "Bearer ${var.hcloud_token}"
+  }
+  lifecycle {
+    postcondition {
+      condition     = self.status_code == 200
+      error_message = "Status code invalid"
+    }
+  }
 }

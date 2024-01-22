@@ -51,4 +51,5 @@ module "node_pools" {
       EOT
   ], var.additional_runcmd)
   additional_cloud_init = var.additional_cloud_init
+  prices                = local.prices
 }

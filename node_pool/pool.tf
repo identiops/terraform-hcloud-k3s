@@ -69,6 +69,10 @@ resource "hcloud_placement_group" "pool" {
   labels = var.node_labels
 }
 
+locals {
+  costs_node = [for server_type in var.prices.server_types : [for price in server_type.prices : { net = tonumber(price.price_monthly.net), gross = tonumber(price.price_monthly.gross) } if price.location == var.location][0] if server_type.name == var.node_type][0]
+}
+
 variable "name" {
   description = "Name of node pool."
   type        = string
@@ -194,6 +198,10 @@ variable "additional_cloud_init" {
   }
 }
 
+variable "prices" {
+  description = "List of prices"
+}
+
 output "is_control_plane" {
   value = var.is_control_plane
 }
@@ -211,6 +219,15 @@ output "nodes" {
         ipv6 = var.enable_public_net_ipv6 ? n.ipv6_address : ""
       },
       private = [for network in n.network : network.ip]
+      costs   = local.costs_node
     }
+  }
+}
+
+output "costs" {
+  description = "Total monthly costs for running the cluster"
+  value = {
+    net   = local.costs_node.net * var.node_count
+    gross = local.costs_node.gross * var.node_count
   }
 }
