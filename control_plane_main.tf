@@ -122,6 +122,13 @@ locals {
         path    = "/etc/systemd/network/default-route.network"
         content = file("${path.module}/templates/default-route.network")
       },
+      {
+        path    = "/etc/sysctl.d/99-increase-inotify-limits"
+        content = <<-EOT
+          fs.inotify.max_user_instances = 512;
+          fs.inotify.max_user_watches = 262144;
+        EOT
+      },
     ]
     }),
     yamlencode(var.additional_cloud_init)
