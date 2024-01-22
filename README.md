@@ -25,7 +25,8 @@ system!
   nodes via SSH/SCP.
 - Automatic operating system updates with optional automatic reboots via
   [kured](https://kured.dev).
-- Node pools for managing cluster resources effictively.
+- Node pools for managing cluster resources efficiently. Minimum cluster size is
+  _one_ main node. Pools can be added, resized, and removed at any time.
 - Calculation of monthly costs for every part of the deployment (see
   `terraform output`).
 - Support for network policies via
