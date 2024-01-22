@@ -26,7 +26,7 @@ terraform {
 
 module "cluster" {
   source       = "github.com/identiops/terraform-hcloud-k3s"
-  hcloud_token = var.hcloud_token # INFO: Set via `export HCLOUD_TOKEN=xyz`
+  hcloud_token = var.hcloud_token # INFO: Set via `export TF_VAR_hcloud_token=xyz; export HCLOUD_TOKEN=$TF_VAR_hcloud_token`
 
   # Cluster Settings
   # ----------------
@@ -96,7 +96,7 @@ provider "hcloud" {
 ###############
 
 variable "hcloud_token" {
-  description = "Hetzner cloud auth token"
+  description = "Hetzner cloud auth token."
   type        = string
   sensitive   = true
 }
@@ -107,24 +107,24 @@ variable "hcloud_token" {
 
 output "gateway" {
   depends_on  = [module.cluster]
-  description = "IP Addresses of the gateway"
+  description = "IP Addresses of the gateway."
   value       = module.cluster.gateway
 }
 
 output "control_plane_main" {
   depends_on  = [module.cluster]
-  description = "Public Addresses of the main control plane node"
+  description = "Public Addresses of the main control plane node."
   value       = module.cluster.control_plane_main
 }
 
 output "node_pools" {
   depends_on  = [module.cluster]
-  description = "IP Addresses of the worker node pools"
+  description = "IP Addresses of the worker node pools."
   value       = module.cluster.node_pools
 }
 
 output "total_monthly_costs" {
   depends_on  = [module.cluster]
-  description = "Total monthly costs for running the cluster"
+  description = "Total monthly costs for running the cluster."
   value       = module.cluster.total_monthly_costs
 }
