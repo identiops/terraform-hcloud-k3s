@@ -16,12 +16,9 @@ module "node_pools" {
   ssh_keys               = [for k in hcloud_ssh_key.pub_keys : k.name]
   firewall_ids           = var.worker_node_firewall_ids
   hcloud_network_id      = hcloud_network.private.id
-  subnet_ip_range        = hcloud_network_subnet.subnet.ip_range
-  ip_offset              = var.ip_offset
   enable_public_net_ipv4 = var.enable_public_net_ipv4
   enable_public_net_ipv6 = var.enable_public_net_ipv6
 
-  server_packages = concat(local.base_packages, var.additional_packages)
   runcmd = concat([
     local.security_setup,
     local.k8s_security_setup,

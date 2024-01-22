@@ -10,13 +10,6 @@ terraform {
   backend "local" {
     path = "terraform.tfstate"
   }
-  required_providers {
-    hcloud = {
-      # Documentation; https://registry.terraform.io/providers/hetznercloud/hcloud
-      source  = "hetznercloud/hcloud"
-      version = "~> 1.45.0"
-    }
-  }
   required_version = ">= 1.0"
 }
 
@@ -26,7 +19,7 @@ terraform {
 
 module "cluster" {
   source       = "github.com/identiops/terraform-hcloud-k3s"
-  hcloud_token = var.hcloud_token # INFO: Set via `export TF_VAR_hcloud_token=xyz; export HCLOUD_TOKEN=$TF_VAR_hcloud_token`
+  hcloud_token = var.hcloud_token # INFO: Set via `export TF_VAR_hcloud_token=xyz
 
   # Cluster Settings
   # ----------------
@@ -81,16 +74,6 @@ module "cluster" {
   }
 }
 
-
-##########
-#  Code  #
-##########
-
-# INFO: Although we don't use the provider, it needs to be present here because
-# of how terraform modules work https://www.terraform.io/docs/modules/providers.html
-provider "hcloud" {
-  token = var.hcloud_token
-}
 
 ###############
 #  Variables  #

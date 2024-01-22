@@ -62,7 +62,6 @@ security settings - API tokens and create a new token.
 ```bash
 read -sp "Hetzner Cloud API Token: " TF_VAR_hcloud_token # Enter your Hetzner Cloud API Token (it will be hidden)
 export TF_VAR_hcloud_token
-export HCLOUD_TOKEN=${TF_VAR_hcloud_token}
 ```
 
 ## Usage

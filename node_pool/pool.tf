@@ -1,3 +1,14 @@
+terraform {
+  required_providers {
+    hcloud = {
+      # Documentation; https://registry.terraform.io/providers/hetznercloud/hcloud
+      source  = "hetznercloud/hcloud"
+      version = "1.45.0"
+    }
+  }
+  required_version = ">= 1.0"
+}
+
 resource "hcloud_server" "pool" {
   depends_on = [hcloud_placement_group.pool]
 
@@ -38,8 +49,7 @@ resource "hcloud_server" "pool" {
     }
     package_update  = false
     package_upgrade = false
-    # packages        = var.server_packages
-    runcmd = var.runcmd
+    runcmd          = var.runcmd
     write_files = [
       {
         path    = "/etc/systemd/network/default-route.network"
@@ -66,7 +76,6 @@ resource "hcloud_server" "pool" {
 
   network {
     network_id = var.hcloud_network_id
-    # ip         = cidrhost(var.subnet_ip_range, var.ip_offset + count.index)
   }
 }
 
@@ -94,11 +103,6 @@ variable "name" {
 variable "delete_protection" {
   description = "Prevent cluster nodes from manual deletion. Is lifted automatically when cluster is destroyed. See https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/resources/server#delete_protection"
   type        = bool
-}
-
-variable "server_packages" {
-  description = "Server packages."
-  type        = list(string)
 }
 
 variable "is_control_plane" {
@@ -169,15 +173,6 @@ variable "hcloud_network_id" {
   type        = string
 }
 
-variable "subnet_ip_range" {
-  description = "CIDR block of the subnet."
-}
-
-variable "ip_offset" {
-  description = "Offset from which agents are IPs are counted upwards. Needs to be adjusted to not cause collisions!"
-  type        = number
-}
-
 variable "firewall_ids" {
   description = "A list of firewall IDs to apply on the node."
   type        = list(number)
@@ -207,6 +202,7 @@ variable "additional_cloud_init" {
 
 variable "prices" {
   description = "List of prices"
+  type        = any
 }
 
 output "is_control_plane" {

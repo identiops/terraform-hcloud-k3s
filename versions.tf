@@ -1,8 +1,9 @@
 terraform {
   required_providers {
     hcloud = {
+      # Documentation; https://registry.terraform.io/providers/hetznercloud/hcloud
       source  = "hetznercloud/hcloud"
-      version = "~> 1.45.0"
+      version = "1.45.0"
     }
     http = {
       source  = "hashicorp/http"
@@ -26,4 +27,8 @@ terraform {
     }
   }
   required_version = ">= 1.0"
+}
+
+provider "hcloud" {
+  token = var.hcloud_token
 }
