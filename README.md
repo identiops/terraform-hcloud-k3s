@@ -21,20 +21,19 @@ system!
     initiral setup. The cluster administrator starts exposing the cluster by
     deploying a load balancer, e.g. by annotating an installed ingress
     controller.
-- Convenience scripts for downloading the kubernetes configuration and accessing
-  nodes via SSH/SCP.
-- Automatic operating system updates with optional automatic reboots via
-  [kured](https://kured.dev).
-- Node pools for managing cluster resources efficiently. Minimum cluster size is
-  _one_ main node. Pools can be added, resized, and removed at any time.
 - Calculation of monthly costs for every part of the deployment (see
   `terraform output`).
-- Support for network policies via
-  [Calico](https://www.tigera.io/project-calico/).
+- Node pools for managing cluster resources efficiently. Minimum cluster size is
+  _one_ main node. Pools can be added, resized, and removed at any time.
+- Automatic operating system updates with optional automatic reboots via
+  [kured](https://kured.dev).
+- Support for network policies via [Cilium](https://www.cilium.io/).
 - Hetzner Cloud Controller Manager for managing cloud resources from the within
   the cluster.
 - Hetzner Cloud Storage Interface for managing volumes from the within the
   cluster.
+- Convenience scripts for downloading the kubernetes configuration and accessing
+  nodes via SSH/SCP.
 - Documentation of common administrative tasks and debugging tools.
 
 TODO:
@@ -150,13 +149,18 @@ TODO
 
 TODO
 
-#### Update Hetzner CCM and CSI
+#### Update Cilium
 
-TODO
+See https://docs.cilium.io/en/stable/operations/upgrade/
 
-#### Update Hetzner Calico
+#### Update Hetzner CCM
 
-TODO
+See
+https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/CHANGELOG.md
+
+#### Update Hetzner CSI
+
+See https://github.com/hetznercloud/csi-driver/blob/main/CHANGELOG.md
 
 ### Deletion
 
@@ -365,7 +369,7 @@ sh -x PATH_TO_RUNCMD
 
 ## Related Documentation
 
-- [Calico](https://docs.tigera.io/calico/)
+- [Cilium](https://docs.cilium.io/)
 - [Cloud-init](https://cloudinit.readthedocs.io/)
 - [Hetzner API](https://docs.hetzner.cloud/)
 - [Hetzner Cloud Platform](https://docs.hetzner.com/cloud)

@@ -32,11 +32,13 @@ variable "location" {
 variable "k3s_channel" {
   description = "k3s channel (stable, latest, v1.19 and so on, see https://update.k3s.io/v1-release/channels)."
   type        = string
+  default     = ""
 }
 
 variable "k3s_version" {
   description = "k3s version, if set, takes presdence over k3s_channel, see https://github.com/k3s-io/k3s/tags."
   type        = string
+  default     = ""
 }
 
 variable "image" {
@@ -144,8 +146,8 @@ variable "hcloud_csi_driver_install" {
   default     = true
 }
 
-variable "calico_version" {
-  description = "Calico version, see https://github.com/projectcalico/calico"
+variable "cilium_version" {
+  description = "Cilium version, see https://github.com/cilium/cilium"
   type        = string
 }
 

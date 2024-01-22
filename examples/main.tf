@@ -32,9 +32,8 @@ module "cluster" {
   # ----------------
   delete_protection = true # Must be set to false + `terraform apply` before destroying the cluster via `terraform destory`!
   cluster_name      = "production"
-  location          = "nbg1"
-  k3s_channel       = ""
-  k3s_version       = "v1.28.5+k3s1"
+  location          = "nbg1"         # See available locations https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/resources/server#location
+  k3s_version       = "v1.28.5+k3s1" # See available versions https://github.com/k3s-io/k3s/tags.
 
   # General Settings
   # ----------------
@@ -42,16 +41,16 @@ module "cluster" {
     "john" = file("john.pub")
     "jane" = "ssh-xxxx xxxxx jane@example"
   }
-  hcloud_ccm_driver_version = "v1.19.0"
-  hcloud_csi_driver_version = "v2.6.0"
-  calico_version            = "v3.27.0"
+  hcloud_ccm_driver_version = "v1.19.0" # Check k8s compatibility https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy
+  hcloud_csi_driver_version = "v2.6.0"  # Check k8s compatibility https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy
+  cilium_version            = "1.14.5"  # See available version https://github.com/cilium/cilium
 
   # Control Plane Settings
   # ----------------------
   control_plane_main_schedule_workloads = true
-  control_plane_main_server_type        = "cx41"
+  control_plane_main_server_type        = "cx31" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
   additional_cloud_init = {
-    timezone = "Europe/Berlin"
+    timezone = "Europe/Berlin" # See available time zones https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
   }
 
   # Node Group Settings
@@ -61,7 +60,7 @@ module "cluster" {
     system = {
       is_control_plane   = true
       schedule_workloads = true
-      type               = "cx41"
+      type               = "cx31" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
       count              = 2
       labels = {
         # "control-plane" = "yes"
@@ -73,7 +72,7 @@ module "cluster" {
     workers = {
       is_control_plane   = false
       schedule_workloads = true
-      type               = "cx41"
+      type               = "cx31" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
       count              = 3
       labels             = {}
       taints             = {}

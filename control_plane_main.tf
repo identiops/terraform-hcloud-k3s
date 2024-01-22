@@ -92,9 +92,16 @@ locals {
       done
       EOT
       ,
-      "kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/${var.calico_version}/manifests/tigera-operator.yaml",
-      "kubectl apply -f /run/calico.yml",
-      "kubectl -n kube-system create secret generic hcloud --from-literal=token=${var.hcloud_token} --from-literal=network=${hcloud_network.private.id}",
+      "CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)",
+      "CLI_ARCH=amd64",
+      "curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/$CILIUM_CLI_VERSION/cilium-linux-$CLI_ARCH.tar.gz{,.sha256sum}",
+      "sha256sum --check cilium-linux-$CLI_ARCH.tar.gz.sha256sum",
+      "tar xzvfC cilium-linux-$CLI_ARCH.tar.gz /usr/local/bin",
+      "rm cilium-linux-$CLI_ARCH.tar.gz{,.sha256sum}",
+      "export KUBECONFIG=/etc/rancher/k3s/k3s.yaml",
+      "cilium install --version '${var.cilium_version}' --set-string routingMode=native,ipv4NativeRoutingCIDR=${var.network_cidr},ipam.operator.clusterPoolIPv4PodCIDRList=${local.cluster_cidr_network},k8sServiceHost=${locals.cmd_node_ip}",
+      # "rm /usr/local/bin/cilium",
+      "kubectl -n kube-system create secret generic hcloud --from-literal='token=${var.hcloud_token}' --from-literal='network=${hcloud_network.private.id}'",
       <<-EOT
       if [ "${var.hcloud_ccm_driver_install}" = "true" ]; then
         wget -qO /var/lib/rancher/k3s/server/manifests/hcloud-ccm.yaml "https://github.com/hetznercloud/hcloud-cloud-controller-manager/releases/download/${var.hcloud_ccm_driver_version}/ccm-networks.yaml"
@@ -113,12 +120,6 @@ locals {
       {
         path    = "/run/csi/kustomization.yml"
         content = file("${path.module}/templates/kustomization.yml")
-      },
-      {
-        path = "/run/calico.yml"
-        content = templatefile("${path.module}/templates/calico.yml", {
-          cluster_cidr_network = local.cluster_cidr_network
-        })
       },
       {
         path    = "/etc/systemd/network/default-route.network"
