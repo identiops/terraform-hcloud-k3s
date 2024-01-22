@@ -24,15 +24,8 @@ module "node_pools" {
   server_packages = concat(local.base_packages, var.additional_packages)
   runcmd = concat([
     local.security_setup,
-    # Required open ports, see https://docs.k3s.io/installation/requirements#inbound-rules-for-k3s-server-nodeshttps://docs.k3s.io/installation/requirements#inbound-rules-for-k3s-server-nodes
-    "ufw allow proto tcp from ${var.subnet_cidr} to any port 2379,2380,10250",
-    <<-EOT
-      killall apt-get || true
-      apt-get update
-      DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y
-      DEBIAN_FRONTEND=noninteractive apt-get install -y ${join(" ", concat(local.base_packages, var.additional_packages))}
-      EOT
-    ,
+    local.k8s_security_setup,
+    local.package_updates,
     each.value.is_control_plane ?
     <<-EOT
       export K3S_URL="https://${hcloud_server_network.control_plane_main.ip}:6443"

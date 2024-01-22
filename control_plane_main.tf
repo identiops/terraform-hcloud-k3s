@@ -65,15 +65,8 @@ locals {
     # packages        = concat(local.base_packages, var.additional_packages) # netcat is required for acting as an ssh jump jost
     runcmd = concat([
       local.security_setup,
-      # Required open ports, see https://docs.k3s.io/installation/requirements#inbound-rules-for-k3s-server-nodeshttps://docs.k3s.io/installation/requirements#inbound-rules-for-k3s-server-nodes
-      "ufw allow proto tcp from ${var.subnet_cidr} to any port 2379,2380,10250",
-      <<-EOT
-      killall apt-get || true
-      apt-get update
-      DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y
-      DEBIAN_FRONTEND=noninteractive apt-get install -y ${join(" ", concat(local.base_packages, var.additional_packages))}
-      EOT
-      ,
+      local.k8s_security_setup,
+      local.package_updates,
       <<-EOT
       ${local.k3s_install~}
       sh -s - server \
@@ -99,7 +92,7 @@ locals {
       "tar xzvfC cilium-linux-$CLI_ARCH.tar.gz /usr/local/bin",
       "rm cilium-linux-$CLI_ARCH.tar.gz{,.sha256sum}",
       "export KUBECONFIG=/etc/rancher/k3s/k3s.yaml",
-      "cilium install --version '${var.cilium_version}' --set-string routingMode=native,ipv4NativeRoutingCIDR=${var.network_cidr},ipam.operator.clusterPoolIPv4PodCIDRList=${local.cluster_cidr_network},k8sServiceHost=${locals.cmd_node_ip}",
+      "cilium install --version '${var.cilium_version}' --set-string routingMode=native,ipv4NativeRoutingCIDR=${var.network_cidr},ipam.operator.clusterPoolIPv4PodCIDRList=${local.cluster_cidr_network},k8sServiceHost=${local.cmd_node_ip}",
       # "rm /usr/local/bin/cilium",
       "kubectl -n kube-system create secret generic hcloud --from-literal='token=${var.hcloud_token}' --from-literal='network=${hcloud_network.private.id}'",
       <<-EOT

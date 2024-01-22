@@ -12,7 +12,7 @@ locals {
     oidc-issuer-url     = var.oidc_issuer_url
     oidc-client-id      = var.oidc_client_id
   } : {}
-  security_setup          = <<-EOT
+  security_setup = <<-EOT
   # SSH
   sed -i -e 's/^#*PermitRootLogin .*/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
   sed -i -e 's/^#*PasswordAuthentication .*/PasswordAuthentication no/g' /etc/ssh/sshd_config
@@ -23,6 +23,14 @@ locals {
   ufw default allow outgoing
   ufw --force enable
   systemctl restart systemd-networkd.service
+  EOT
+  # Required open ports, see https://docs.k3s.io/installation/requirements#inbound-rules-for-k3s-server-nodeshttps://docs.k3s.io/installation/requirements#inbound-rules-for-k3s-server-nodes
+  k8s_security_setup      = "ufw allow proto tcp from any to any port 2379,2380,10250"
+  package_updates         = <<-EOT
+  killall apt-get || true
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y
+  DEBIAN_FRONTEND=noninteractive apt-get install -y ${join(" ", concat(local.base_packages, var.additional_packages))}
   EOT
   k3s_install             = <<-EOT
   export INSTALL_K3S_CHANNEL="${var.k3s_channel}"
