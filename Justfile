@@ -54,6 +54,6 @@ release LEVEL="patch":
     open --raw examples/main.tf | str replace -r "\\?ref=.*" $"?ref=($new_version)\"" | save -f examples/main.tf
     git cliff -t $new_version -o CHANGELOG.md
     git add examples/main.tf CHANGELOG.md
-    git commit -m "chore: bump version"
+    git commit -m $"Bump version to ($new_version)"
     git tag -s -m $new_version $new_version
     git push --atomic origin refs/heads/main $"refs/tags/($new_version)"
