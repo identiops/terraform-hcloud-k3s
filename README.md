@@ -36,8 +36,10 @@ https://registry.terraform.io/modules/identiops/k3s/hcloud/latest
   `terraform output`).
 - Node pools for managing cluster resources efficiently. Minimum cluster size is
   _one_ main node. Pools can be added, resized, and removed at any time.
+- Automatic use of placement groups for node pools to improve availability.
 - Automatic operating system updates with optional automatic reboots via
   [kured](https://kured.dev).
+- Deletion protection for all cloud resources.
 - Support for network policies via [Cilium](https://www.cilium.io/).
 - Hetzner Cloud Controller Manager for managing cloud resources from the within
   the cluster.
