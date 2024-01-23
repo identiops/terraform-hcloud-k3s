@@ -117,12 +117,6 @@ variable "service_cidr_network_bits" {
   default     = 16
 }
 
-variable "ip_offset" {
-  description = "Offset from which agents are IPs are counted upwards. Needs to be adjusted to not cause collisions!"
-  type        = number
-  default     = 20
-}
-
 variable "enable_public_net_ipv4" {
   description = "Enable the assignment of a public IPv4 address (increases the costs per month)."
   type        = bool
