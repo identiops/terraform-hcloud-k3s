@@ -36,10 +36,7 @@ module "node_pools" {
     <<-EOT
       export K3S_URL=https://${hcloud_server_network.control_plane_main.ip}:6443
       ${local.k3s_install~}
-      sh -s - agent \
-      ${local.common_arguments~}
-
-      # ATTENTION: the empty line above is required!
+      sh -s - agent ${local.common_arguments~}
       EOT
   ], var.additional_runcmd)
   additional_cloud_init = var.additional_cloud_init
