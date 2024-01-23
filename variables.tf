@@ -249,6 +249,12 @@ variable "control_plane_main_labels" {
   default     = {}
 }
 
+variable "control_plane_main_k3s_additional_options" {
+  description = "Additional options passed to the main k3s control plane node during installation."
+  type        = string
+  default     = ""
+}
+
 variable "control_plane_k3s_additional_options" {
   description = "Additional options passed to k3s control plane nodes during installation."
   type        = string

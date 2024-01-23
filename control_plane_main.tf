@@ -73,7 +73,7 @@ locals {
       --cluster-init \
       ${local.control_plane_arguments~}
       ${!var.control_plane_main_schedule_workloads ? "--node-taint node-role.kubernetes.io/control-plane=true:NoExecute" : ""} \
-      ${var.control_plane_k3s_additional_options} %{for key, value in var.control_plane_main_labels} --node-label=${key}=${value} %{endfor} %{for key, value in local.kube-apiserver-args} --kube-apiserver-arg=${key}=${value} %{endfor}
+      ${var.control_plane_main_k3s_additional_options} ${var.control_plane_k3s_additional_options} %{for key, value in var.control_plane_main_labels} --node-label=${key}=${value} %{endfor} %{for key, value in local.kube-apiserver-args} --kube-apiserver-arg=${key}=${value} %{endfor}
 
 
       EOT
