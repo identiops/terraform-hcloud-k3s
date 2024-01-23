@@ -1,6 +1,6 @@
 output "gateway" {
   depends_on  = [hcloud_server.gateway]
-  description = "IP Addresses of the gateway"
+  description = "IP Addresses of the gateway."
   value = {
     name = hcloud_server.gateway.name,
     type = var.gateway_server_type,
@@ -15,7 +15,7 @@ output "gateway" {
 
 output "control_plane_main" {
   depends_on  = [hcloud_server.control_plane_main]
-  description = "IP Addresses of the control plane main node"
+  description = "IP Addresses of the control plane main node."
   value = {
     name = hcloud_server.control_plane_main.name,
     type = var.control_plane_main_server_type,
@@ -30,13 +30,13 @@ output "control_plane_main" {
 
 output "node_pools" {
   depends_on  = [module.node_pools]
-  description = "IP Addresses of the worker node pools"
+  description = "IP Addresses of the worker node pools."
   value       = module.node_pools
 }
 
 output "total_monthly_costs" {
   depends_on  = [module.node_pools]
-  description = "Total monthly costs for running the cluster"
+  description = "Total monthly costs for running the cluster."
   value = {
     net      = sum(concat([local.costs_gateway.net, local.costs_main.net], [for pool in module.node_pools : pool.costs.net]))
     gross    = sum(concat([local.costs_gateway.gross, local.costs_main.gross], [for pool in module.node_pools : pool.costs.gross]))
