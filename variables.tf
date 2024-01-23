@@ -134,18 +134,12 @@ variable "ssh_keys" {
   type        = map(string)
 }
 
-variable "hcloud_csi_driver_install" {
-  description = "Install Hetzner CSI driver."
-  type        = bool
-  default     = true
-}
-
 variable "cilium_version" {
   description = "Cilium version, see https://github.com/cilium/cilium"
   type        = string
 }
 
-variable "kured_version" {
+variable "kured_chart_version" {
   description = "Kured version, see https://artifacthub.io/packages/helm/kured/kured"
   type        = string
 }
@@ -168,18 +162,12 @@ variable "kured_end_time" {
   default     = "5am"
 }
 
-variable "hcloud_csi_driver_version" {
+variable "hcloud_csi_driver_chart_version" {
   description = "Hetzner CSI driver version, see https://github.com/hetznercloud/csi-driver"
   type        = string
 }
 
-variable "hcloud_ccm_driver_install" {
-  description = "Install Hetzner CCM."
-  type        = bool
-  default     = true
-}
-
-variable "hcloud_ccm_driver_version" {
+variable "hcloud_ccm_driver_chart_version" {
   description = "Hetzner CCM version, see https://github.com/hetznercloud/hcloud-cloud-controller-manager"
   type        = string
 }
