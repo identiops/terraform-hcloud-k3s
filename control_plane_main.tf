@@ -1,9 +1,9 @@
 resource "hcloud_server" "control_plane_main" {
   lifecycle {
     prevent_destroy = false
-    ignore_changes  = [user_data, image]
+    ignore_changes  = [image, location, ssh_keys, user_data]
   }
-  depends_on = [time_sleep.wait_30_seconds]
+  depends_on = [time_sleep.wait_for_gateway_to_become_ready]
 
   name               = "${var.cluster_name}-control-plane-main"
   delete_protection  = var.delete_protection
@@ -34,7 +34,7 @@ resource "hcloud_server_network" "control_plane_main" {
   ip         = cidrhost(hcloud_network_subnet.subnet.ip_range, 2)
 }
 
-resource "time_sleep" "wait_30_seconds" {
+resource "time_sleep" "wait_for_gateway_to_become_ready" {
   depends_on      = [hcloud_server.gateway]
   create_duration = "30s"
 }
