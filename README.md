@@ -1,3 +1,11 @@
+<div style="display: flex; gap: 10px;">
+
+![license](https://img.shields.io/github/license/identiops/terraform-hcloud-k3s)
+
+![stars](https://img.shields.io/github/stars/identiops/terraform-hcloud-k3s)
+
+</div>
+
 # Kubernetes Terraform installer for Hetzner Cloud
 
 This Terraform module creates a Kubernetes Cluster on
@@ -6,6 +14,9 @@ This Terraform module creates a Kubernetes Cluster on
 secure and maintainable setup. Thanks to Ubuntu's LTS version we get up to 5
 years of peace and quiet before having to upgrade the cluster's operating
 system!
+
+Terraform module published at:
+https://registry.terraform.io/modules/identiops/k3s/hcloud/latest
 
 ![infrastructure](https://raw.githubusercontent.com/identiops/terraform-hcloud-k3s/main/infrastructure.png)
 
