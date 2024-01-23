@@ -52,22 +52,18 @@ resource "hcloud_server" "gateway" {
   user_data = format("%s\n%s\n%s", "#cloud-config", yamlencode({
     package_update             = true
     package_upgrade            = true
-    package_reboot_if_required = false
+    package_reboot_if_required = true
     packages                   = concat(["netcat-openbsd"], local.base_packages) # netcat is required for acting as an ssh jump jost
     # Find runcmd: find /var/lib/cloud/instances -name runcmd
     runcmd = concat([
       local.security_setup,
-      # Enable postrouting with ufw
-      "echo 'Unattended-Upgrade::Automatic-Reboot \"true\";' >> /etc/apt/apt.conf.d/50unattended-upgrades",
-      "ufw route allow in on ens10 out on eth0",
-      # "echo '\n*nat\n:PREROUTING ACCEPT [0:0]\n:POSTROUTING ACCEPT [0:0]\n-F\n-A POSTROUTING -s ${var.subnet_cidr} -o eth0 -j MASQUERADE\nCOMMIT\n' >> /etc/ufw/before.rules",
-      # "ufw disable",
-      # "ufw --force enable",
-      # "ufw -f disable",
-      # "ufw -f enable",
-      # "ufw -f route allow in on ens10 out on eth0",
-      "systemctl daemon-reload",
-      "systemctl enable --now proxy-k8s.socket",
+      <<-EOT
+      echo 'Unattended-Upgrade::Automatic-Reboot "true";' >> /etc/apt/apt.conf.d/50unattended-upgrades
+      # Enable packet forwarding
+      ufw route allow in on ens10 out on eth0
+      systemctl daemon-reload
+      systemctl enable --now proxy-k8s.socket
+      EOT
     ], var.additional_runcmd)
     write_files = [
       {
@@ -85,6 +81,7 @@ resource "hcloud_server" "gateway" {
         content = file("${path.module}/templates/gateway-forwarding.network")
       },
       {
+        # Enable postrouting with ufw
         path    = "/etc/ufw/before.rules"
         content = templatefile("${path.module}/templates/gateway-ufw-before.rules", { subnet = var.subnet_cidr })
         append  = true
