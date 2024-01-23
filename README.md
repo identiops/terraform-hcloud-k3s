@@ -129,6 +129,9 @@ This will do the following:
 
 TODO
 
+Add annotation TODO to the service of type load balancer. A new load balancer
+will be added via the Hetzner Cloud Controller Manager.
+
 #### Add Nodes or Node Pools
 
 The number of nodes in a node pool can be increased at any point. Just increase
@@ -165,7 +168,45 @@ https://kured.dev/docs/operation/.
 
 #### Upgrade Operating System
 
-TODO
+WARNING: untested!
+
+An operating system update is not recommended, e.g. from Ubuntu 22.04 to 24.04.
+Instead, the corresponding nodes should be replaced!
+
+##### Gateway
+
+1. Delete the node in the [Hetzner Console](https://console.hetzner.cloud/)
+2. Reapply the configuration: `terraform apply`
+
+The gateway will reappear again within a few minutes. This will disrupt the
+internet access of the cluster's nodes for tasks like fetching package updates.
+However, it will not affect the services that are provided via load balancers!
+
+##### Main Control Plane Node
+
+The main control plane node should not be updated but be replaced. For a single
+node cluster, it is recommended to backed the etcd data store on an external s3
+storage, see [k3s Cluster Datastore](https://docs.k3s.io/datastore). Then:
+
+1. Create a new snapshot
+2. Stop kubernetes: `systemctl stop k3s.service`
+3. Delete the node manually from the
+   [Hetzner Console](https://console.hetzner.cloud/)
+4. Set the `control_plane_main_reset` xor `control_plane_main_join` variables.
+   See https://docs.k3s.io/cli/etcd-snapshot
+5. Reapply the configuration: `terraform apply`
+
+##### Node Pool
+
+Similarly, to update a node pool, it should be replaced.
+
+1. Add a new node pool that uses the new image.
+2. Once the new node pool is up and running, drain the old nodes:
+   `kubectl drain node-xyz`
+3. Once all pods have been migrateded, delete the old nodes:
+   `kubectl delete node node-xyz`
+4. Remove the node pool from the terraform configuration.
+5. Reapply the configuration: `terraform apply`
 
 #### Update Kubernetes
 
@@ -175,12 +216,12 @@ TODO
 
 See https://docs.cilium.io/en/stable/operations/upgrade/
 
-#### Update Hetzner CCM
+#### Update Hetzner Cloud Controller Manager (CCM)
 
 See
 https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/CHANGELOG.md
 
-#### Update Hetzner CSI
+#### Update Hetzner Cloud Storage Interface (CSI)
 
 See https://github.com/hetznercloud/csi-driver/blob/main/CHANGELOG.md
 

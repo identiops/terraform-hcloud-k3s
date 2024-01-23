@@ -42,7 +42,7 @@ variable "k3s_version" {
 }
 
 variable "image" {
-  description = "Node boot image."
+  description = "Node image. See `HCLOUD_TOKEN=XXXX; curl -H \"Authorization: Bearer $HCLOUD_TOKEN\" https://api.hetzner.cloud/v1/images | jq -r .images[].name | sort`"
   type        = string
   default     = "ubuntu-22.04"
 }
@@ -225,6 +225,24 @@ variable "gateway_labels" {
 
 # Control Plane Settings
 # ----------------------
+
+variable "control_plane_main_reset" {
+  description = "ATTENTION: Only set this option when replacing or restoring the control plane main node! Either set the reset and path variable xor the join variable - never both! Path is either the path to (usually /var/lib/rancher/k3s/server/db/...) or the s3 name of the snapshot. Join is the IP address of an existing control plane server that shall be used to join the existing cluster. See https://docs.k3s.io/cli/etcd-snapshot"
+  type = object({
+    reset = optional(bool, false)
+    path  = optional(string, "")
+    join  = optional(string, "")
+  })
+  default = {}
+  validation {
+    condition = (
+      (var.control_plane_main_reset.join == "" && !var.control_plane_main_reset.reset) ||
+      (var.control_plane_main_reset.join != "" && !var.control_plane_main_reset.reset) ||
+      (var.control_plane_main_reset.join == "" && var.control_plane_main_reset.reset && var.control_plane_main_reset.path != "")
+    )
+    error_message = "`path` can not be empty when var.control_plane_main_reset is set. Or either `reset` or `join` can be configured, not both."
+  }
+}
 
 variable "control_plane_main_schedule_workloads" {
   description = "Schedule workloads on main control plane node"
