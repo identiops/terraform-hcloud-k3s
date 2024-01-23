@@ -56,6 +56,10 @@ resource "hcloud_server" "pool" {
         content = file("${path.module}/../templates/default-route.network")
       },
       {
+        path    = "/etc/sysctl.d/90-kubelet.conf"
+        content = file("${path.module}/../templates/90-kubelet.conf")
+      },
+      {
         path    = "/etc/sysctl.d/99-increase-inotify-limits"
         content = <<-EOT
           fs.inotify.max_user_instances = 512;

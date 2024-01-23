@@ -32,6 +32,13 @@ https://registry.terraform.io/modules/identiops/k3s/hcloud/latest
     initiral setup. The cluster administrator starts exposing the cluster by
     deploying a load balancer, e.g. by annotating an installed ingress
     controller.
+  - [CSI hardening guide](https://docs.k3s.io/security/hardening-guide) applied
+    partially
+    - Kernel parameters defined.
+    - Audit log directory created.
+    - Network policies, pod security policies, admission policies and the
+      enabling of audit logs are up to the administrator of the cluster to
+      configure.
 - Calculation of monthly costs for every part of the deployment (see
   `terraform output`).
 - Node pools for managing cluster resources efficiently. Minimum cluster size is

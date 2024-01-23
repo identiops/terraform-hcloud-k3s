@@ -25,7 +25,12 @@ locals {
   systemctl restart systemd-networkd.service
   EOT
   # Required open ports, see https://docs.k3s.io/installation/requirements#inbound-rules-for-k3s-server-nodeshttps://docs.k3s.io/installation/requirements#inbound-rules-for-k3s-server-nodes
-  k8s_security_setup      = "ufw allow proto tcp from any to any port 2379,2380,10250"
+  k8s_security_setup      = <<-EOT
+  ufw allow proto tcp from any to any port 2379,2380,10250
+  # Audit log directory, if required. See https://docs.k3s.io/security/hardening-guide
+  mkdir -p -m 700 /var/lib/rancher/k3s/server/logs
+  sysctl --system
+  EOT
   package_updates         = <<-EOT
   killall apt-get || true
   apt-get update
