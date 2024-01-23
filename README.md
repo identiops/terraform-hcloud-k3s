@@ -246,39 +246,6 @@ terraform destroy -force
 Be sure to clean-up any CSI created Block Storage Volumes, and CCM created
 NodeBalancers that you no longer require.
 
-## Addons Included
-
-### [**Hetzner Cloud cloud controller manager (CCM)**](https://github.com/hetznercloud/hcloud-cloud-controller-manager)
-
-The Hetzner Cloud cloud controller manager integrates your Kubernets cluster
-with the Hetzner Cloud API. Read more about kubernetes cloud controller managers
-in the
-[kubernetes documentation](https://kubernetes.io/docs/tasks/administer-cluster/running-cloud-controller/).
-
-#### Features
-
-- **instances interface**: adds the server type to the
-  `beta.kubernetes.io/instance-type` label, sets the external IPv4 and IPv6
-  addresses and deletes nodes from Kubernetes that were deleted from the Hetzner
-  Cloud.
-- **zones interface**: makes Kubernetes aware of the failure domain of the
-  server by setting the `failure-domain.beta.kubernetes.io/region` and
-  `failure-domain.beta.kubernetes.io/zone` labels on the node.
-- **Private Networks**: allows to use Hetzner Cloud Private Networks for your
-  pods traffic.
-- **Load Balancers**: allows to use Hetzner Cloud Load Balancers with Kubernetes
-  Services
-
-### [**Container Storage Interface driver for Hetzner Cloud (CSI)**](https://github.com/hetznercloud/csi-driver)
-
-This is a Container Storage Interface driver for Hetzner Cloud enabling you to
-use Volumes within Kubernetes.
-
-When a `PV` is deleted, the Hetzner Block Storage Volume will be deleted as
-well, based on the `ReclaimPolicy`.
-
-[Learn More about Persistent Volumes on kubernetes.io](https://kubernetes.io/docs/concepts/storage/persistent-volumes/).
-
 ## Debugging
 
 ### Gateway
