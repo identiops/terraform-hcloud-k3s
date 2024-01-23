@@ -1,5 +1,5 @@
 resource "hcloud_firewall" "gateway" {
-  name = "gateway-firewall"
+  name = "${var.cluster_name}-gateway"
 
   rule {
     direction = "in"
