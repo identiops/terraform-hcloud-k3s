@@ -116,10 +116,3 @@ locals {
     yamlencode(var.additional_cloud_init)
   )
 }
-
-resource "local_file" "control_plane_main_user_data" {
-  count           = var.create_scripts ? 1 : 0
-  filename        = "./.control_plane_main_user_data.yaml"
-  content         = local.control_plane_main_user_data
-  file_permission = "0600"
-}

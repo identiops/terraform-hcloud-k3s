@@ -35,8 +35,6 @@ override.tf.json
 
 .terraform.lock.hcl
 
-.control_plane_main_user_data.yaml
-
 .kube
 setkubeconfig
 unsetkubeconfig
