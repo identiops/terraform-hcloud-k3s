@@ -387,7 +387,7 @@ tar xvzf cloud-init.tar.gz
 
 # Quickly find runcmd
 find /var/lib/cloud/instances -name runcmd
-sh -x PATH_TO_RUNCMD
+sh -ex PATH_TO_RUNCMD
 ```
 
 ## Related Projects
