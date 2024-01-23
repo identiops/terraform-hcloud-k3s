@@ -23,6 +23,8 @@ https://registry.terraform.io/modules/identiops/k3s/hcloud/latest
 ## Features
 
 - [k3s](https://k3s.io/) based kubernetes cluster.
+- Kubernetes update managment via
+  [System Upgrade Controller](https://github.com/rancher/system-upgrade-controller).
 - Secured default configuration:
   - Cluster nodes have no public network interface.
   - SSH key required for remote access.
@@ -55,10 +57,6 @@ https://registry.terraform.io/modules/identiops/k3s/hcloud/latest
 - Convenience scripts for downloading the kubernetes configuration and accessing
   nodes via SSH/SCP.
 - Documentation of common administrative tasks and debugging tools.
-
-TODO:
-
-- Kubernetes update managment.
 
 ## Install
 
@@ -217,7 +215,11 @@ Similarly, to update a node pool, it should be replaced.
 
 #### Update Kubernetes
 
-TODO
+1. Determine the next kubernetes version, see
+   [k3s release tags](https://github.com/k3s-io/k3s/tags).
+2. Write the ugrade plan, see
+   [examples](https://github.com/rancher/system-upgrade-controller#example-plans).
+3. Apply an upgrade plan.
 
 #### Update Cilium
 

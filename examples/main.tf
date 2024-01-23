@@ -34,10 +34,11 @@ module "cluster" {
     "john" = file("john.pub")
     "jane" = "ssh-xxxx xxxxx jane@example"
   }
-  cilium_version                  = "1.14.5" # See available version https://github.com/cilium/cilium
-  hcloud_ccm_driver_chart_version = "1.19.0" # Check k8s compatibility https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy
-  hcloud_csi_driver_chart_version = "2.6.0"  # Check k8s compatibility https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy
-  kured_chart_version             = "5.4.1"  # See available version https://artifacthub.io/packages/helm/kured/kured
+  cilium_version                    = "1.14.5"  # See available version https://github.com/cilium/cilium
+  hcloud_ccm_driver_chart_version   = "1.19.0"  # Check k8s compatibility https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy
+  hcloud_csi_driver_chart_version   = "2.6.0"   # Check k8s compatibility https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy
+  kured_chart_version               = "5.4.1"   # See available version https://artifacthub.io/packages/helm/kured/kured
+  system_upgrade_controller_version = "v0.13.2" # See available versions https://github.com/rancher/system-upgrade-controller
 
   # Control Plane Settings
   # ----------------------

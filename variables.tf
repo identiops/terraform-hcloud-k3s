@@ -162,13 +162,18 @@ variable "kured_end_time" {
   default     = "5am"
 }
 
+variable "hcloud_ccm_driver_chart_version" {
+  description = "Hetzner CCM version, see https://github.com/hetznercloud/hcloud-cloud-controller-manager"
+  type        = string
+}
+
 variable "hcloud_csi_driver_chart_version" {
   description = "Hetzner CSI driver version, see https://github.com/hetznercloud/csi-driver"
   type        = string
 }
 
-variable "hcloud_ccm_driver_chart_version" {
-  description = "Hetzner CCM version, see https://github.com/hetznercloud/hcloud-cloud-controller-manager"
+variable "system_upgrade_controller_version" {
+  description = "System Upgarde Controller version, see available versions https://github.com/rancher/system-upgrade-controller"
   type        = string
 }
 
