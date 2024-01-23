@@ -16,7 +16,7 @@ years of peace and quiet before having to upgrade the cluster's operating
 system!
 
 Terraform module published at:
-https://registry.terraform.io/modules/identiops/k3s/hcloud/latest
+https://registry.terraform.io/modules/identiops/k3s
 
 ![infrastructure](https://raw.githubusercontent.com/identiops/terraform-hcloud-k3s/main/infrastructure.png)
 
