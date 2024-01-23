@@ -96,7 +96,7 @@ locals {
       helm install hcloud-ccm hcloud/hcloud-cloud-controller-manager -n kube-system --version '${var.hcloud_ccm_driver_chart_version}' --set 'networking.enabled=true,networking.clusterCIDR=${local.cluster_cidr_network}'
       helm install hcloud-csi hcloud/hcloud-csi -n kube-system --version '${var.hcloud_csi_driver_chart_version}' --set 'storageClasses[0].name=hcloud-volumes,storageClasses[0].defaultStorageClass=true,storageClasses[0].retainPolicy=Retain'
       helm repo add kubereboot https://kubereboot.github.io/charts
-      helm install -n kube-system kured kubereboot/kured --version '${var.kured_chart_version}' --set 'configuration.timeZone=${var.additional_cloud_init.timezone},configuration.startTime=${var.kured_start_time},configuration.endTime=${var.kured_end_time},configuration.rebootDays={${var.kured_reboot_days}
+      helm install -n kube-system kured kubereboot/kured --version '${var.kured_chart_version}' --set 'configuration.timeZone=${var.additional_cloud_init.timezone},configuration.startTime=${var.kured_start_time},configuration.endTime=${var.kured_end_time},configuration.rebootDays={${var.kured_reboot_days}'
       # rm /usr/local/bin/helm
       EOT
     ], var.additional_runcmd)
