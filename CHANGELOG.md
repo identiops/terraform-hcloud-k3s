@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2024-01-23
+
+### Bug Fixes
+
+- Syntax error in installation scirpt
+
+### Documentation
+
+- Improve k8s upgrade
+
 ## [0.1.5] - 2024-01-23
 
 ### Documentation
