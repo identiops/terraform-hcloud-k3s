@@ -26,7 +26,7 @@ module "cluster" {
   cluster_name      = "production"
   location          = "nbg1"         # See available locations https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/resources/server#location
   image             = "ubuntu-22.04" # See `HCLOUD_TOKEN=XXXX; curl -H \"Authorization: Bearer $HCLOUD_TOKEN\" https://api.hetzner.cloud/v1/images | jq -r .images[].name | sort`
-  k3s_version       = "v1.28.5+k3s1" # See available versions https://github.com/k3s-io/k3s/tags.
+  k3s_version       = "v1.28.5+k3s1" # See available versions, regular: https://hub.docker.com/r/rancher/k3s/tags upgrade: https://hub.docker.com/r/rancher/k3s-upgrade/tags
 
   # General Settings
   # ----------------

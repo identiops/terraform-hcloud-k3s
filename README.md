@@ -216,10 +216,14 @@ Similarly, to update a node pool, it should be replaced.
 #### Update Kubernetes
 
 1. Determine the next kubernetes version, see
-   [k3s release tags](https://github.com/k3s-io/k3s/tags).
+   [k3s images tags](https://hub.docker.com/r/rancher/k3s/tags) and
+   [k3s upgrade image tags](https://hub.docker.com/r/rancher/k3s-upgrade/tags).
 2. Write the ugrade plan, see
+   [instructions](https://docs.k3s.io/upgrades/automated) and
    [examples](https://github.com/rancher/system-upgrade-controller#example-plans).
 3. Apply an upgrade plan.
+4. Update the `image` variable in the configuration for future nodes to be
+   deployed with the correct image.
 
 #### Update Cilium
 
