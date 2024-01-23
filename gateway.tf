@@ -3,6 +3,16 @@ resource "hcloud_firewall" "gateway" {
 
   rule {
     direction = "in"
+    protocol  = "icmp"
+    port      = ""
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
+
+  rule {
+    direction = "in"
     protocol  = "tcp"
     port      = "22"
     source_ips = [
