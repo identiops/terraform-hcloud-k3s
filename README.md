@@ -7,7 +7,7 @@ secure and maintainable setup. Thanks to Ubuntu's LTS version we get up to 5
 years of peace and quiet before having to upgrade the cluster's operating
 system!
 
-![infrastructure](./infrastructure.png)
+![infrastructure](https://raw.githubusercontent.com/identiops/terraform-hcloud-k3s/main/infrastructure.png)
 
 ## Features
 
@@ -68,12 +68,14 @@ export TF_VAR_hcloud_token
 
 ### Initialization
 
-Make a copy of the [`examples/`](./examples) directory on your local file
-system.
+Make a copy of the
+[`examples/`](https://github.com/identiops/terraform-hcloud-k3s/tree/main/examples)
+directory on your local file system.
 
 - Run `terraform init`
-- Modify the `cluster` section in [`main.tf`](./examples/main.tf) to your
-  liking, e.g. `cluster_name`, `k3s_version`, `ssh_keys`,
+- Modify the `cluster` section in
+  [`main.tf`](https://github.com/identiops/terraform-hcloud-k3s/blob/main/examples/main.tf)
+  to your liking, e.g. `cluster_name`, `k3s_version`, `ssh_keys`,
   `control_plane_main_server_type` and `node_pools`.
 
 That's all it takes to get started!
