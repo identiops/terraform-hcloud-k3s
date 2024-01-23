@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.4] - 2024-01-23
+
+### Documentation
+
+- Make references absolute to work on registry.terraform.io
+
+### Miscellaneous Tasks
+
+- Make version bump commit unconventional to not appear in the changelog
+
 ## [0.1.3] - 2024-01-23
 
 ### Bug Fixes
@@ -78,6 +88,7 @@ All notable changes to this project will be documented in this file.
 - Remove unused ip_offset variable
 - [**breaking**] Make ccm and csi mandatory, correct name of chart version vars
 - Add commit linter and nix package references
+- Bump version
 
 ### README.md
 
