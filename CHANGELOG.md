@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.5] - 2024-01-23
+
+### Documentation
+
+- Update output descriptions
+- Add badges and link to terraform registry
+- List more features
+- Remove duplicated section Addons included
+
+### Features
+
+- Add variable for passing k3s options to main server
+- Ignore changes to server ssh_keys and location
+- Add and document restore and os upgrades
+- Apply and document security hardening
+- Add system upgrade controller
+
+### Miscellaneous Tasks
+
+- Allow inbound ICMP
+- Prefix firewall with cluster name
+- Remove local cloud init file
+
+### Refactor
+
+- Group all setup commands
+
 ## [0.1.4] - 2024-01-23
 
 ### Documentation
