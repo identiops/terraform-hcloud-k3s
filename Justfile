@@ -36,3 +36,24 @@ husky_add_pre-commit_hook:
 # Lint configuration
 lint:
     tflint --recursive
+
+# Create a new release of this module. LEVEL can be one of: major, minor, patch, premajor, preminor, prepatch, or prerelease.
+release LEVEL="patch":
+    #!/usr/bin/env nu
+    if (git rev-parse --abbrev-ref HEAD) != "main" {
+      print -e "ERROR: A new release can only be created on the main branch."
+      exit 1
+    }
+    if (git status --porcelain | wc -l) != "0" {
+      print -e "ERROR: Repository contains uncommited changes."
+      exit 1
+    }
+    let current_version = (git describe | str replace -r "-.*" "" | npx semver $in)
+    let new_version = ($current_version | npx semver -i "{{ LEVEL }}" $in)
+    input -s $"Version will be bumped from ($current_version) to ($new_version).\nPress enter to confirm.\n"
+    open --raw examples/main.tf | str replace -r "\\?ref=.*" $"?ref=($new_version)\"" | save -f examples/main.tf
+    git cliff -t $new_version -o CHANGELOG.md
+    git add examples/main.tf CHANGELOG.md
+    git commit -m "chore: bump version"
+    git tag -s -m $new_version $new_version
+    git push --atomic origin refs/heads/main $"refs/tags/($new_version)"
