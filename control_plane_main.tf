@@ -71,7 +71,7 @@ locals {
       <<-EOT
       ${local.k3s_install~}
       sh -s - server \
-      ${var.control_plane_main_reset.join != "" ? "--cluster-init" : ""} \
+      ${var.control_plane_main_reset.join != "" ? "" : "--cluster-init"} \
       ${var.control_plane_main_reset.reset ? "--cluster-reset --cluster-reset-restore-path='${var.control_plane_main_reset.path}'" : ""} \
       ${local.control_plane_arguments~}
       ${!var.control_plane_main_schedule_workloads ? "--node-taint node-role.kubernetes.io/control-plane=true:NoExecute" : ""} \
