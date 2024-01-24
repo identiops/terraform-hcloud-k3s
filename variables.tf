@@ -153,7 +153,7 @@ variable "kured_reboot_days" {
 variable "kured_start_time" {
   description = "Kured system reboot start time, see https://kured.dev/docs/configuration/#setting-a-schedule"
   type        = string
-  default     = "2am"
+  default     = "1am"
 }
 
 variable "kured_end_time" {
