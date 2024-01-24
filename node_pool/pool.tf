@@ -200,19 +200,27 @@ variable "additional_cloud_init" {
 }
 
 variable "prices" {
-  description = "List of prices"
+  description = "List of prices."
   type        = any
 }
 
+output "node_count" {
+  description = "Number of nodes."
+  value       = var.node_count
+}
+
 output "labels" {
-  value = var.node_labels
+  description = "Node pool labels."
+  value       = { for k, v in var.node_labels : k => v }
 }
 
 output "type" {
-  value = var.node_type
+  description = "Server type."
+  value       = var.node_type
 }
 
 output "nodes" {
+  description = "Node details."
   value = {
     for n in hcloud_server.pool :
     n.name => {
@@ -227,7 +235,7 @@ output "nodes" {
 }
 
 output "costs" {
-  description = "Total monthly costs for running the cluster"
+  description = "Monthly costs for this node pool."
   value = {
     net   = local.costs_node.net * var.node_count
     gross = local.costs_node.gross * var.node_count

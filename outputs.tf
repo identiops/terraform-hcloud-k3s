@@ -4,7 +4,7 @@ output "gateway" {
   value = {
     name   = hcloud_server.gateway.name,
     type   = var.gateway_server_type,
-    labels = var.gateway_labels
+    labels = { for k, v in var.gateway_labels : k => v }
     public = {
       ipv4 = hcloud_server.gateway.ipv4_address,
       ipv6 = hcloud_server.gateway.ipv6_address,
@@ -20,7 +20,7 @@ output "control_plane_main" {
   value = {
     name   = hcloud_server.control_plane_main.name,
     type   = var.control_plane_main_server_type,
-    labels = local.control_plane_main_labels
+    labels = { for k, v in local.control_plane_main_labels : k => v }
     public = {
       ipv4 = hcloud_server.control_plane_main.ipv4_address,
       ipv6 = hcloud_server.control_plane_main.ipv6_address
@@ -40,9 +40,10 @@ output "total_monthly_costs" {
   depends_on  = [module.node_pools]
   description = "Total monthly costs for running the cluster."
   value = {
-    net      = sum(concat([local.costs_gateway.net, local.costs_main.net], [for pool in module.node_pools : pool.costs.net]))
-    gross    = sum(concat([local.costs_gateway.gross, local.costs_main.gross], [for pool in module.node_pools : pool.costs.gross]))
-    currency = local.prices.currency
-    vat_rate = tonumber(local.prices.vat_rate)
+    node_count = sum(concat([1, 1], [for pool in module.node_pools : pool.node_count]))
+    net        = sum(concat([local.costs_gateway.net, local.costs_main.net], [for pool in module.node_pools : pool.costs.net]))
+    gross      = sum(concat([local.costs_gateway.gross, local.costs_main.gross], [for pool in module.node_pools : pool.costs.gross]))
+    currency   = local.prices.currency
+    vat_rate   = tonumber(local.prices.vat_rate)
   }
 }
