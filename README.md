@@ -58,6 +58,13 @@ https://registry.terraform.io/modules/identiops/k3s
   nodes via SSH/SCP.
 - Documentation of common administrative tasks and debugging tools.
 
+### To be added
+
+- OIDC support for user authentication. Some configuration is in place but it
+  hasen't been tested, yet.
+- Remove the control-plane-main node and make the cluster fully run on node
+  pools.
+
 ## Install
 
 ### Prerequisites
