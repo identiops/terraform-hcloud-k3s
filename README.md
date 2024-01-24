@@ -132,10 +132,21 @@ This will do the following:
 
 #### Add Load Balancer
 
-TODO
+Add annotations to the service of type load balancer, e.g. the ingress
+controller. A new load balancer will be added via the Hetzner Cloud Controller
+Manager and configured to route traffic to the service.
 
-Add annotation TODO to the service of type load balancer. A new load balancer
-will be added via the Hetzner Cloud Controller Manager.
+See
+[List of supported Load Balancer Annotations](https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/internal/annotation/load_balancer.go).
+
+Useful annotations:
+
+- `load-balancer.hetzner.cloud/protocol: "tcp"`
+- `load-balancer.hetzner.cloud/location: "fsn1"`
+- `load-balancer.hetzner.cloud/use-private-ip: "true"` - route traffic to the
+  internal interface of the servers.
+- `load-balancer.hetzner.cloud/type: "lb11"` - the type of load balancer, see
+  https://docs.hetzner.com/cloud/load-balancers/overview
 
 #### Add Nodes or Node Pools
 
