@@ -18,6 +18,9 @@ system!
 Terraform module published at:
 https://registry.terraform.io/modules/identiops/k3s
 
+What changed in the latest version? See
+[CHANGELOG.md](https://github.com/identiops/terraform-hcloud-k3s/tree/main/CHANGELOG.md).
+
 ![infrastructure](https://raw.githubusercontent.com/identiops/terraform-hcloud-k3s/main/infrastructure.png)
 
 ## Features
