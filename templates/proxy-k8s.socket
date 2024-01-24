@@ -1,7 +1,0 @@
-[Socket]
-ListenStream=6443
-
-[Install]
-WantedBy=sockets.target
-
-# vi: ft=ini:tw=80:sw=2:ts=4:sts=4:et

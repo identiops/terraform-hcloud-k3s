@@ -14,7 +14,7 @@ resource "hcloud_server" "pool" {
 
   lifecycle {
     prevent_destroy = false
-    ignore_changes  = [image, location, ssh_keys, user_data]
+    ignore_changes  = [image, location, ssh_keys, user_data, network]
   }
 
   count              = var.node_count
@@ -106,11 +106,6 @@ variable "name" {
 
 variable "delete_protection" {
   description = "Prevent cluster nodes from manual deletion. Is lifted automatically when cluster is destroyed. See https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/resources/server#delete_protection"
-  type        = bool
-}
-
-variable "is_control_plane" {
-  description = "Is control plane node pool."
   type        = bool
 }
 
@@ -209,8 +204,8 @@ variable "prices" {
   type        = any
 }
 
-output "is_control_plane" {
-  value = var.is_control_plane
+output "labels" {
+  value = var.node_labels
 }
 
 output "type" {

@@ -1,7 +1,7 @@
 resource "hcloud_server" "control_plane_main" {
   lifecycle {
     prevent_destroy = false
-    ignore_changes  = [image, location, ssh_keys, user_data]
+    ignore_changes  = [image, location, ssh_keys, user_data, network]
   }
   depends_on = [time_sleep.wait_for_gateway_to_become_ready]
 
@@ -12,7 +12,7 @@ resource "hcloud_server" "control_plane_main" {
   image              = var.image
   server_type        = var.control_plane_main_server_type
   ssh_keys           = [for k in hcloud_ssh_key.pub_keys : k.name]
-  labels             = var.control_plane_main_labels
+  labels             = local.control_plane_main_labels
   user_data          = local.control_plane_main_user_data
   firewall_ids       = var.control_plane_firewall_ids
 
@@ -65,6 +65,7 @@ locals {
     # packages        = concat(local.base_packages, var.additional_packages) # netcat is required for acting as an ssh jump jost
     runcmd = concat([
       local.security_setup,
+      local.control_plane_k8s_security_setup,
       local.k8s_security_setup,
       local.package_updates,
       var.control_plane_main_reset.join != "" ? "export K3S_URL='https://${var.control_plane_main_reset.join}:6443'" : "",
@@ -95,7 +96,7 @@ locals {
       helm install hcloud-ccm hcloud/hcloud-cloud-controller-manager -n kube-system --version '${var.hcloud_ccm_driver_chart_version}' --set 'networking.enabled=true,networking.clusterCIDR=${local.cluster_cidr_network}'
       helm install hcloud-csi hcloud/hcloud-csi -n kube-system --version '${var.hcloud_csi_driver_chart_version}' --set 'storageClasses[0].name=hcloud-volumes,storageClasses[0].defaultStorageClass=true,storageClasses[0].retainPolicy=Retain'
       helm repo add kubereboot https://kubereboot.github.io/charts
-      helm install -n kube-system kured kubereboot/kured --version '${var.kured_chart_version}' --set 'configuration.timeZone=${var.additional_cloud_init.timezone},configuration.startTime=${var.kured_start_time},configuration.endTime=${var.kured_end_time},configuration.rebootDays={${var.kured_reboot_days}'
+      helm install -n kube-system kured kubereboot/kured --version '${var.kured_chart_version}' --set 'configuration.timeZone=${var.additional_cloud_init.timezone},configuration.startTime=${var.kured_start_time},configuration.endTime=${var.kured_end_time},configuration.rebootDays={${var.kured_reboot_days}}'
       kubectl apply -f "https://github.com/rancher/system-upgrade-controller/releases/download/${var.system_upgrade_controller_version}/system-upgrade-controller.yaml"
       # rm /usr/local/bin/helm
       EOT

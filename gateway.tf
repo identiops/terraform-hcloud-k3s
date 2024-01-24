@@ -53,28 +53,39 @@ resource "hcloud_server" "gateway" {
     package_update             = true
     package_upgrade            = true
     package_reboot_if_required = true
-    packages                   = concat(["netcat-openbsd"], local.base_packages) # netcat is required for acting as an ssh jump jost
+    packages                   = concat(["netcat-openbsd", "haproxy"], local.base_packages) # netcat is required for acting as an ssh jump jost
     # Find runcmd: find /var/lib/cloud/instances -name runcmd
     runcmd = concat([
       local.security_setup,
+      "ufw allow proto tcp from any to any port 6443",
       <<-EOT
       echo 'Unattended-Upgrade::Automatic-Reboot "true";' >> /etc/apt/apt.conf.d/50unattended-upgrades
       # Enable packet forwarding
       ufw route allow in on ens10 out on eth0
       systemctl daemon-reload
-      systemctl enable --now proxy-k8s.socket
+      export NU_VERSION="0.89.0"
+      curl -Lo /tmp/nu.tar.gz https://github.com/nushell/nushell/releases/download/$NU_VERSION/nu-$NU_VERSION-x86_64-linux-gnu-full.tar.gz
+      tar xvzfC /tmp/nu.tar.gz /tmp nu-$NU_VERSION-x86_64-linux-gnu-full/nu
+      mv /tmp/nu-$NU_VERSION-x86_64-linux-gnu-full/nu /usr/local/bin
+      mkdir -p /etc/haproxy/haproxy.d
+      echo 'EXTRAOPTS="-f /etc/haproxy/haproxy.d"' >> /etc/default/haproxy
+      systemctl restart haproxy
+      systemctl enable --now haproxy-k8s.timer
       EOT
     ], var.additional_runcmd)
     write_files = [
       {
-        path    = "/etc/systemd/system/proxy-k8s.socket"
-        content = file("${path.module}/templates/proxy-k8s.socket")
+        path        = "/usr/local/bin/haproxy-k8s.nu"
+        content     = templatefile("${path.module}/templates/haproxy-k8s.nu", { token = var.hcloud_token })
+        permissions = "0700"
       },
       {
-        path = "/etc/systemd/system/proxy-k8s.service"
-        content = templatefile("${path.module}/templates/proxy-k8s.service", {
-          cluster_ip = "10.0.1.2" # can't be retrieved dynamically .. it would create a loop as it depends on the main server
-        })
+        path    = "/etc/systemd/system/haproxy-k8s.service"
+        content = file("${path.module}/templates/haproxy-k8s.service")
+      },
+      {
+        path    = "/etc/systemd/system/haproxy-k8s.timer"
+        content = file("${path.module}/templates/haproxy-k8s.timer")
       },
       {
         path    = "/etc/systemd/network/gateway-forwarding.network"

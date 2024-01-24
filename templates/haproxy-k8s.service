@@ -1,0 +1,8 @@
+[Unit]
+Description=Invoke haproxy-k8s
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/haproxy-k8s.nu
+
+# vi: ft=toml:tw=80:sw=2:ts=4:sts=4:et

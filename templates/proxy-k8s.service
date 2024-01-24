@@ -1,9 +1,0 @@
-[Unit]
-Requires=proxy-k8s.socket
-After=proxy-k8s.socket
-
-[Service]
-Type=notify
-ExecStart=/usr/lib/systemd/systemd-socket-proxyd ${cluster_ip}:6443
-
-# vi: ft=ini:tw=80:sw=2:ts=4:sts=4:et

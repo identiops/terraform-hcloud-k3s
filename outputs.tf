@@ -2,8 +2,9 @@ output "gateway" {
   depends_on  = [hcloud_server.gateway]
   description = "IP Addresses of the gateway."
   value = {
-    name = hcloud_server.gateway.name,
-    type = var.gateway_server_type,
+    name   = hcloud_server.gateway.name,
+    type   = var.gateway_server_type,
+    labels = var.gateway_labels
     public = {
       ipv4 = hcloud_server.gateway.ipv4_address,
       ipv6 = hcloud_server.gateway.ipv6_address,
@@ -17,8 +18,9 @@ output "control_plane_main" {
   depends_on  = [hcloud_server.control_plane_main]
   description = "IP Addresses of the control plane main node."
   value = {
-    name = hcloud_server.control_plane_main.name,
-    type = var.control_plane_main_server_type,
+    name   = hcloud_server.control_plane_main.name,
+    type   = var.control_plane_main_server_type,
+    labels = local.control_plane_main_labels
     public = {
       ipv4 = hcloud_server.control_plane_main.ipv4_address,
       ipv6 = hcloud_server.control_plane_main.ipv6_address

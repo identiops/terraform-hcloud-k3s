@@ -10,8 +10,7 @@ module "node_pools" {
   delete_protection      = var.delete_protection
   node_type              = each.value.type
   node_count             = each.value.count
-  node_labels            = each.value.labels
-  is_control_plane       = each.value.is_control_plane
+  node_labels            = merge(each.value.labels, each.value.is_control_plane ? { "control-plane" = "true" } : {})
   image                  = var.image
   ssh_keys               = [for k in hcloud_ssh_key.pub_keys : k.name]
   firewall_ids           = var.worker_node_firewall_ids
@@ -21,11 +20,12 @@ module "node_pools" {
 
   runcmd = concat([
     local.security_setup,
+    each.value.is_control_plane ? local.control_plane_k8s_security_setup : "",
     local.k8s_security_setup,
     local.package_updates,
+    "export K3S_URL='https://${hcloud_server_network.gateway.ip}:6443'",
     each.value.is_control_plane ?
     <<-EOT
-      export K3S_URL="https://${hcloud_server_network.control_plane_main.ip}:6443"
       ${local.k3s_install~}
       sh -s - server \
       ${local.control_plane_arguments~}
@@ -34,7 +34,6 @@ module "node_pools" {
       EOT
     :
     <<-EOT
-      export K3S_URL=https://${hcloud_server_network.control_plane_main.ip}:6443
       ${local.k3s_install~}
       sh -s - agent ${local.common_arguments~}
       EOT
