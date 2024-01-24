@@ -390,7 +390,16 @@ find /var/lib/cloud/instances -name runcmd
 sh -ex PATH_TO_RUNCMD
 ```
 
-## Related Projects
+## Related Documentation
+
+- [Cilium](https://docs.cilium.io/)
+- [Cloud-init](https://cloudinit.readthedocs.io/)
+- [Hetzner API](https://docs.hetzner.cloud/)
+- [Hetzner Cloud Platform](https://docs.hetzner.com/cloud)
+- [Terraform Module Registry](https://registry.terraform.io/)
+- [Terraform](https://www.terraform.io/docs/)
+
+## Similar Projects
 
 - [k-andy](https://github.com/StarpTech/k-andy) Zero friction Kubernetes stack
   on Hetzner Cloud.
@@ -408,16 +417,6 @@ sh -ex PATH_TO_RUNCMD
   - Not terraform-based.
 - [terraform-hcloud-kube-hetzner](https://github.com/kube-hetzner/terraform-hcloud-kube-hetzner).
   Optimized and Maintenance-free Kubernetes on Hetzner Cloud in one command!
-- [Rancher system-upgrade-controller](https://rancher.com/docs/k3s/latest/en/upgrades/automated/)
-
-## Related Documentation
-
-- [Cilium](https://docs.cilium.io/)
-- [Cloud-init](https://cloudinit.readthedocs.io/)
-- [Hetzner API](https://docs.hetzner.cloud/)
-- [Hetzner Cloud Platform](https://docs.hetzner.com/cloud)
-- [Terraform Module Registry](https://registry.terraform.io/)
-- [Terraform](https://www.terraform.io/docs/)
 
 ## Special Thanks
 
