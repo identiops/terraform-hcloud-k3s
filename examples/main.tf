@@ -34,16 +34,16 @@ module "cluster" {
     "john" = file("john.pub")
     "jane" = "ssh-xxxx xxxxx jane@example"
   }
-  cilium_version                    = "1.14.5"  # See available version https://github.com/cilium/cilium
+  cilium_version                    = "1.14.5"  # See available versions https://github.com/cilium/cilium
   hcloud_ccm_driver_chart_version   = "1.19.0"  # Check k8s compatibility https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy
   hcloud_csi_driver_chart_version   = "2.6.0"   # Check k8s compatibility https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy
-  kured_chart_version               = "5.4.1"   # See available version https://artifacthub.io/packages/helm/kured/kured
+  kured_chart_version               = "5.4.1"   # See available versions https://artifacthub.io/packages/helm/kured/kured
   system_upgrade_controller_version = "v0.13.2" # See available versions https://github.com/rancher/system-upgrade-controller
 
   # Control Plane Settings
   # ----------------------
   control_plane_main_schedule_workloads = true
-  control_plane_main_server_type        = "cx31" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
+  control_plane_main_server_type        = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
   additional_cloud_init = {
     timezone = "Europe/Berlin" # See available time zones https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
   }
@@ -55,7 +55,7 @@ module "cluster" {
     system = {
       is_control_plane   = true
       schedule_workloads = true
-      type               = "cx31" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
+      type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
       count              = 2
       labels = {
         # "control-plane" = "yes"
@@ -67,7 +67,7 @@ module "cluster" {
     workers = {
       is_control_plane   = false
       schedule_workloads = true
-      type               = "cx31" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
+      type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
       count              = 3
       labels             = {}
       taints             = {}
