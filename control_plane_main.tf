@@ -75,7 +75,7 @@ locals {
       ${var.control_plane_main_reset.join != "" ? "" : "--cluster-init"} \
       ${var.control_plane_main_reset.reset ? "--cluster-reset --cluster-reset-restore-path='${var.control_plane_main_reset.path}'" : ""} \
       ${local.control_plane_arguments~}
-      ${!var.control_plane_main_schedule_workloads ? "--node-taint node-role.kubernetes.io/control-plane=true:NoExecute" : ""} \
+      ${!var.control_plane_main_schedule_workloads ? "--node-taint CriticalAddonsOnly=true:NoExecute" : ""} \
       ${var.control_plane_main_k3s_additional_options} ${var.control_plane_k3s_additional_options} %{for key, value in var.control_plane_main_labels} --node-label=${key}=${value} %{endfor} %{for key, value in local.kube-apiserver-args} --kube-apiserver-arg=${key}=${value} %{endfor}
       while ! test -d /var/lib/rancher/k3s/server/manifests; do
         echo "Waiting for '/var/lib/rancher/k3s/server/manifests'"
@@ -96,7 +96,7 @@ locals {
       helm install hcloud-ccm hcloud/hcloud-cloud-controller-manager -n kube-system --version '${var.hcloud_ccm_driver_chart_version}' --set 'networking.enabled=true,networking.clusterCIDR=${local.cluster_cidr_network}'
       helm install hcloud-csi hcloud/hcloud-csi -n kube-system --version '${var.hcloud_csi_driver_chart_version}' --set 'storageClasses[0].name=hcloud-volumes,storageClasses[0].defaultStorageClass=true,storageClasses[0].retainPolicy=Retain'
       helm repo add kubereboot https://kubereboot.github.io/charts
-      helm install -n kube-system kured kubereboot/kured --version '${var.kured_chart_version}' --set 'configuration.timeZone=${var.additional_cloud_init.timezone},configuration.startTime=${var.kured_start_time},configuration.endTime=${var.kured_end_time},configuration.rebootDays={${var.kured_reboot_days}}'
+      helm install -n kube-system kured kubereboot/kured --version '${var.kured_chart_version}' --set 'configuration.timeZone=${var.additional_cloud_init.timezone},configuration.startTime=${var.kured_start_time},configuration.endTime=${var.kured_end_time},configuration.rebootDays={${var.kured_reboot_days}},tolerations[0].key=CriticalAddonsOnly,tolerations[0].operator=Exists'
       kubectl apply -f "https://github.com/rancher/system-upgrade-controller/releases/download/${var.system_upgrade_controller_version}/system-upgrade-controller.yaml"
       # rm /usr/local/bin/helm
       EOT
