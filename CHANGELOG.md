@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - 2024-01-24
+
+### Bug Fixes
+
+- Add missing k3s --cloud-init switch
+
+### Documentation
+
+- Shorten link to terraform module
+- Make runcmd debugging use sh -e
+- Reorder documentation
+- Document load balancer annotations
+- Add a to be added section
+- Add changelog reference
+
+### Features
+
+- Use haproxy on gateway to proxy port 6443
+- Show ports and protocols in architecture picture
+- Add node_count to pools and total costs output and optimize label output
+
+### Miscellaneous Tasks
+
+- Remove mandatory newline
+- Change schedule to start at 1am
+- Change no workload taint back to CriticalAddonsOnly
+- Update description and lower suggested node size
+
 ## [0.2.0] - 2024-01-23
 
 ### Bug Fixes
