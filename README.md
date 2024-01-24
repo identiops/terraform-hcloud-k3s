@@ -26,15 +26,15 @@ What changed in the latest version? See
 ## Features
 
 - [k3s](https://k3s.io/) based kubernetes cluster.
-- Kubernetes update managment via
+- Kubernetes update management via
   [System Upgrade Controller](https://github.com/rancher/system-upgrade-controller).
 - Secured default configuration:
   - Cluster nodes have no public network interface.
   - SSH key required for remote access.
   - `fail2ban` limits SSH brute force attacks.
   - Internal firewall on all nodes with minimal exposure.
-  - Cluster is not exposed to incoming traffic from the internet after the
-    initiral setup. The cluster administrator starts exposing the cluster by
+  - Cluster is not exposed to incoming traffic from the Internet after the
+    initial setup. The cluster administrator starts exposing the cluster by
     deploying a load balancer, e.g. by annotating an installed ingress
     controller.
   - [CSI hardening guide](https://docs.k3s.io/security/hardening-guide) applied
@@ -64,7 +64,7 @@ What changed in the latest version? See
 ### To be added
 
 - OIDC support for user authentication. Some configuration is in place but it
-  hasen't been tested, yet.
+  hasn't been tested, yet.
 - Remove the control-plane-main node and make the cluster fully run on node
   pools.
 
@@ -422,11 +422,8 @@ sh -ex PATH_TO_RUNCMD
 
 ## Similar Projects
 
-- [k-andy](https://github.com/StarpTech/k-andy) Zero friction Kubernetes stack
-  on Hetzner Cloud.
-  - Terraform-based stack.
-  - Distributed across multiple Hetzner sites and data centers.
-  - Support for multiple control-plane servers.
+- [hcloud-k3s](https://github.com/cicdteam/terraform-hcloud-k3s) Original
+  project that this project has been forked from.
 - [hetzner-cloud-k3s](https://github.com/vitobotta/hetzner-cloud-k3s) A fully
   functional, super cheap Kubernetes cluster in Hetzner Cloud in 1m30s or less
   - Not terraform-based.
@@ -436,6 +433,11 @@ sh -ex PATH_TO_RUNCMD
   distribution k3s by Rancher. Successor of
   [hetzner-cloud-k3s](https://github.com/vitobotta/hetzner-cloud-k3s).
   - Not terraform-based.
+- [k-andy](https://github.com/StarpTech/k-andy) Zero friction Kubernetes stack
+  on Hetzner Cloud.
+  - Terraform-based stack.
+  - Distributed across multiple Hetzner sites and data centers.
+  - Support for multiple control-plane servers.
 - [terraform-hcloud-kube-hetzner](https://github.com/kube-hetzner/terraform-hcloud-kube-hetzner).
   Optimized and Maintenance-free Kubernetes on Hetzner Cloud in one command!
 
