@@ -22,10 +22,10 @@
           # Shared dependencies
           # opentofu # Terraform OSS https://opentofu.org/
           bashInteractive
+          deno # JS interpreter https://deno.land/
           gh # GitHub CLI https://cli.github.com/
           git-cliff # Changelog generator https://github.com/orhun/git-cliff
           just # Simple make replacement https://just.systems/
-          nodejs_20 # JS interpreter https://nodejs.org/en/
           tflint # Terraform linter https://github.com/terraform-linters/tflint
           unstable.nushell # Nu Shell https://www.nushell.sh/
 

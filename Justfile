@@ -16,22 +16,20 @@ default:
 format:
     @just --fmt --unstable
 
-# Install commit hooks
-husky_install:
+# Install git commit hooks
+githooks:
     #!/usr/bin/env nu
-    if (git config core.hooksPath) != '.husky' or not ('.husky/_/husky.sh' | path exists) {
+    let hooks_folder = '.githooks'
+    if (git config core.hooksPath) != $hooks_folder {
       print 'Installing git commit hooks'
-      npx husky install
-      git config core.hooksPath .husky
-      rm .husky/_/.gitignore # commit huskey
-      git add .husky
+      mkdir $hooks_folder
+      git config core.hooksPath $hooks_folder
     }
-
-# Add pre-commit hook
-husky_add_pre-commit_hook:
-    #!/usr/bin/env nu
-    npx husky add .husky/pre-commit
-    print "Add pre-commit hook with: npx husky add .husky/pre-commit"
+    if not ($hooks_folder | path exists) {
+      "#!/usr/bin/env sh\nset -eu\necho 'ERROR: customize this git commit hook.'\nexit 1" | save $"($hooks_folder)/pre-commit"
+      chmod 755 $"($hooks_folder)/pre-commit"
+      git add $hooks_folder
+    }
 
 # Lint configuration
 lint:
@@ -48,8 +46,8 @@ release LEVEL="patch":
       print -e "ERROR: Repository contains uncommited changes."
       exit 1
     }
-    let current_version = (git describe | str replace -r "-.*" "" | npx semver $in)
-    let new_version = ($current_version | npx semver -i "{{ LEVEL }}" $in)
+    let current_version = (git describe | str replace -r "-.*" "" | deno run npm:semver $in)
+    let new_version = ($current_version | deno run npm:semver -i "{{ LEVEL }}" $in)
     input -s $"Version will be bumped from ($current_version) to ($new_version).\nPress enter to confirm.\n"
     open --raw examples/main.tf | str replace -r "\\?ref=.*" $"?ref=($new_version)\"" | save -f examples/main.tf
     git cliff -t $new_version -o CHANGELOG.md
