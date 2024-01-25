@@ -1,7 +1,7 @@
 #!/usr/bin/env just --justfile
 # Documentation: https://just.systems/man/en/
 
-set shell := ["nu", "-c"]
+set shell := ['nu', "-c"]
 
 # Integration with nodejs package.json scripts, see https://just.systems/man/en/chapter_65.html
 # export PATH := "node_modules/.bin:" + env_var('PATH')
@@ -19,8 +19,8 @@ format:
 # Install commit hooks
 husky_install:
     #!/usr/bin/env nu
-    if (git config core.hooksPath) != ".husky" or (".husky/_/husky.sh" | path exists | not in) {
-      print "Installing git commit hooks"
+    if (git config core.hooksPath) != '.husky' or not ('.husky/_/husky.sh' | path exists) {
+      print 'Installing git commit hooks'
       npx husky install
       git config core.hooksPath .husky
       rm .husky/_/.gitignore # commit huskey
