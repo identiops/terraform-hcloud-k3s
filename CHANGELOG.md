@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - 2024-01-26
+
+### Documentation
+
+- Correct typos and add hcloud-k3s reference
+
+### Features
+
+- Install metrics server via helm
+- [**breaking**] Integrate control_plane_main into node_pools
+
+### Miscellaneous Tasks
+
+- Update husky
+- Replace husky with a plain githooks folder
+- Add validation for node_pools
+- Replace hard-coded default gateway with a dynamic calculation
+- Reorder firewall rules in gateway
+- Manage all scripts in scripts.tf
+- Use terraform registry module as the default source
+
 ## [1.0.0] - 2024-01-24
 
 ### Bug Fixes
