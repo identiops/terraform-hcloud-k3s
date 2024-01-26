@@ -140,7 +140,7 @@ variable "cilium_version" {
 }
 
 variable "kured_chart_version" {
-  description = "Kured version, see https://artifacthub.io/packages/helm/kured/kured"
+  description = "Kured chart version, see https://artifacthub.io/packages/helm/kured/kured"
   type        = string
 }
 
@@ -163,12 +163,17 @@ variable "kured_end_time" {
 }
 
 variable "hcloud_ccm_driver_chart_version" {
-  description = "Hetzner CCM version, see https://github.com/hetznercloud/hcloud-cloud-controller-manager"
+  description = "Hetzner CCM chart version, see https://github.com/hetznercloud/hcloud-cloud-controller-manager"
   type        = string
 }
 
 variable "hcloud_csi_driver_chart_version" {
-  description = "Hetzner CSI driver version, see https://github.com/hetznercloud/csi-driver"
+  description = "Hetzner CSI driver chart version, see https://github.com/hetznercloud/csi-driver"
+  type        = string
+}
+
+variable "metrics_server_chart_version" {
+  description = "Metrics server chart version, see https://artifacthub.io/packages/helm/metrics-server/metrics-server"
   type        = string
 }
 
@@ -250,13 +255,13 @@ variable "control_plane_main_reset" {
 }
 
 variable "control_plane_main_schedule_workloads" {
-  description = "Schedule workloads on main control plane node"
+  description = "Schedule workloads on main control plane node."
   type        = bool
   default     = false
 }
 
 variable "control_plane_main_server_type" {
-  description = "Main control plane node type (size)"
+  description = "Main control plane node type (size)."
   type        = string
 }
 
@@ -298,6 +303,10 @@ variable "node_pools" {
     taints             = map(string)
   }))
   default = {}
+  validation {
+    condition     = alltrue([for pool in var.node_pools : (pool.schedule_workloads == false && pool.is_control_plane) || pool.schedule_workloads])
+    error_message = "`schedule_workloads` can only be set to false for control plane node pools."
+  }
 }
 
 variable "worker_node_firewall_ids" {
