@@ -1,10 +1,6 @@
-<div style="display: flex; gap: 10px;">
-
 ![license](https://img.shields.io/github/license/identiops/terraform-hcloud-k3s)
 
 ![stars](https://img.shields.io/github/stars/identiops/terraform-hcloud-k3s)
-
-</div>
 
 # Kubernetes Terraform installer for Hetzner Cloud
 
@@ -16,7 +12,7 @@ years of peace and quiet before having to upgrade the cluster's operating
 system!
 
 Terraform module published at:
-[https://registry.terraform.io/modules/identiops/k3s/hcloud]()
+[https://registry.terraform.io/modules/identiops/k3s/hcloud](https://registry.terraform.io/modules/identiops/k3s/hcloud)
 
 What changed in the latest version? See
 [CHANGELOG.md](https://github.com/identiops/terraform-hcloud-k3s/tree/main/CHANGELOG.md).
@@ -265,16 +261,18 @@ Perform theses steps for all node pools, except the one with the
 
 #### Update Cilium
 
-See https://docs.cilium.io/en/stable/operations/upgrade/
+See
+[https://docs.cilium.io/en/stable/operations/upgrade/](https://docs.cilium.io/en/stable/operations/upgrade/)
 
 #### Update Hetzner Cloud Controller Manager (CCM)
 
 See
-https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/CHANGELOG.md
+[https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/CHANGELOG.md](https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/CHANGELOG.md)
 
 #### Update Hetzner Cloud Storage Interface (CSI)
 
-See https://github.com/hetznercloud/csi-driver/blob/main/CHANGELOG.md
+See
+[https://github.com/hetznercloud/csi-driver/blob/main/CHANGELOG.md](https://github.com/hetznercloud/csi-driver/blob/main/CHANGELOG.md)
 
 ### Deletion
 
