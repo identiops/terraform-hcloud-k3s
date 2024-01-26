@@ -17,7 +17,8 @@ locals {
     oidc-issuer-url     = var.oidc_issuer_url
     oidc-client-id      = var.oidc_client_id
   } : {}
-  security_setup = <<-EOT
+  default_gateway = cidrhost(var.network_cidr, 1)
+  security_setup  = <<-EOT
   set -eu
   # SSH
   sed -i -e 's/^#*PermitRootLogin .*/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config

@@ -37,7 +37,7 @@ resource "hcloud_server" "pool" {
           name = "ens10"
           subnets = [
             { type    = "dhcp"
-              gateway = "10.0.0.1"
+              gateway = var.default_gateway
               dns_nameservers = [
                 "1.1.1.1",
                 "1.0.0.1",
@@ -52,8 +52,11 @@ resource "hcloud_server" "pool" {
     runcmd          = count.index == 0 && length(var.runcmd_first) > 0 ? var.runcmd_first : var.runcmd
     write_files = [
       {
-        path    = "/etc/systemd/network/default-route.network"
-        content = file("${path.module}/../templates/default-route.network")
+        path = "/etc/systemd/network/default-route.network"
+        content = templatefile("${path.module}/../templates/default-route.network",
+          {
+            default_gateway = var.default_gateway
+        })
       },
       {
         path    = "/etc/sysctl.d/90-kubelet.conf"
@@ -175,6 +178,11 @@ variable "ssh_keys" {
 
 variable "hcloud_network_id" {
   description = "IP Network id."
+  type        = string
+}
+
+variable "default_gateway" {
+  description = "Default gateway."
   type        = string
 }
 

@@ -6,8 +6,7 @@ DHCP=yes
 DNS=1.1.1.1#cloudflare-dns.com 1.0.0.1#cloudflare-dns.com
 
 [Route]
-# ATTENTION: hard coded!
-Gateway=10.0.0.1
+Gateway=${default_gateway}
 Destination=0.0.0.0/0
 GatewayOnlink=yes
 

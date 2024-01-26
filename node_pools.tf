@@ -16,6 +16,7 @@ module "node_pools" {
   hcloud_network_id      = hcloud_network.private.id
   enable_public_net_ipv4 = var.enable_public_net_ipv4
   enable_public_net_ipv6 = var.enable_public_net_ipv6
+  default_gateway        = local.default_gateway
 
   runcmd = concat([
     local.security_setup,
