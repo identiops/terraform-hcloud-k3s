@@ -1,6 +1,6 @@
 ![license](https://img.shields.io/github/license/identiops/terraform-hcloud-k3s)
 
-![stars](https://img.shields.io/github/stars/identiops/terraform-hcloud-k3s)
+[![stars](https://img.shields.io/github/stars/identiops/terraform-hcloud-k3s)](https://github.com/identiops/terraform-hcloud-k3s)
 
 # Kubernetes Terraform installer for Hetzner Cloud
 
