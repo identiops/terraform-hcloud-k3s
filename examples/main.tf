@@ -17,9 +17,9 @@ terraform {
 ###########################
 
 module "cluster" {
-  # source       = "github.com/identiops/terraform-hcloud-k3s?ref=2.0.2"
+  # source       = "github.com/identiops/terraform-hcloud-k3s?ref=2.0.3"
   source       = "identiops/k3s/hcloud"
-  version = "2.0.2"
+  version = "2.0.3"
   hcloud_token = var.hcloud_token # INFO: Set via `export TF_VAR_hcloud_token=xyz
 
   # Cluster Settings
