@@ -1,38 +1,3 @@
-resource "hcloud_firewall" "gateway" {
-  name = "${var.cluster_name}-gateway"
-
-  rule {
-    direction = "in"
-    protocol  = "icmp"
-    port      = ""
-    source_ips = [
-      "0.0.0.0/0",
-      "::/0"
-    ]
-  }
-
-  rule {
-    direction = "in"
-    protocol  = "tcp"
-    port      = "22"
-    source_ips = [
-      "0.0.0.0/0",
-      "::/0"
-    ]
-  }
-
-  rule {
-    direction = "in"
-    protocol  = "tcp"
-    port      = "6443"
-    source_ips = [
-      "0.0.0.0/0",
-      "::/0"
-    ]
-  }
-
-}
-
 resource "hcloud_server" "gateway" {
   lifecycle {
     prevent_destroy = false
@@ -125,4 +90,39 @@ resource "hcloud_network_route" "default" {
   network_id  = hcloud_network.private.id
   destination = "0.0.0.0/0"
   gateway     = hcloud_server_network.gateway.ip
+}
+
+resource "hcloud_firewall" "gateway" {
+  name = "${var.cluster_name}-gateway"
+
+  rule {
+    direction = "in"
+    protocol  = "icmp"
+    port      = ""
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
+
+  rule {
+    direction = "in"
+    protocol  = "tcp"
+    port      = "22"
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
+
+  rule {
+    direction = "in"
+    protocol  = "tcp"
+    port      = "6443"
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
+
 }
