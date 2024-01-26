@@ -47,7 +47,7 @@ What changed in the latest version? See
 - Calculation of monthly costs for every part of the deployment (see
   `terraform output`).
 - Node pools for managing cluster resources efficiently. Minimum cluster size is
-  _one_ main node. Pools can be added, resized, and removed at any time.
+  _one_ node. Pools can be added, resized, and removed at any time.
 - Automatic use of placement groups for node pools to improve availability.
 - Automatic operating system updates with optional automatic reboots via
   [kured](https://kured.dev).
@@ -65,8 +65,6 @@ What changed in the latest version? See
 
 - OIDC support for user authentication. Some configuration is in place but it
   hasn't been tested, yet.
-- Remove the control-plane-main node and make the cluster fully run on node
-  pools.
 
 ## Install
 
@@ -103,8 +101,8 @@ directory on your local file system.
 - Run `terraform init`
 - Modify the `cluster` section in
   [`main.tf`](https://github.com/identiops/terraform-hcloud-k3s/blob/main/examples/main.tf)
-  to your liking, e.g. `cluster_name`, `k3s_version`, `ssh_keys`,
-  `control_plane_main_server_type` and `node_pools`.
+  to your liking, e.g. `cluster_name`, `k3s_version`, `ssh_keys`, and
+  `node_pools`.
 
 That's all it takes to get started!
 
@@ -208,31 +206,50 @@ The gateway will reappear again within a few minutes. This will disrupt the
 internet access of the cluster's nodes for tasks like fetching package updates.
 However, it will not affect the services that are provided via load balancers!
 
-##### Main Control Plane Node
-
-The main control plane node should not be updated but be replaced. For a single
-node cluster, it is recommended to backed the etcd data store on an external s3
-storage, see [k3s Cluster Datastore](https://docs.k3s.io/datastore). Then:
-
-1. Create a new snapshot
-2. Stop kubernetes: `systemctl stop k3s.service`
-3. Delete the node manually from the
-   [Hetzner Console](https://console.hetzner.cloud/)
-4. Set the `control_plane_main_reset` xor `control_plane_main_join` variables.
-   See https://docs.k3s.io/cli/etcd-snapshot
-5. Reapply the configuration: `terraform apply`
-
 ##### Node Pool
 
-Similarly, to update a node pool, it should be replaced.
+Nodes should not be updated manually via `agt-get`, but be replaced. For control
+plane nodes, it is recommended to backup the etcd data store to an external s3
+storage, see [k3s Cluster Datastore](https://docs.k3s.io/datastore).
 
-1. Add a new node pool that uses the new image.
-2. Once the new node pool is up and running, drain the old nodes:
+Perform theses steps ONLY for the node pool with the `cluster_can_init` setting:
+
+1. For control plane pools only: Create a new etcd snapshot, see
+   [k3s etcd-snapshot](https://docs.k3s.io/cli/etcd-snapshot).
+2. For control plane pools only: Ensure that the `cluster_init_action.init` and
+   `cluster_init_action.reset` settings are disabled.
+3. Add a temporary node pool with the `is_control_plane` setting.
+4. Reapply the configuration: `terraform apply`
+5. Once the new node pool is up and running, drain the old nodes:
    `kubectl drain node-xyz`
-3. Once all pods have been migrateded, delete the old nodes:
+6. Once all pods have been migrateded, delete the old nodes:
    `kubectl delete node node-xyz`
-4. Remove the node pool from the terraform configuration.
-5. Reapply the configuration: `terraform apply`
+7. Change the `image` of the node pool with the `cluster_can_init` setting.
+8. Reapply the configuration - the nodes are recreated with the new image:
+   `terraform apply`
+9. Once the node pool is up and running, drain the nodes of the temporary pool:
+   `kubectl drain node-xyz`
+10. Once all pods have been migrateded, delete the nodes of the temporary pool:
+    `kubectl delete node node-xyz`
+11. Remove the temporary node pool from the terraform configuration.
+12. Reapply the configuration: `terraform apply`
+
+Perform theses steps for all node pools, except the one with the
+`cluster_can_init` setting:
+
+1. For control plane pools only: Create a new etcd snapshot, see
+   [k3s etcd-snapshot](https://docs.k3s.io/cli/etcd-snapshot).
+2. For control plane pools only: Ensure that the `cluster_init_action.init` and
+   `cluster_init_action.reset` settings are disabled.
+3. Add a new node pool that uses the new image.
+   - For the control plane pool with the `cluster_can_init` setting: Ensure that
+     the `cluster_init_action.init` and
+4. Once the new node pool is up and running, drain the old nodes:
+   `kubectl drain node-xyz`
+5. Once all pods have been migrateded, delete the old nodes:
+   `kubectl delete node node-xyz`
+6. Remove the node pool from the terraform configuration.
+7. Reapply the configuration: `terraform apply`
 
 #### Update Kubernetes
 

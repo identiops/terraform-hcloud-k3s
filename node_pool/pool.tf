@@ -14,7 +14,7 @@ resource "hcloud_server" "pool" {
 
   lifecycle {
     prevent_destroy = false
-    ignore_changes  = [image, location, ssh_keys, user_data, network]
+    ignore_changes  = [ssh_keys, user_data, network]
   }
 
   count              = var.node_count
@@ -49,7 +49,7 @@ resource "hcloud_server" "pool" {
     }
     package_update  = false
     package_upgrade = false
-    runcmd          = var.runcmd
+    runcmd          = count.index == 0 && length(var.runcmd_first) > 0 ? var.runcmd_first : var.runcmd
     write_files = [
       {
         path    = "/etc/systemd/network/default-route.network"
@@ -132,6 +132,12 @@ variable "location" {
 variable "runcmd" {
   description = "Installation instructions."
   type        = list(string)
+}
+
+variable "runcmd_first" {
+  description = "Installation instructions for the first node in the pool."
+  type        = list(string)
+  default     = []
 }
 
 variable "cluster_name" {

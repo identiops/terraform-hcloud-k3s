@@ -3,11 +3,12 @@ resource "local_file" "ssh_config" {
   filename = "./.ssh/config"
   content = templatefile(
     "${path.module}/templates/ssh_config", {
-      cluster_name          = var.cluster_name
-      cluster_ip            = hcloud_server.gateway.ipv4_address
-      control_plane_main_ip = hcloud_server_network.control_plane_main.ip
-      node_pools            = module.node_pools
-      cwd                   = path.cwd
+      cluster_name = var.cluster_name
+      cluster_ip   = hcloud_server.gateway.ipv4_address
+      control_plane_init_ip = [for pool in module.node_pool_cluster_init :
+      [for node in pool.nodes : node.private[0]][0]][0]
+      node_pools = merge(module.node_pool_cluster_init, module.node_pools)
+      cwd        = path.cwd
     }
   )
   file_permission = "0600"

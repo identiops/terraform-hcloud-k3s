@@ -3,15 +3,11 @@ User root
 
 Host gateway
 HostName ${cluster_ip}
-# Port 22222
 Port 22
 
 # Alias for control plane main serever
 Host cluster
-ProxyCommand ${cwd}/ssh-node gateway nc ${control_plane_main_ip} %p
-
-Host ${cluster_name}-control-plane-main
-ProxyCommand ${cwd}/ssh-node gateway nc ${control_plane_main_ip} %p
+ProxyCommand ${cwd}/ssh-node gateway nc ${control_plane_init_ip} %p
 %{ for pool in node_pools ~}
 %{ for name, node in pool.nodes ~}
 

@@ -18,6 +18,7 @@ locals {
     oidc-client-id      = var.oidc_client_id
   } : {}
   security_setup = <<-EOT
+  set -eu
   # SSH
   sed -i -e 's/^#*PermitRootLogin .*/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
   sed -i -e 's/^#*PasswordAuthentication .*/PasswordAuthentication no/g' /etc/ssh/sshd_config
@@ -69,10 +70,8 @@ locals {
   --disable servicelb \
   ${local.common_arguments~}
   EOT
-  control_plane_main_labels        = merge(var.control_plane_main_labels, { "control-plane" = "true" })
   prices                           = jsondecode(data.http.prices.response_body).pricing
   costs_gateway                    = [for server_type in local.prices.server_types : [for price in server_type.prices : { net = tonumber(price.price_monthly.net), gross = tonumber(price.price_monthly.gross) } if price.location == var.location][0] if server_type.name == var.gateway_server_type][0]
-  costs_main                       = [for server_type in local.prices.server_types : [for price in server_type.prices : { net = tonumber(price.price_monthly.net), gross = tonumber(price.price_monthly.gross) } if price.location == var.location][0] if server_type.name == var.control_plane_main_server_type][0]
 }
 
 data "http" "prices" {

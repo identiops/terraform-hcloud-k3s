@@ -82,7 +82,7 @@ variable "create_scripts" {
 }
 
 variable "network_cidr" {
-  description = "CIDR of the private network."
+  description = "CIDR of the private network. Attention, this setting is hard-coded in the node_pools/pool.tf!! Don't change it without adjusting the module."
   type        = string
   default     = "10.0.0.0/8"
 }
@@ -211,6 +211,9 @@ variable "additional_cloud_init" {
   })
 }
 
+# Gateway Settings
+# ----------------
+
 variable "gateway_firewall_ids" {
   description = "A list of firewall IDs to apply on the gateway."
   type        = list(number)
@@ -236,55 +239,20 @@ variable "gateway_labels" {
 # Control Plane Settings
 # ----------------------
 
-variable "control_plane_main_reset" {
-  description = "ATTENTION: Only set this option when replacing or restoring the control plane main node! Either set the reset and path variable xor the join variable - never both! Path is either the path to (usually /var/lib/rancher/k3s/server/db/...) or the s3 name of the snapshot. Join is the IP address of an existing control plane server that shall be used to join the existing cluster. See https://docs.k3s.io/cli/etcd-snapshot"
-  type = object({
-    reset = optional(bool, false)
-    path  = optional(string, "")
-    join  = optional(string, "")
-  })
-  default = {}
-  validation {
-    condition = (
-      (var.control_plane_main_reset.join == "" && !var.control_plane_main_reset.reset) ||
-      (var.control_plane_main_reset.join != "" && !var.control_plane_main_reset.reset) ||
-      (var.control_plane_main_reset.join == "" && var.control_plane_main_reset.reset && var.control_plane_main_reset.path != "")
-    )
-    error_message = "`path` can not be empty when var.control_plane_main_reset is set. Or either `reset` or `join` can be configured, not both."
-  }
-}
-
-variable "control_plane_main_schedule_workloads" {
-  description = "Schedule workloads on main control plane node."
-  type        = bool
-  default     = false
-}
-
-variable "control_plane_main_server_type" {
-  description = "Main control plane node type (size)."
-  type        = string
-}
-
 variable "control_plane_firewall_ids" {
   description = "A list of firewall IDs to apply on the control plane nodes."
   type        = list(number)
   default     = []
 }
 
-variable "control_plane_main_labels" {
-  description = "Hetzner server labels for main control plane."
-  type        = map(string)
-  default     = {}
-}
-
-variable "control_plane_main_k3s_additional_options" {
-  description = "Additional options passed to the main k3s control plane node during installation."
+variable "control_plane_k3s_init_additional_options" {
+  description = "Additional options passed to the control plane node that initializes the cluster during installation."
   type        = string
   default     = ""
 }
 
 variable "control_plane_k3s_additional_options" {
-  description = "Additional options passed to k3s control plane nodes during installation."
+  description = "Additional options passed to all control plane nodes during installation."
   type        = string
   default     = ""
 }
@@ -293,8 +261,82 @@ variable "control_plane_k3s_additional_options" {
 # ------------------
 
 variable "node_pools" {
-  description = "Map of node pools, control plane and worker pools. Key is the node pool name, value an object specifying the server `type`, `count` of nodes, `labels`, `taints` (https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) and whether it's a control plane pool (`is_control_plane`) and workloads are `schedule_workloads`."
+  description = <<-EOT
+Map of node pools with control plane and worker nodes.
+Key is the node pool's name.
+Value an object specifying:
+- `is_control_plane`: whether it's a control plane pool. Note: don't change this
+  variable after the node pool has been deployed!
+- `schedule_workloads:` whether and workloads can be scheduled, Note: a change
+  of this variable will only affect newly created nodes. So, don't change this
+  variable after the node pool has been deployed!
+- `type`: defines the server type, see https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
+  Note: a change of this variable will cause a redeployment of the whole pool!
+  If this is a control plane pool, mind the initialization settings!
+- `count`: defines the nubmer of nodes. Note: before reducing this count and
+  running `terraform apply`, drain and delete the nodes from kubernetes. The
+  nodes will be removed in descending order - highest number first.
+- `labels`: defines node labels that will be applied to hetzner console and
+  kubernetes. Note: changes to this variable won't affect kubernetes labels of
+  existing nodes!
+- `taints`: defines kubernetes taints, see https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+- Note: changes to this variable won't affect tains of
+  existing nodes!
+- `cluster_can_init`: defines whether the first node of the control plane pool
+  can initialize the cluster. Exactly one node pool must set this variable to
+  `true`.
+- `cluster_init_action`: defines the initialization action that shall be performed
+  - `init`, required for the first run of `terraform apply`. For later runs it
+     should be set to `false` to prevent any accidential reinitialization of the
+     cluster, e.g. when the first node of this pool is manually deleted via
+     the management console. Note: changes to this variable won't affect
+     existing nodes. So, if a reinitialization shall be performed, first delete
+     the node from the cluster and then run `terraform apply` again.
+  - `reset`: required for reinitializing the cluster to an older state.
+  - `reset_restore_path`: is the name or path to the etcd backup, see
+     https://docs.k3s.io/cli/etcd-snapshot?_highlight=reset
+
+Example:
+```
+node_pools = {
+  system = {
+    cluster_can_init = true # Required for one node pool to perform initializing actions.
+    cluster_init_action = {
+      # `init` must be `true` for the first call of `terraform apply.
+      # For later runs it should be set to `false` to prevent any accidential
+      # reinitialization of the cluster, e.g. when the first node of this pool
+      # is manually deleted via the management console.
+      init = true,
+    }
+    is_control_plane   = true
+    schedule_workloads = true
+    type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
+    count              = 3
+    labels = {
+      # "my" = "label"
+    }
+    taints = {
+      # "MyTaint=true" = "NoSchedule"
+    }
+  }
+  workers = {
+    is_control_plane   = false
+    schedule_workloads = true
+    type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
+    count              = 2
+    labels             = {}
+    taints             = {}
+  }
+}
+```
+EOT
   type = map(object({
+    cluster_can_init = optional(bool, false),
+    cluster_init_action = optional(object({
+      init               = optional(bool, false),
+      reset              = optional(bool, false)
+      reset_restore_path = optional(string, "")
+    }), {}),
     is_control_plane   = optional(bool, false),
     schedule_workloads = optional(bool, true),
     type               = string,
@@ -304,8 +346,32 @@ variable "node_pools" {
   }))
   default = {}
   validation {
-    condition     = alltrue([for pool in var.node_pools : (pool.schedule_workloads == false && pool.is_control_plane) || pool.schedule_workloads])
+    condition     = alltrue([for pool in var.node_pools : pool.count > 0])
+    error_message = "`count` must be greater or equal to 1."
+  }
+  validation {
+    condition     = alltrue([for pool in var.node_pools : (!pool.schedule_workloads && pool.is_control_plane) || pool.schedule_workloads])
     error_message = "`schedule_workloads` can only be set to false for control plane node pools."
+  }
+  validation {
+    condition     = anytrue([for pool in var.node_pools : pool.is_control_plane])
+    error_message = "There must be at least one control plane node pool, i.e. `is_control_plane = true`."
+  }
+  validation {
+    condition     = length([for pool in var.node_pools : pool.cluster_can_init if pool.cluster_can_init && pool.is_control_plane]) == 1
+    error_message = "`cluster_can_init` must be set to `true` for exactly one control plane node pool."
+  }
+  validation {
+    condition = alltrue([for pool in var.node_pools :
+      (!pool.cluster_init_action.init || !pool.cluster_init_action.reset) if pool.cluster_can_init
+    ])
+    error_message = "`cluster_init_action.init` and `cluster_init_action.reset` can not be true at the same time."
+  }
+  validation {
+    condition = alltrue([for pool in var.node_pools :
+      (pool.cluster_init_action.reset && pool.cluster_init_action.reset_restore_path != "") if pool.cluster_can_init && pool.cluster_init_action.reset
+    ])
+    error_message = "`cluster_init_action.reset` requires `cluster_init_action.reset_restore_path` to be non-empty."
   }
 }
 

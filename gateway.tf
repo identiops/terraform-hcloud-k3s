@@ -36,7 +36,7 @@ resource "hcloud_firewall" "gateway" {
 resource "hcloud_server" "gateway" {
   lifecycle {
     prevent_destroy = false
-    ignore_changes  = [image, location, ssh_keys, user_data]
+    ignore_changes  = [ssh_keys, user_data]
   }
   depends_on = [hcloud_network_subnet.subnet]
 
