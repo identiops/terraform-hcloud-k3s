@@ -38,6 +38,7 @@ module "cluster" {
   hcloud_ccm_driver_chart_version   = "1.19.0"  # Check k8s compatibility https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy
   hcloud_csi_driver_chart_version   = "2.6.0"   # Check k8s compatibility https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy
   kured_chart_version               = "5.4.1"   # See available versions https://artifacthub.io/packages/helm/kured/kured
+  metrics_server_chart_version      = "3.11.0"  # See available versions https://artifacthub.io/packages/helm/metrics-server/metrics-server
   system_upgrade_controller_version = "v0.13.2" # See available versions https://github.com/rancher/system-upgrade-controller
 
   # Control Plane Settings

@@ -86,7 +86,7 @@ locals {
       curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/$CILIUM_CLI_VERSION/cilium-linux-$CLI_ARCH.tar.gz{,.sha256sum}
       sha256sum --check cilium-linux-$CLI_ARCH.tar.gz.sha256sum
       tar xzvfC cilium-linux-$CLI_ARCH.tar.gz /usr/local/bin
-      rm cilium-linux-$CLI_ARCH.tar.gz{,.sha256sum}
+      rm -f cilium-linux-$CLI_ARCH.tar.gz{,.sha256sum}
       export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
       cilium install --version '${var.cilium_version}' --set-string routingMode=native,ipv4NativeRoutingCIDR=${var.network_cidr},ipam.operator.clusterPoolIPv4PodCIDRList=${local.cluster_cidr_network},k8sServiceHost=${local.cmd_node_ip}
       # rm /usr/local/bin/cilium
@@ -95,6 +95,8 @@ locals {
       helm repo add hcloud https://charts.hetzner.cloud
       helm install hcloud-ccm hcloud/hcloud-cloud-controller-manager -n kube-system --version '${var.hcloud_ccm_driver_chart_version}' --set 'networking.enabled=true,networking.clusterCIDR=${local.cluster_cidr_network}'
       helm install hcloud-csi hcloud/hcloud-csi -n kube-system --version '${var.hcloud_csi_driver_chart_version}' --set 'storageClasses[0].name=hcloud-volumes,storageClasses[0].defaultStorageClass=true,storageClasses[0].retainPolicy=Retain'
+      helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
+      helm install -n kube-system metrics-server metrics-server/metrics-server --version '${var.metrics_server_chart_version}'
       helm repo add kubereboot https://kubereboot.github.io/charts
       helm install -n kube-system kured kubereboot/kured --version '${var.kured_chart_version}' --set 'configuration.timeZone=${var.additional_cloud_init.timezone},configuration.startTime=${var.kured_start_time},configuration.endTime=${var.kured_end_time},configuration.rebootDays={${var.kured_reboot_days}},tolerations[0].key=CriticalAddonsOnly,tolerations[0].operator=Exists'
       kubectl apply -f "https://github.com/rancher/system-upgrade-controller/releases/download/${var.system_upgrade_controller_version}/system-upgrade-controller.yaml"

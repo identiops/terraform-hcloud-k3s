@@ -64,6 +64,7 @@ locals {
   --service-cidr="${local.service_cidr_network}" \
   --disable local-storage \
   --disable-cloud-controller \
+  --disable metrics-server \
   --disable traefik \
   --disable servicelb \
   ${local.common_arguments~}
