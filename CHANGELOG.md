@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.4] - 2024-01-26
+
+### Miscellaneous Tasks
+
+- Remove s3 sample configuation
+
 ## [2.0.3] - 2024-01-26
 
 ### Documentation
