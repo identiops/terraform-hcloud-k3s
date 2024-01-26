@@ -19,7 +19,7 @@ terraform {
 module "cluster" {
   # source       = "github.com/identiops/terraform-hcloud-k3s?ref=2.0.3"
   source       = "identiops/k3s/hcloud"
-  version = "2.0.3"
+  version      = "2.0.3"
   hcloud_token = var.hcloud_token # INFO: Set via `export TF_VAR_hcloud_token=xyz
 
   # Cluster Settings
@@ -46,7 +46,6 @@ module "cluster" {
   # Control Plane Settings
   # ----------------------
   # S3 documentation  https://docs.k3s.io/cli/server
-  control_plane_k3s_init_additional_options = "--etcd-s3 --etcd-s3-region=${var.etcd_s3_region} --etcd-s3-endpoint=s3.${var.etcd_s3_region}.wasabisys.com --etcd-s3-access-key=${var.etcd_s3_access_key} --etcd-s3-secret-key=${var.etcd_s3_secret_key} --etcd-s3-bucket=${var.etcd_s3_bucket} --etcd-s3-folder=etcd"
   additional_cloud_init = {
     timezone = "Europe/Berlin" # See available time zones https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
   }
