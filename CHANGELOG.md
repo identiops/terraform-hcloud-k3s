@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - 2024-01-27
+
+### Documentation
+
+- Remove warning about hard coded gateway
+- Simplify instructions for OS upgrades of the main node pool
+
+### Features
+
+- Replace sleep wait with cluster readiness check script
+
+### Miscellaneous Tasks
+
+- Create a github release for every new version
+- Update copyright and add license identifiers to files
+
 ## [2.0.5] - 2024-01-26
 
 ### Documentation
