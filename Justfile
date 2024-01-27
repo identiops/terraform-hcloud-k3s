@@ -54,7 +54,7 @@ release LEVEL="patch":
     git cliff --strip all -u -t $new_version
     input -s $"Version will be bumped from ($current_version) to ($new_version).\nPress enter to confirm.\n"
     open --raw examples/main.tf | str replace -r "\\?ref=.*" $"?ref=($new_version)\"" | str replace -r ' version *= *".*"' $" version = \"($new_version)\"" | save -f examples/main.tf
-    terraform fmt examples/main.tf
+    tofu fmt examples/main.tf
     git cliff -t $new_version -o CHANGELOG.md
     git add examples/main.tf CHANGELOG.md
     git commit -m $"Bump version to ($new_version)"
