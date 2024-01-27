@@ -1,3 +1,6 @@
+# Copyright 2024, identinet GmbH. All rights reserved.
+# SPDX-License-Identifier: MIT
+
 locals {
   # See https://linuxopsys.com/topics/ubuntu-automatic-updates
   base_packages = [

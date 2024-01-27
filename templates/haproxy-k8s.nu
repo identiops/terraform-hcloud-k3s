@@ -1,5 +1,8 @@
 #!/usr/bin/env nu
 # Dynamically retrieve servers with the control-plane label.
+# Copyright 2024, identinet GmbH. All rights reserved.
+# SPDX-License-Identifier: MIT
+
 let API = "https://api.hetzner.cloud/v1/servers"
 let CFG = "/etc/haproxy/haproxy.d/k8s.cfg"
 let TOKEN = "${token}"

@@ -1,3 +1,6 @@
+# Copyright 2024, identinet GmbH. All rights reserved.
+# SPDX-License-Identifier: MIT
+
 module "node_pool_cluster_init" {
   source     = "./node_pool"
   depends_on = [time_sleep.wait_for_gateway_to_become_ready]

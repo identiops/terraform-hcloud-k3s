@@ -1,5 +1,7 @@
 # Terraform language documentation: https://www.terraform.io/docs/language/index.html
 # HCL language specification: https://github.com/hashicorp/hcl/blob/main/hclsyntax/spec.md
+# Copyright 2024, identinet GmbH. All rights reserved.
+# SPDX-License-Identifier: MIT
 
 ###########################
 #  Backend and Providers  #
@@ -19,7 +21,7 @@ terraform {
 module "cluster" {
   # source       = "github.com/identiops/terraform-hcloud-k3s?ref=2.0.5"
   source       = "identiops/k3s/hcloud"
-  version = "2.0.5"
+  version      = "2.0.5"
   hcloud_token = var.hcloud_token # INFO: Set via `export TF_VAR_hcloud_token=xyz
 
   # Cluster Settings

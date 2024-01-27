@@ -1,5 +1,7 @@
 #!/usr/bin/env just --justfile
 # Documentation: https://just.systems/man/en/
+# Copyright 2024, identinet GmbH. All rights reserved.
+# SPDX-License-Identifier: MIT
 
 set shell := ['nu', "-c"]
 

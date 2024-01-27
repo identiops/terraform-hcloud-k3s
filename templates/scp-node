@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Wrapper for scp that uses the generated SSH configuration.
+# Copyright 2024, identinet GmbH. All rights reserved.
+# SPDX-License-Identifier: MIT
+
 set -eEuo pipefail
 
 scp -F "${cwd}/.ssh/config" "$@"

@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# List known hosts in the cluster.
+# Copyright 2024, identinet GmbH. All rights reserved.
+# SPDX-License-Identifier: MIT
+
 set -eEuo pipefail
 
 sed -ne "s/^Host //p" "${cwd}/.ssh/config"

@@ -1,3 +1,6 @@
+# Copyright 2024, identinet GmbH. All rights reserved.
+# SPDX-License-Identifier: MIT
+
 output "gateway" {
   depends_on  = [hcloud_server.gateway]
   description = "IP Addresses of the gateway."

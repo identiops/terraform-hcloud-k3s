@@ -1,3 +1,6 @@
+# Copyright 2024, identinet GmbH. All rights reserved.
+# SPDX-License-Identifier: MIT
+
 resource "hcloud_network" "private" {
   name              = var.cluster_name
   ip_range          = var.network_cidr

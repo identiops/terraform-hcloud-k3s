@@ -1,3 +1,6 @@
+# Copyright 2024, identinet GmbH. All rights reserved.
+# SPDX-License-Identifier: MIT
+
 module "node_pools" {
   source     = "./node_pool"
   depends_on = [module.node_pool_cluster_init]

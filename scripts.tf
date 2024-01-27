@@ -1,3 +1,6 @@
+# Copyright 2024, identinet GmbH. All rights reserved.
+# SPDX-License-Identifier: MIT
+
 resource "local_file" "ssh_config" {
   count    = var.create_scripts ? 1 : 0
   filename = "./.ssh/config"

@@ -1,3 +1,6 @@
+# Copyright 2024, identinet GmbH. All rights reserved.
+# SPDX-License-Identifier: MIT
+
 variable "hcloud_token" {
   description = "Hetzner cloud auth token."
   type        = string
