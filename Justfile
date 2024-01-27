@@ -50,6 +50,8 @@ release LEVEL="patch":
     }
     let current_version = (git describe | str replace -r "-.*" "" | deno run npm:semver $in)
     let new_version = ($current_version | deno run npm:semver -i "{{ LEVEL }}" $in)
+    print "Changelog:\n"
+    git cliff --strip all -u -t $new_version
     input -s $"Version will be bumped from ($current_version) to ($new_version).\nPress enter to confirm.\n"
     open --raw examples/main.tf | str replace -r "\\?ref=.*" $"?ref=($new_version)\"" | str replace -r ' version *= *".*"' $" version = \"($new_version)\"" | save -f examples/main.tf
     terraform fmt examples/main.tf
