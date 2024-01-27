@@ -210,25 +210,19 @@ storage, see [k3s Cluster Datastore](https://docs.k3s.io/datastore).
 
 Perform theses steps ONLY for the node pool with the `cluster_can_init` setting:
 
-1. For control plane pools only: Create a new etcd snapshot, see
-   [k3s etcd-snapshot](https://docs.k3s.io/cli/etcd-snapshot).
-2. For control plane pools only: Ensure that the `cluster_init_action.init` and
-   `cluster_init_action.reset` settings are disabled.
-3. Add a temporary node pool with the `is_control_plane` setting.
-4. Reapply the configuration: `terraform apply`
-5. Once the new node pool is up and running, drain the old nodes:
-   `kubectl drain node-xyz`
-6. Once all pods have been migrateded, delete the old nodes:
-   `kubectl delete node node-xyz`
-7. Change the `image` of the node pool with the `cluster_can_init` setting.
-8. Reapply the configuration - the nodes are recreated with the new image:
-   `terraform apply`
-9. Once the node pool is up and running, drain the nodes of the temporary pool:
-   `kubectl drain node-xyz`
-10. Once all pods have been migrateded, delete the nodes of the temporary pool:
-    `kubectl delete node node-xyz`
-11. Remove the temporary node pool from the terraform configuration.
-12. Reapply the configuration: `terraform apply`
+- If there is a second node pool that contains control plane nodes there's no
+  special handling required.
+- When there's no other control plane node pool:
+  1. Create a temporary control plane node pool.
+  2. Once the node pool is up and running, drain the nodes of the node pool with
+     the `cluster_can_init` setting: `kubectl drain node-xyz`
+  3. Once all pods have been migrateded, delete the nodes:
+     `kubectl delete node node-xyz`
+  4. Then update the `image` of the node pool with the `cluster_can_init`
+     setting and apply the changes: `terraform apply`
+  5. Wait until the node pool rejoined the cluster.
+  6. Finally, drain and delete the temporary control plane node pool and apply
+     the updated configuration.
 
 Perform theses steps for all node pools, except the one with the
 `cluster_can_init` setting:
