@@ -11,6 +11,26 @@ terraform {
   backend "local" {
     path = "terraform.tfstate"
   }
+  # Example s3 configuration:
+  # backend "s3" {
+  #   bucket = "xxxxx-terraform"
+  #   key    = "prod/terraform.tfstate"
+  #   # access_key                  = {}
+  #   # secret_key                  = {}
+  #   # skip_get_ec2_platforms      = true
+  #   region                      = "eu-central-2"
+  #   skip_credentials_validation = true
+  #   skip_metadata_api_check     = true
+  #   skip_region_validation      = true
+  #   skip_requesting_account_id  = true
+  #   skip_s3_checksum            = true
+  #   use_path_style              = true
+  #   endpoints = {
+  #     iam = "https://iam.eu-central-2.wasabisys.com" # special endpoint URL required, see https://wasabi-support.zendesk.com/hc/en-us/articles/360003362071-How-do-I-use-Terraform-with-Wasabi-
+  #     sts = "https://sts.eu-central-2.wasabisys.com" # special endpoint URL required, see https://wasabi-support.zendesk.com/hc/en-us/articles/360003362071-How-do-I-use-Terraform-with-Wasabi-
+  #     s3  = "https://s3.eu-central-2.wasabisys.com"  # special endpoint URL required, see https://wasabi-support.zendesk.com/hc/en-us/articles/360003362071-How-do-I-use-Terraform-with-Wasabi-
+  #   }
+  # }
   required_version = ">= 1.0"
 }
 
@@ -47,6 +67,9 @@ module "cluster" {
 
   # Control Plane Settings
   # ----------------------
+  # Example s3 configuration:
+  # S3 documentation  https://docs.k3s.io/cli/server
+  # control_plane_k3s_init_additional_options = "--etcd-s3 --etcd-s3-region=${var.etcd_s3_region} --etcd-s3-endpoint=s3.${var.etcd_s3_region}.wasabisys.com --etcd-s3-access-key=${var.etcd_s3_access_key} --etcd-s3-secret-key=${var.etcd_s3_secret_key} --etcd-s3-bucket=${var.etcd_s3_bucket} --etcd-s3-folder=etcd/$(hostname)"
   additional_cloud_init = {
     timezone = "Europe/Berlin" # See available time zones https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
   }
@@ -96,6 +119,27 @@ variable "hcloud_token" {
   type        = string
   sensitive   = true
 }
+
+# Example s3 configuraiton:
+# variable "etcd_s3_region" {
+#   type      = string
+#   sensitive = true
+# }
+# 
+# variable "etcd_s3_access_key" {
+#   type      = string
+#   sensitive = true
+# }
+# 
+# variable "etcd_s3_secret_key" {
+#   type      = string
+#   sensitive = true
+# }
+# 
+# variable "etcd_s3_bucket" {
+#   type      = string
+#   sensitive = true
+# }
 
 ############
 #  Output  #
