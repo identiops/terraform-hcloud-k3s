@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Wrapper for ssh that uses the generated SSH configuration.
+# Copyright 2024, identinet GmbH. All rights reserved.
+# SPDX-License-Identifier: MIT
+
+set -eEuo pipefail
+
+TIMEOUT="$1"
+shift
+END_TIME="$(($(date +%s) + TIMEOUT))"
+URL="$1"
+shift
+CURRENT_TIME=$(date +%s)
+
+while ! curl -sfo /dev/null --connect-timeout 3 --insecure "$URL" && ((CURRENT_TIME <= END_TIME)); do
+	echo "Retrying to retrieve $URL."
+	sleep 2
+	CURRENT_TIME=$(date +%s)
+done
+
+if ((CURRENT_TIME > END_TIME)); then
+	echo "ERROR: Failed to retrieve $URL in time." 1>&2
+	exit 1
+fi
+echo "Successfully retrieved $URL."

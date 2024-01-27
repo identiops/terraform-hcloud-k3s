@@ -55,6 +55,11 @@ resource "hcloud_server" "pool" {
     runcmd          = count.index == 0 && length(var.runcmd_first) > 0 ? var.runcmd_first : var.runcmd
     write_files = [
       {
+        path        = "/usr/local/bin/check-cluster-readiness"
+        content     = file("${path.module}/../templates/check-cluster-readiness")
+        permissions = "0755"
+      },
+      {
         path = "/etc/systemd/network/default-route.network"
         content = templatefile("${path.module}/../templates/default-route.network",
           {

@@ -66,9 +66,7 @@ module "node_pool_cluster_init" {
     each.value.is_control_plane ? local.control_plane_k8s_security_setup : "",
     local.k8s_security_setup,
     local.package_updates,
-    # Add a delay so other control plane nodes are not immediately trying to join when init or reset are triggered
-    (each.value.cluster_init_action.init || each.value.cluster_init_action.reset) ? "sleep 60" : "",
-    "export K3S_URL='https://${hcloud_server_network.gateway.ip}:6443'",
+    local.k3s_url,
     each.value.is_control_plane ?
     <<-EOT
       ${local.k3s_install~}

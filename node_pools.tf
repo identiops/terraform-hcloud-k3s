@@ -26,7 +26,7 @@ module "node_pools" {
     each.value.is_control_plane ? local.control_plane_k8s_security_setup : "",
     local.k8s_security_setup,
     local.package_updates,
-    "export K3S_URL='https://${hcloud_server_network.gateway.ip}:6443'",
+    local.k3s_url,
     each.value.is_control_plane ?
     <<-EOT
       ${local.k3s_install~}

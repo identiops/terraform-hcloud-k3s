@@ -50,6 +50,10 @@ locals {
   DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y
   DEBIAN_FRONTEND=noninteractive apt-get install -y ${join(" ", concat(local.base_packages, var.additional_packages))}
   EOT
+  k3s_url                          = <<-EOT
+  export K3S_URL='https://${hcloud_server_network.gateway.ip}:6443'
+  check-cluster-readiness 600 "$K3S_URL/cacerts"
+  EOT
   k3s_install                      = <<-EOT
   export INSTALL_K3S_CHANNEL="${var.k3s_channel}"
   export INSTALL_K3S_VERSION="${var.k3s_version}"
