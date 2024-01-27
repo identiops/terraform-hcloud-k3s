@@ -82,7 +82,7 @@ variable "create_scripts" {
 }
 
 variable "network_cidr" {
-  description = "CIDR of the private network. Attention, this setting is hard-coded in the node_pools/pool.tf!! Don't change it without adjusting the module."
+  description = "CIDR of the private network."
   type        = string
   default     = "10.0.0.0/8"
 }
