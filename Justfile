@@ -50,8 +50,10 @@ release LEVEL="patch":
     let new_version = ($current_version | deno run npm:semver -i "{{ LEVEL }}" $in)
     input -s $"Version will be bumped from ($current_version) to ($new_version).\nPress enter to confirm.\n"
     open --raw examples/main.tf | str replace -r "\\?ref=.*" $"?ref=($new_version)\"" | str replace -r ' version *= *".*"' $" version = \"($new_version)\"" | save -f examples/main.tf
+    terraform fmt examples/main.tf
     git cliff -t $new_version -o CHANGELOG.md
     git add examples/main.tf CHANGELOG.md
     git commit -m $"Bump version to ($new_version)"
     git tag -s -m $new_version $new_version
     git push --atomic origin refs/heads/main $"refs/tags/($new_version)"
+    git cliff --strip all --current | gh release create -F - $new_version examples/main.tf
