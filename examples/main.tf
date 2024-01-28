@@ -42,7 +42,7 @@ module "cluster" {
   # source       = "github.com/identiops/terraform-hcloud-k3s?ref=2.1.1"
   source       = "identiops/k3s/hcloud"
   version      = "2.1.1"
-  hcloud_token = var.hcloud_token # INFO: Set via `export TF_VAR_hcloud_token=xyz
+  hcloud_token = var.hcloud_token # INFO: Set via `export TF_VAR_hcloud_token=xyz`
 
   # Cluster Settings
   # ----------------
@@ -55,7 +55,7 @@ module "cluster" {
   # General Settings
   # ----------------
   ssh_keys = {
-    "john" = file("john.pub")
+    "john" = file("~/.ssh/id_ed25519.pub")
     "jane" = "ssh-xxxx xxxxx jane@example"
   }
   cilium_version                    = "1.14.5"  # See available versions https://github.com/cilium/cilium
