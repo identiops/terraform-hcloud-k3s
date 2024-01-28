@@ -9,7 +9,7 @@ output "gateway" {
     type     = hcloud_server.gateway.server_type,
     location = hcloud_server.gateway.location,
     image    = hcloud_server.gateway.image
-    labels   = { for k, v in hcloud_server.gateway.labels : k => v }
+    labels   = hcloud_server.gateway.labels != null ? { for k, v in hcloud_server.gateway.labels : k => v } : {}
     public = {
       ipv4 = hcloud_server.gateway.ipv4_address,
       ipv6 = hcloud_server.gateway.ipv6_address,
