@@ -5,6 +5,7 @@ resource "hcloud_server" "gateway" {
   lifecycle {
     prevent_destroy = false
     ignore_changes = [
+      name,
       image,
       location,
       network,
@@ -102,6 +103,13 @@ resource "hcloud_network_route" "default" {
 }
 
 resource "hcloud_firewall" "gateway" {
+  lifecycle {
+    prevent_destroy = false
+    ignore_changes = [
+      name,
+    ]
+  }
+
   name = "${var.cluster_name}-gateway"
 
   rule {

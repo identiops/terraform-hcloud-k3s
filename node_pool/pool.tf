@@ -18,6 +18,7 @@ resource "hcloud_server" "pool" {
   lifecycle {
     prevent_destroy = false
     ignore_changes = [
+      name,
       image,
       location,
       network,
@@ -101,6 +102,13 @@ resource "hcloud_server" "pool" {
 }
 
 resource "hcloud_placement_group" "pool" {
+  lifecycle {
+    prevent_destroy = false
+    ignore_changes = [
+      name,
+    ]
+  }
+
   name   = "${var.cluster_name}-${var.name}"
   type   = "spread"
   labels = var.node_labels

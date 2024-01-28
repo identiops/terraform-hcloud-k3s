@@ -2,6 +2,13 @@
 # SPDX-License-Identifier: MIT
 
 resource "hcloud_network" "private" {
+  lifecycle {
+    prevent_destroy = false
+    ignore_changes = [
+      name,
+    ]
+  }
+
   name              = var.cluster_name
   ip_range          = var.network_cidr
   delete_protection = var.delete_protection
