@@ -21,7 +21,7 @@ What changed in the latest version? See
 
 ## Features
 
-- [k3s](https://k3s.io/) based kubernetes cluster.
+- [k3s](https://k3s.io/) based Kubernetes cluster.
 - Node pools for managing cluster resources efficiently. Pools can be added,
   resized, and removed at any time.
 - Automated Kubernetes update management via
@@ -32,7 +32,7 @@ What changed in the latest version? See
 - Secured default configuration:
   - Deletion protection for all cloud resources.
   - SSH key required for remote access.
-  - `fail2ban` limits SSH brute force attacks.
+  - fail2ban limits SSH brute force attacks.
   - Cluster nodes have no public network interface.
   - Internal firewall active on all nodes for minimal exposure.
   - Support for network policies via [Cilium](https://www.cilium.io/).
@@ -46,7 +46,7 @@ What changed in the latest version? See
   from the within the cluster.
 - Integration of Hetzner Cloud Storage Interface for managing volumes from the
   within the cluster.
-- Convenience scripts for retrieving the kubernetes configuration and accessing
+- Convenience scripts for retrieving the Kubernetes configuration and accessing
   nodes via SSH and SCP.
 - Calculation of monthly costs for every part of the deployment (see
   `terraform output`).
@@ -54,7 +54,7 @@ What changed in the latest version? See
 
 ### To be added
 
-- OIDC support for user authentication. Some configuration is in place but it
+- OIDC support for user authentication. Some configuration is in place, but it
   hasn't been tested, yet.
 
 ## Getting Started
@@ -62,8 +62,8 @@ What changed in the latest version? See
 ### Prerequisites
 
 - [Terraform](https://terraform.io) or [OpenTofu](https://opentofu.org/)
-- Bash
-- SSH with an SSH Key and Agent
+- `bash`
+- `ssh`
 - `kubectl`
 - `jq`
 
@@ -85,7 +85,7 @@ read -sp "Hetzner Cloud API Token: " TF_VAR_hcloud_token
 export TF_VAR_hcloud_token
 ```
 
-2. Create a second Hetzner Cloud API token with just **read** acces.
+2. Create a second Hetzner Cloud API token with just **read** access.
    - Pass the token to terraform via an environment variable:
 
 ```bash
@@ -108,26 +108,26 @@ export TF_VAR_hcloud_token_read_only
 7. Grab a coffee and enjoy the servers popping up in Hetzner's cloud console.
    Wait for about 5 minutes.
 8. Test SSH access to the cluster: `./ssh-node cluster`
-   - ATTENTION: don't hammer the cluster with failing SSH requests or you'll be
+   - ATTENTION: don't hammer the cluster with failing SSH requests, or you'll be
      banned by your cluster automatically! If the request fails, because the
-     cluster node isn't ready yet, wait a another minute.
+     cluster node isn't ready yet, wait another minute.
 9. Once SSH connection is established, double check that everything is working
    as expected:
    - Did the node initialization finish successfully? `cloud-init status`
    - Is the cluster up and running? `kubectl cluster-info`
-10. If the tests were successful, retrieve the kubernetes configuration locally:
+10. If the tests were successful, retrieve the Kubernetes configuration locally:
     `./setkubeconfig`
 
 Enjoy your new cluster! 🚀
 
 ### Usage
 
-Start using your favorite kubernetes tools to interact with the cluster.
+Start using your favorite Kubernetes tools to interact with the cluster.
 
 In addition, a few convenience scripts were created to help with maintenance:
 
-- `setkubeconfig`: retrieves and stores the kubernetes configuration locally.
-- `unsetkubeconfig`: removes the cluster from the local kubernetes
+- `setkubeconfig`: retrieves and stores the Kubernetes configuration locally.
+- `unsetkubeconfig`: removes the cluster from the local Kubernetes
   configuration.
 - `ls-nodes`: lists the nodes that are part of the cluster for access via
   `ssh-node` and `scp-node`.
@@ -148,7 +148,7 @@ See
 
 Useful annotations:
 
-- `load-balancer.hetzner.cloud/name` - name of the load balancer.
+- `load-balancer.hetzner.cloud/name: "traefik-lb"` - name of the load balancer.
 - `load-balancer.hetzner.cloud/protocol: "tcp"`
 - `load-balancer.hetzner.cloud/location: "nbg1"`
 - `load-balancer.hetzner.cloud/use-private-ip: "true"` - required! Route traffic
@@ -162,12 +162,12 @@ The number of nodes in a node pool can be increased at any point. Just increase
 the count and apply the new configuration via `terraform apply`. After a few
 minutes the additional nodes will appear in the cluster.
 
-In the same way, node pools cann be added to the configuration without any
+In the same way, node pools can be added to the configuration without any
 precaution.
 
 ### Remove Nodes or Node Pools
 
-Removing a nodes requires the following steps:
+Removing nodes requires the following steps:
 
 1. Identify the nodes and node pools that shall be removed. If the number of
    nodes in a node pool needs to be decreased, the nodes will be removed from
@@ -177,7 +177,7 @@ Removing a nodes requires the following steps:
 2. Drain all nodes that will be removed of pods:
    `kubectl drain cluster-system-02`
 3. Wait until all pods have been migrated to other nodes before continuing.
-   - If the wrong node was drained, reactivate the node:
+   - If you drained the wrong node, you can reactivate the node with:
      `kubectl uncordon cluster-system-02`
 4. Update the terrafrom configuration and apply it: `terraform apply`
    - Review the plan to verify that the drained nodes will be deleted.
@@ -186,8 +186,8 @@ Removing a nodes requires the following steps:
 ### Stop Automated Node Reboots
 
 Nodes are rebooting automatically when they receive updates that require a
-reboot. The kured service triggers the reboots of nodes one by one. Reboots can
-be disabled system wide by annotating the Daemonset, see
+reboot. The kured service triggers reboots of nodes one by one. Reboots can be
+disabled system-wide by annotating the Daemonset, see
 https://kured.dev/docs/operation/.
 
 ### Upgrade Operating System
@@ -203,14 +203,14 @@ Instead, the corresponding nodes should be replaced!
 2. Reapply the configuration: `terraform apply`
 
 The gateway will reappear again within a few minutes. This will disrupt the
-internet access of the cluster's nodes for tasks like fetching package updates.
+Internet access of the cluster's nodes for tasks like fetching package updates.
 However, it will not affect the services that are provided via load balancers!
 
 #### Node Pools
 
 Nodes should not be updated manually via `agt-get`, but be replaced. For control
-plane nodes, it is recommended to backup the etcd data store to an external s3
-storage, see [k3s Cluster Datastore](https://docs.k3s.io/datastore).
+plane nodes, it is recommended to create a back-up of the etcd data store on an
+external s3 storage, see [k3s Cluster Datastore](https://docs.k3s.io/datastore).
 
 1. For control plane pools only: Create a new etcd snapshot, see
    [k3s etcd-snapshot](https://docs.k3s.io/cli/etcd-snapshot).
@@ -229,7 +229,7 @@ Start the replacement with the node pool with the `cluster_can_init` setting:
    - Ensure that the `cluster_init_action.init` and `cluster_init_action.reset`
      settings are disabled.
    - Drain the old nodes: `kubectl drain node-xyz`
-   - Once all pods have been migrateded, delete the old nodes:
+   - Once all pods have been migrated, delete the old nodes:
      `kubectl delete node node-xyz`
    - Then rename the node pool to achieve deletion and replacement in one
      configuration change.
@@ -237,22 +237,23 @@ Start the replacement with the node pool with the `cluster_can_init` setting:
    - Once the new control plane node pool with the `cluster_can_init` setting is
      again up and running, the temporary control plane node pool can be deleted.
 
-Perform theses steps for all remaining node pools:
+Perform these steps for all remaining node pools:
 
 5. Add a new node pool.
 6. Once the new node pool is up and running, drain the old nodes:
    `kubectl drain node-xyz`
-7. Once all pods have been migrateded, delete the old nodes:
+7. Once all pods have been migrated, delete the old nodes:
    `kubectl delete node node-xyz`
 8. Remove the node pool from the terraform configuration.
 9. Reapply the configuration: `terraform apply`
 
 ### Update Kubernetes
 
-1. Determine the next kubernetes version, see
-   [k3s images tags](https://hub.docker.com/r/rancher/k3s/tags) and
+1. Determine the next Kubernetes version, see
+   [k3s channels](https://update.k3s.io/v1-release/channels),
+   [k3s images tags](https://hub.docker.com/r/rancher/k3s/tags), and
    [k3s upgrade image tags](https://hub.docker.com/r/rancher/k3s-upgrade/tags).
-2. Write the ugrade plan, see
+2. Write the upgrade plan, see
    [instructions](https://docs.k3s.io/upgrades/automated) and
    [examples](https://github.com/rancher/system-upgrade-controller#example-plans).
 3. Apply an upgrade plan.
@@ -283,7 +284,7 @@ load balancer's, control plane's, and node pools' IP addresses.
 terraform destroy -force
 ```
 
-Be sure to clean-up any CSI created Block Storage Volumes, and CCM created
+Be sure to clean up any CSI created Block Storage Volumes, and CCM created
 NodeBalancers that you no longer require.
 
 ## Debugging
@@ -292,7 +293,7 @@ NodeBalancers that you no longer require.
 
 Ensure gateway is set up correctly: `./ssh-node gateway`
 
-#### Verify packet masquarading is set up properly
+#### Verify packet masquerading is set up properly
 
 ```bash
 iptables -L -t nat
