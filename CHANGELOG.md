@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.0] - 2024-01-28
+
+### Features
+
+- Require a second read only access token for the gateway
+
 ## [2.2.0] - 2024-01-28
 
 ### Bug Fixes
