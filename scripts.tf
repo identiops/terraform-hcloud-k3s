@@ -73,7 +73,6 @@ resource "local_file" "unsetkubeconfig" {
   content = templatefile(
     "${path.module}/templates/kubeconfig_unsetkubeconfig", {
       cluster_name = var.cluster_name
-      cwd          = path.cwd
     }
   )
   file_permission = "0755"
