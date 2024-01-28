@@ -51,7 +51,7 @@ resource "hcloud_server" "gateway" {
     write_files = [
       {
         path        = "/usr/local/bin/haproxy-k8s.nu"
-        content     = templatefile("${path.module}/templates/haproxy-k8s.nu", { token = var.hcloud_token })
+        content     = templatefile("${path.module}/templates/haproxy-k8s.nu", { token = var.hcloud_token_read_only != "" ? var.hcloud_token_read_only : var.hcloud_token })
         permissions = "0700"
       },
       {

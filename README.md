@@ -75,7 +75,8 @@ Note that you'll need Terraform v1.0 or newer to run this project.
    - Register with [Hetzner Cloud](https://console.hetzner.cloud).
    - Create a new project.
    - Navigate to the security settings.
-   - Select the "API tokens" tab and add a new token.
+   - Select the "API tokens" tab and add a new token with **read & write**
+     access.
    - Pass the token to terraform via an environment variable:
 
 ```bash
@@ -84,29 +85,38 @@ read -sp "Hetzner Cloud API Token: " TF_VAR_hcloud_token
 export TF_VAR_hcloud_token
 ```
 
-2. Download
+2. Create a second Hetzner Cloud API token with just **read** acces.
+   - Pass the token to terraform via an environment variable:
+
+```bash
+# Enter your Hetzner Cloud API Token (it will be hidden)
+read -sp "Hetzner Cloud API read only Token: " TF_VAR_hcloud_token_read_only
+export TF_VAR_hcloud_token_read_only
+```
+
+3. Download
    [`examples/main.tf`](https://github.com/identiops/terraform-hcloud-k3s/blob/main/examples/main.tf):
    `curl -LO https://github.com/identiops/terraform-hcloud-k3s/raw/main/examples/main.tf`
-3. Adjust the cluster configuration in `main.tf`, e.g.
+4. Adjust the cluster configuration in `main.tf`, e.g.
    - `cluster_name`
    - `location`
    - `k3s_version`
    - `ssh_keys` (to create a new ssh key run: `ssh-keygen -t ed25519`)
    - `node_pools`
-4. Initialize the configuration: `terraform init`
-5. Apply the configuration: `terraform apply`
-6. Grab a coffee and enjoy the servers popping up in Hetzner's cloud console.
+5. Initialize the configuration: `terraform init`
+6. Apply the configuration: `terraform apply`
+7. Grab a coffee and enjoy the servers popping up in Hetzner's cloud console.
    Wait for about 5 minutes.
-7. Test SSH access to the cluster: `./ssh-node cluster`
+8. Test SSH access to the cluster: `./ssh-node cluster`
    - ATTENTION: don't hammer the cluster with failing SSH requests or you'll be
      banned by your cluster automatically! If the request fails, because the
      cluster node isn't ready yet, wait a another minute.
-8. Once SSH connection is established, double check that everything is working
+9. Once SSH connection is established, double check that everything is working
    as expected:
    - Did the node initialization finish successfully? `cloud-init status`
    - Is the cluster up and running? `kubectl cluster-info`
-9. If the tests were successful, retrieve the kubernetes configuration locally:
-   `./setkubeconfig`
+10. If the tests were successful, retrieve the kubernetes configuration locally:
+    `./setkubeconfig`
 
 Enjoy your new cluster! 🚀
 

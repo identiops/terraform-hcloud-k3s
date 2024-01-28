@@ -7,6 +7,12 @@ variable "hcloud_token" {
   sensitive   = true
 }
 
+variable "hcloud_token_read_only" {
+  description = "Hetzner cloud auth token, read only - used by the gateway to proxy kubernetes traffic to control plane nodes."
+  type        = string
+  sensitive   = true
+}
+
 # Cluster Settings
 # ----------------
 

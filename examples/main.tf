@@ -40,9 +40,10 @@ terraform {
 
 module "cluster" {
   # source       = "github.com/identiops/terraform-hcloud-k3s?ref=2.2.0"
-  source       = "identiops/k3s/hcloud"
-  version      = "2.2.0"
-  hcloud_token = var.hcloud_token # INFO: Set via `export TF_VAR_hcloud_token=xyz`
+  source                 = "identiops/k3s/hcloud"
+  version                = "2.2.0"
+  hcloud_token           = var.hcloud_token           # INFO: Set via `export TF_VAR_hcloud_token=xyz`
+  hcloud_token_read_only = var.hcloud_token_read_only # INFO: Set via `export TF_VAR_hcloud_token_read_only=abc`
 
   # Cluster Settings
   # ----------------
@@ -116,6 +117,12 @@ module "cluster" {
 
 variable "hcloud_token" {
   description = "Hetzner cloud auth token."
+  type        = string
+  sensitive   = true
+}
+
+variable "hcloud_token_read_only" {
+  description = "Hetzner cloud auth token, read only - used by the gateway to proxy kubernetes traffic to control plane nodes."
   type        = string
   sensitive   = true
 }
