@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.1] - 2024-01-28
+
+### Bug Fixes
+
+- Correct null error when retrieving gateway labels
+
 ## [2.3.0] - 2024-01-28
 
 ### Features
