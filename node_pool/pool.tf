@@ -240,6 +240,11 @@ variable "prices" {
   type        = any
 }
 
+output "location" {
+  description = "Node pool location."
+  value       = var.location
+}
+
 output "node_count" {
   description = "Number of nodes."
   value       = var.node_count
@@ -260,6 +265,7 @@ output "nodes" {
   value = {
     for n in hcloud_server.pool :
     n.name => {
+      image = n.image
       public = {
         ipv4 = var.enable_public_net_ipv4 ? n.ipv4_address : "",
         ipv6 = var.enable_public_net_ipv6 ? n.ipv6_address : ""
