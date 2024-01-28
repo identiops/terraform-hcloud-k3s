@@ -17,7 +17,13 @@ resource "hcloud_server" "pool" {
 
   lifecycle {
     prevent_destroy = false
-    ignore_changes  = [ssh_keys, user_data, network]
+    ignore_changes = [
+      image,
+      location,
+      network,
+      ssh_keys,
+      user_data,
+    ]
   }
 
   count              = var.node_count
