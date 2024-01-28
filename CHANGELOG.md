@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.0] - 2024-01-28
+
+### Bug Fixes
+
+- Restore the life cycle ignore settings for image and location
+- Remove KUBECONFIG setting from scripts
+
+### Documentation
+
+- Clarify OS upgrade instructions
+- Clarify installation instructions and rework feature list
+
+### Features
+
+- Make resources immune to changes to cluster_name
+- Add image and location information to output
+
+### Miscellaneous Tasks
+
+- Improve SSH example configuration
+
 ## [2.1.1] - 2024-01-27
 
 ### Bug Fixes
