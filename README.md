@@ -202,44 +202,46 @@ The gateway will reappear again within a few minutes. This will disrupt the
 internet access of the cluster's nodes for tasks like fetching package updates.
 However, it will not affect the services that are provided via load balancers!
 
-##### Node Pool
+##### Node Pools
 
 Nodes should not be updated manually via `agt-get`, but be replaced. For control
 plane nodes, it is recommended to backup the etcd data store to an external s3
 storage, see [k3s Cluster Datastore](https://docs.k3s.io/datastore).
 
-Perform theses steps ONLY for the node pool with the `cluster_can_init` setting:
-
-- If there is a second node pool that contains control plane nodes there's no
-  special handling required.
-- When there's no other control plane node pool:
-  1. Create a temporary control plane node pool.
-  2. Once the node pool is up and running, drain the nodes of the node pool with
-     the `cluster_can_init` setting: `kubectl drain node-xyz`
-  3. Once all pods have been migrateded, delete the nodes:
-     `kubectl delete node node-xyz`
-  4. Then update the `image` of the node pool with the `cluster_can_init`
-     setting and apply the changes: `terraform apply`
-  5. Wait until the node pool rejoined the cluster.
-  6. Finally, drain and delete the temporary control plane node pool and apply
-     the updated configuration.
-
-Perform theses steps for all node pools, except the one with the
-`cluster_can_init` setting:
-
 1. For control plane pools only: Create a new etcd snapshot, see
    [k3s etcd-snapshot](https://docs.k3s.io/cli/etcd-snapshot).
-2. For control plane pools only: Ensure that the `cluster_init_action.init` and
-   `cluster_init_action.reset` settings are disabled.
-3. Add a new node pool that uses the new image.
-   - For the control plane pool with the `cluster_can_init` setting: Ensure that
-     the `cluster_init_action.init` and
-4. Once the new node pool is up and running, drain the old nodes:
+2. Set the new `image` in the configuration. Then, perform the following steps
+   on consecutively on all existing node pools until they have all been
+   replaced.
+
+Start the replacement with the node pool with the `cluster_can_init` setting:
+
+3. Ensure that there's another control plane node pool. If there's no other
+   control plane node pool, create a temporary one that is deleted after the
+   successful replacement of the node pool with the `cluster_can_init` setting.
+4. When the second control plane node pool is up and running, the node pool with
+   the `cluster_can_init` setting must be deleted and replaced in one
+   application of the configuration.
+   - Ensure that the `cluster_init_action.init` and `cluster_init_action.reset`
+     settings are disabled.
+   - Drain the old nodes: `kubectl drain node-xyz`
+   - Once all pods have been migrateded, delete the old nodes:
+     `kubectl delete node node-xyz`
+   - Then rename the node pool to achieve deletion and replacement in one
+     configuration change.
+   - Apply the configuration: `terraform apply`
+   - Once the new control plane node pool with the `cluster_can_init` setting is
+     again up and running, the temporary control plane node pool can be deleted.
+
+Perform theses steps for all remaining node pools:
+
+5. Add a new node pool.
+6. Once the new node pool is up and running, drain the old nodes:
    `kubectl drain node-xyz`
-5. Once all pods have been migrateded, delete the old nodes:
+7. Once all pods have been migrateded, delete the old nodes:
    `kubectl delete node node-xyz`
-6. Remove the node pool from the terraform configuration.
-7. Reapply the configuration: `terraform apply`
+8. Remove the node pool from the terraform configuration.
+9. Reapply the configuration: `terraform apply`
 
 #### Update Kubernetes
 
