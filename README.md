@@ -22,39 +22,34 @@ What changed in the latest version? See
 ## Features
 
 - [k3s](https://k3s.io/) based kubernetes cluster.
-- Kubernetes update management via
+- Node pools for managing cluster resources efficiently. Pools can be added,
+  resized, and removed at any time.
+- Automated Kubernetes update management via
   [System Upgrade Controller](https://github.com/rancher/system-upgrade-controller).
+- Automated operating system updates with automatic system reboots via
+  [kured](https://kured.dev).
+- Creation of placement groups for to improve availability.
 - Secured default configuration:
-  - Cluster nodes have no public network interface.
+  - Deletion protection for all cloud resources.
   - SSH key required for remote access.
   - `fail2ban` limits SSH brute force attacks.
-  - Internal firewall on all nodes with minimal exposure.
-  - Cluster is not exposed to incoming traffic from the Internet after the
-    initial setup. The cluster administrator starts exposing the cluster by
-    deploying a load balancer, e.g. by annotating an installed ingress
-    controller.
-  - [CSI hardening guide](https://docs.k3s.io/security/hardening-guide) applied
-    partially
+  - Cluster nodes have no public network interface.
+  - Internal firewall active on all nodes for minimal exposure.
+  - Support for network policies via [Cilium](https://www.cilium.io/).
+  - [CSI hardening guide](https://docs.k3s.io/security/hardening-guide) applied:
     - Kernel parameters defined.
     - Audit log directory created.
     - Network policies, pod security policies, admission policies and the
       enabling of audit logs are up to the administrator of the cluster to
       configure.
+- Integration of Hetzner Cloud Controller Manager for managing cloud resources
+  from the within the cluster.
+- Integration of Hetzner Cloud Storage Interface for managing volumes from the
+  within the cluster.
+- Convenience scripts for retrieving the kubernetes configuration and accessing
+  nodes via SSH and SCP.
 - Calculation of monthly costs for every part of the deployment (see
   `terraform output`).
-- Node pools for managing cluster resources efficiently. Minimum cluster size is
-  _one_ node. Pools can be added, resized, and removed at any time.
-- Automatic use of placement groups for node pools to improve availability.
-- Automatic operating system updates with optional automatic reboots via
-  [kured](https://kured.dev).
-- Deletion protection for all cloud resources.
-- Support for network policies via [Cilium](https://www.cilium.io/).
-- Hetzner Cloud Controller Manager for managing cloud resources from the within
-  the cluster.
-- Hetzner Cloud Storage Interface for managing volumes from the within the
-  cluster.
-- Convenience scripts for downloading the kubernetes configuration and accessing
-  nodes via SSH/SCP.
 - Documentation of common administrative tasks and debugging tools.
 
 ### To be added
@@ -62,7 +57,7 @@ What changed in the latest version? See
 - OIDC support for user authentication. Some configuration is in place but it
   hasn't been tested, yet.
 
-## Install
+## Getting Started
 
 ### Prerequisites
 
@@ -70,71 +65,69 @@ What changed in the latest version? See
 - Bash
 - SSH with an SSH Key and Agent
 - `kubectl`
-- `jq` installed is recommended
+- `jq`
 
 Note that you'll need Terraform v1.0 or newer to run this project.
 
-### Hetzner Cloud API Token
+### Installation
 
-Before running the project you'll have to create an access token for Terraform
-to connect to the Hetzner Cloud API. Connect to the
-[Hetzner cloud](https://console.hetzner.cloud), navigate to your project, select
-security settings - API tokens and create a new token.
+1. Create a Hetzner Cloud API token.
+   - Register with [Hetzner Cloud](https://console.hetzner.cloud).
+   - Create a new project.
+   - Navigate to the security settings.
+   - Select the "API tokens" tab and add a new token.
+   - Pass the token to terraform via an environment variable:
 
 ```bash
-read -sp "Hetzner Cloud API Token: " TF_VAR_hcloud_token # Enter your Hetzner Cloud API Token (it will be hidden)
+# Enter your Hetzner Cloud API Token (it will be hidden)
+read -sp "Hetzner Cloud API Token: " TF_VAR_hcloud_token
 export TF_VAR_hcloud_token
 ```
 
-## Usage
+2. Download
+   [`examples/main.tf`](https://github.com/identiops/terraform-hcloud-k3s/blob/main/examples/main.tf):
+   `curl -LO https://github.com/identiops/terraform-hcloud-k3s/raw/main/examples/main.tf`
+3. Adjust the cluster configuration in `main.tf`, e.g.
+   - `cluster_name`
+   - `location`
+   - `k3s_version`
+   - `ssh_keys` (to create a new ssh key run: `ssh-keygen -t ed25519`)
+   - `node_pools`
+4. Initialize the configuration: `terraform init`
+5. Apply the configuration: `terraform apply`
+6. Grab a coffee and enjoy the servers popping up in Hetzner's cloud console.
+   Wait for about 5 minutes.
+7. Test SSH access to the cluster: `./ssh-node cluster`
+   - ATTENTION: don't hammer the cluster with failing SSH requests or you'll be
+     banned by your cluster automatically! If the request fails, because the
+     cluster node isn't ready yet, wait a another minute.
+8. Once SSH connection is established, double check that everything is working
+   as expected:
+   - Did the node initialization finish successfully? `cloud-init status`
+   - Is the cluster up and running? `kubectl cluster-info`
+9. If the tests were successful, retrieve the kubernetes configuration locally:
+   `./setkubeconfig`
 
-### Initialization
+Enjoy your new cluster! 🚀
 
-Make a copy of the
-[`examples/`](https://github.com/identiops/terraform-hcloud-k3s/tree/main/examples)
-directory on your local file system.
+### Usage
 
-- Run `terraform init`
-- Modify the `cluster` section in
-  [`main.tf`](https://github.com/identiops/terraform-hcloud-k3s/blob/main/examples/main.tf)
-  to your liking, e.g. `cluster_name`, `k3s_version`, `ssh_keys`, and
-  `node_pools`.
+Start using your favorite kubernetes tools to interact with the cluster.
 
-That's all it takes to get started!
+In addition, a few convenience scripts were created to help with maintenance:
 
-Pin to a specific module version using `version = "..."` to avoid upgrading to a
-version with breaking changes. Upgrades to this module could potentially replace
-all control plane and worker nodes resulting in data loss. The `terraform plan`
-will report this, but it may not be obvious.
+- `setkubeconfig`: retrieves and stores the kubernetes configuration locally.
+- `unsetkubeconfig`: removes the cluster from the local kubernetes
+  configuration.
+- `ls-nodes`: lists the nodes that are part of the cluster for access via
+  `ssh-node` and `scp-node`.
+- `ssh-node`: SSH wrapper for connecting to cluster nodes.
+- `scp-node`: SCP wrapper for connecting to cluster nodes.
+- `.ssh/config`: SSH configuration for the cluster nodes.
 
-### Creation
+## Maintenance
 
-Create an Hetzner Cloud Kubernetes cluster with one control plane and a worker
-node:
-
-```bash
-terraform apply
-```
-
-This will do the following:
-
-- Provisions Hetzner Cloud Instances with Ubuntu (the instance type/size of the
-  control plane and worker node pools may be different).
-- Installs K3S components and supporting binaries.
-- Joins the nodes in the cluster.
-  - Installs Hetzner Cloud add-ons:
-    - [CSI](https://github.com/hetznercloud/csi-driver) (Container Storage
-      Interface driver for Hetzner Cloud Volumes)
-    - [CCM](https://github.com/hetznercloud/hcloud-cloud-controller-manager)
-      (Kubernetes cloud-controller-manager for Hetzner Cloud)
-- Creates two bash scripts `setkubeconfig` and `unsetkubeconfig` to
-  setup/destroy new context in the kubectl admin config file.
-- Creates `ssh-node`, `scp-node`, and `ls-nodes` bash script and an ssh
-  configuration to quickly connect to all servers.
-
-### Maintenance
-
-#### Add Load Balancer
+### Add Load Balancer
 
 Add annotations to the service of type load balancer, e.g. the ingress
 controller. A new load balancer will be added via the Hetzner Cloud Controller
@@ -145,14 +138,15 @@ See
 
 Useful annotations:
 
+- `load-balancer.hetzner.cloud/name` - name of the load balancer.
 - `load-balancer.hetzner.cloud/protocol: "tcp"`
-- `load-balancer.hetzner.cloud/location: "fsn1"`
-- `load-balancer.hetzner.cloud/use-private-ip: "true"` - route traffic to the
-  internal interface of the servers.
+- `load-balancer.hetzner.cloud/location: "nbg1"`
+- `load-balancer.hetzner.cloud/use-private-ip: "true"` - required! Route traffic
+  to the internal interface of the servers.
 - `load-balancer.hetzner.cloud/type: "lb11"` - the type of load balancer, see
-  https://docs.hetzner.com/cloud/load-balancers/overview
+  [https://docs.hetzner.com/cloud/load-balancers/overview](https://docs.hetzner.com/cloud/load-balancers/overview).
 
-#### Add Nodes or Node Pools
+### Add Nodes or Node Pools
 
 The number of nodes in a node pool can be increased at any point. Just increase
 the count and apply the new configuration via `terraform apply`. After a few
@@ -161,7 +155,7 @@ minutes the additional nodes will appear in the cluster.
 In the same way, node pools cann be added to the configuration without any
 precaution.
 
-#### Remove Nodes or Node Pools
+### Remove Nodes or Node Pools
 
 Removing a nodes requires the following steps:
 
@@ -179,21 +173,21 @@ Removing a nodes requires the following steps:
    - Review the plan to verify that the drained nodes will be deleted.
 5. Delete nodes from cluster: `kubectl delete node cluster-system-02`
 
-#### Stop Automated Node Reboots
+### Stop Automated Node Reboots
 
 Nodes are rebooting automatically when they receive updates that require a
 reboot. The kured service triggers the reboots of nodes one by one. Reboots can
 be disabled system wide by annotating the Daemonset, see
 https://kured.dev/docs/operation/.
 
-#### Upgrade Operating System
+### Upgrade Operating System
 
 WARNING: untested!
 
 An operating system update is not recommended, e.g. from Ubuntu 22.04 to 24.04.
 Instead, the corresponding nodes should be replaced!
 
-##### Gateway
+#### Gateway
 
 1. Delete the node in the [Hetzner Console](https://console.hetzner.cloud/)
 2. Reapply the configuration: `terraform apply`
@@ -202,7 +196,7 @@ The gateway will reappear again within a few minutes. This will disrupt the
 internet access of the cluster's nodes for tasks like fetching package updates.
 However, it will not affect the services that are provided via load balancers!
 
-##### Node Pools
+#### Node Pools
 
 Nodes should not be updated manually via `agt-get`, but be replaced. For control
 plane nodes, it is recommended to backup the etcd data store to an external s3
@@ -243,7 +237,7 @@ Perform theses steps for all remaining node pools:
 8. Remove the node pool from the terraform configuration.
 9. Reapply the configuration: `terraform apply`
 
-#### Update Kubernetes
+### Update Kubernetes
 
 1. Determine the next kubernetes version, see
    [k3s images tags](https://hub.docker.com/r/rancher/k3s/tags) and
@@ -255,22 +249,22 @@ Perform theses steps for all remaining node pools:
 4. Update the `image` variable in the configuration for future nodes to be
    deployed with the correct image.
 
-#### Update Cilium
+### Update Cilium
 
 See
 [https://docs.cilium.io/en/stable/operations/upgrade/](https://docs.cilium.io/en/stable/operations/upgrade/)
 
-#### Update Hetzner Cloud Controller Manager (CCM)
+### Update Hetzner Cloud Controller Manager (CCM)
 
 See
 [https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/CHANGELOG.md](https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/CHANGELOG.md)
 
-#### Update Hetzner Cloud Storage Interface (CSI)
+### Update Hetzner Cloud Storage Interface (CSI)
 
 See
 [https://github.com/hetznercloud/csi-driver/blob/main/CHANGELOG.md](https://github.com/hetznercloud/csi-driver/blob/main/CHANGELOG.md)
 
-### Deletion
+## Deletion
 
 After applying the Terraform plan you'll see several output variables like the
 load balancer's, control plane's, and node pools' IP addresses.
