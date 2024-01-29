@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.3] - 2024-01-29
+
+### Bug Fixes
+
+- Pass only the read only token to the gateway script
+
 ## [2.3.2] - 2024-01-28
 
 ### Documentation
