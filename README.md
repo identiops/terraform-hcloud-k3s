@@ -50,7 +50,7 @@ What changed in the latest version? See
   nodes via SSH and SCP.
 - Calculation of monthly costs for every part of the deployment (see
   `terraform output`).
-- Documentation of common administrative tasks and debugging tools.
+- Documentation of common administrative tasks and troubleshooting approaches.
 
 ### To be added
 
@@ -287,7 +287,7 @@ terraform destroy -force
 Be sure to clean up any CSI created Block Storage Volumes, and CCM created
 NodeBalancers that you no longer require.
 
-## Debugging
+## Troubleshooting
 
 ### Gateway
 
