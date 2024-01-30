@@ -95,8 +95,8 @@ export TF_VAR_hcloud_token_read_only
 ```
 
 3. Download
-   [`examples/main.tf`](https://github.com/identiops/terraform-hcloud-k3s/blob/main/examples/main.tf):
-   `curl -LO https://github.com/identiops/terraform-hcloud-k3s/raw/main/examples/main.tf`
+   [`examples/2ControlPlane_3Worker_Nodes/main.tf`](https://github.com/identiops/terraform-hcloud-k3s/blob/main/examples/2ControlPlane_3Worker_Nodes/main.tf):
+   `curl -LO https://github.com/identiops/terraform-hcloud-k3s/raw/main/examples/2ControlPlane_3Worker_Nodes/main.tf`
 4. Adjust the cluster configuration in `main.tf`, e.g.
    - `cluster_name`
    - `location`
