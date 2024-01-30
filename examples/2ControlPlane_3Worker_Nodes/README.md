@@ -7,5 +7,5 @@ curl -LO https://github.com/identiops/terraform-hcloud-k3s/raw/main/examples/2Co
 ```
 
 Then, follow the
-[installation instructions](https://github.com/identiops/terraform-hcloud-k3s)
+[installation instructions](https://github.com/identiops/terraform-hcloud-k3s#getting-started)
 to set up the cluster.
