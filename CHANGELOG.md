@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.4] - 2024-01-30
+
+### Documentation
+
+- Rename Debugging section to Troubleshooting
+- Place examples in subfolder so they're found by the registry
+
 ## [2.3.3] - 2024-01-29
 
 ### Bug Fixes
