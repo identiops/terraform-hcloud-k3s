@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.6] - 2024-01-30
+
+### Documentation
+
+- Add anchor to the getting started guide
+
 ## [2.3.5] - 2024-01-30
 
 ### Documentation
