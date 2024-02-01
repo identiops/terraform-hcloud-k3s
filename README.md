@@ -46,6 +46,7 @@ What changed in the latest version? See
   from the within the cluster.
 - Integration of Hetzner Cloud Storage Interface for managing volumes from the
   within the cluster.
+- Ansible integration with automatically generated inventory.
 - Convenience scripts for retrieving the Kubernetes configuration and accessing
   nodes via SSH and SCP.
 - Calculation of monthly costs for every part of the deployment (see
