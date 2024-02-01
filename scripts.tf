@@ -1,6 +1,19 @@
 # Copyright 2024, identinet GmbH. All rights reserved.
 # SPDX-License-Identifier: MIT
 
+# Ansible configuration: https://docs.ansible.com/ansible/latest/reference_appendices/config.html
+resource "local_file" "ansible_inventory" {
+  count    = var.create_scripts ? 1 : 0
+  filename = "./.ansible/hosts"
+  content = templatefile(
+    "${path.module}/templates/ansible_inventory.yaml", {
+      node_pools = merge(module.node_pool_cluster_init, module.node_pools)
+      cwd        = path.cwd
+    }
+  )
+  file_permission = "0600"
+}
+
 resource "local_file" "ssh_config" {
   count    = var.create_scripts ? 1 : 0
   filename = "./.ssh/config"

@@ -61,13 +61,16 @@ What changed in the latest version? See
 
 ### Prerequisites
 
-- [Terraform](https://terraform.io) or [OpenTofu](https://opentofu.org/)
+- [Terraform](https://terraform.io) or [OpenTofu](https://opentofu.org/). Note
+  that you'll need Terraform v1.0 or newer to run this project.
 - `bash`
 - `ssh`
 - `kubectl`
 - `jq`
 
-Note that you'll need Terraform v1.0 or newer to run this project.
+### Recommended Tools
+
+- [Ansible](https://www.ansible.com/)
 
 ### Installation
 
@@ -136,6 +139,19 @@ In addition, a few convenience scripts were created to help with maintenance:
 - `.ssh/config`: SSH configuration for the cluster nodes.
 
 ## Maintenance
+
+### Ansible: Execute Commands on Nodes
+
+This module automatically generates an
+[Ansible inventory](https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html#connecting-to-hosts-behavioral-inventory-parameters)
+in file `.ansible/hosts`. It can be leveraged to interact with the nodes and
+node pools of the cluster.
+
+Example: Execute a command on all control plane nodes
+
+```bash
+ANSIBLE_INVENTORY=$PWD/.ansible/hosts ansible all_control_plane_nodes -a "kubectl cluster-info"
+```
 
 ### Add Load Balancer
 

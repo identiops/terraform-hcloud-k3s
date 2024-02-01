@@ -21,6 +21,7 @@ module "node_pool_cluster_init" {
   enable_public_net_ipv4 = var.enable_public_net_ipv4
   enable_public_net_ipv6 = var.enable_public_net_ipv6
   default_gateway        = local.default_gateway
+  is_control_plane       = each.value.is_control_plane
 
   runcmd_first = (each.value.cluster_init_action.init || each.value.cluster_init_action.reset) ? concat([
     local.security_setup,

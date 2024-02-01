@@ -20,6 +20,7 @@ module "node_pools" {
   enable_public_net_ipv4 = var.enable_public_net_ipv4
   enable_public_net_ipv6 = var.enable_public_net_ipv6
   default_gateway        = local.default_gateway
+  is_control_plane       = each.value.is_control_plane
 
   runcmd = concat([
     local.security_setup,

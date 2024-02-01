@@ -240,6 +240,11 @@ variable "prices" {
   type        = any
 }
 
+variable "is_control_plane" {
+  description = "Does node pool contain control plane node?"
+  type        = bool
+}
+
 output "location" {
   description = "Node pool location."
   value       = var.location
@@ -258,6 +263,11 @@ output "labels" {
 output "type" {
   description = "Server type."
   value       = var.node_type
+}
+
+output "is_control_plane" {
+  description = "Does node pool contain control plane node?"
+  value       = var.is_control_plane
 }
 
 output "nodes" {
