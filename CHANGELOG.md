@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.7] - 2024-02-01
+
+### Features
+
+- Auto-generate ansible inventory and describe usage
+
+### Miscellaneous Tasks
+
+- Add warning to auto-generated files
+
 ## [2.3.6] - 2024-01-30
 
 ### Documentation
