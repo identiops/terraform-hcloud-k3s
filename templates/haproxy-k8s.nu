@@ -1,4 +1,5 @@
 #!/usr/bin/env nu
+# Auto-generated file: don't modify!
 # Dynamically retrieve servers with the control-plane label.
 # Copyright 2024, identinet GmbH. All rights reserved.
 # SPDX-License-Identifier: MIT
