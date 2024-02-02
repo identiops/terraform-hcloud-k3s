@@ -57,6 +57,7 @@ What changed in the latest version? See
 
 - OIDC support for user authentication. Some configuration is in place, but it
   hasn't been tested, yet.
+- Support for [cluster auto scaler](https://github.com/kubernetes/autoscaler).
 
 <!-- generated with
 !deno run --unstable --allow-read --allow-write https://deno.land/x/remark_format_cli@v0.1.0/remark-format.js %
@@ -127,7 +128,7 @@ What changed in the latest version? See
    - Register with [Hetzner Cloud](https://console.hetzner.cloud).
    - Create a new project.
    - Navigate to the security settings.
-   - Select the "API tokens" tab and add a new token with __read & write__
+   - Select the "API tokens" tab and add a new token with **read & write**
      access.
    - Pass the token to terraform via an environment variable:
 
@@ -137,7 +138,7 @@ read -sp "Hetzner Cloud API Token: " TF_VAR_hcloud_token
 export TF_VAR_hcloud_token
 ```
 
-2. Create a second Hetzner Cloud API token with just __read__ access.
+2. Create a second Hetzner Cloud API token with just **read** access.
    - Pass the token to terraform via an environment variable:
 
 ```bash
@@ -177,7 +178,7 @@ Enjoy your new cluster! 🚀
 Start using your favorite Kubernetes tools to interact with the cluster. One of
 the first steps usually involves
 [deploying an ingress controller](#add-ingress-controller-and-load-balancer)
-since this configuration doesn't ship with one.
+since this configuration doesn't ship one.
 
 In addition, a few convenience scripts were created to help with maintenance:
 
@@ -466,7 +467,7 @@ sh -ex PATH_TO_RUNCMD
 
 Ensure cluster is set up correctly: `./ssh-node cluster`
 
-#### Verify default route is configured properly
+#### Verify default route
 
 ```bash
 ip r s
@@ -478,7 +479,7 @@ ip r s
 # 169.254.169.254 via 10.0.0.1 dev ens10 proto dhcp src 10.0.1.2 metric 1024
 ```
 
-#### Verify connectivity to the internet
+#### Verify connectivity to the Internet
 
 ```bash
 ping 1.1.1.1
