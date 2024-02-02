@@ -401,6 +401,46 @@ k3s kubectl get nodes
 # ...
 ```
 
+#### Verify Cilium Networking Status
+
+This command only works out of the box on the first node of the control plane
+node pool with the `cluster_can_init` setting.
+
+```bash
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+cilium status
+
+# Expected output:
+#     /¯¯\
+#  /¯¯\__/¯¯\    Cilium:             OK
+#  \__/¯¯\__/    Operator:           OK
+#  /¯¯\__/¯¯\    Envoy DaemonSet:    disabled (using embedded mode)
+#  \__/¯¯\__/    Hubble Relay:       disabled
+#     \__/       ClusterMesh:        disabled
+# 
+# Deployment             cilium-operator    Desired: 1, Ready: 1/1, Available: 1/1
+# DaemonSet              cilium             Desired: 3, Ready: 3/3, Available: 3/3
+# Containers:            cilium             Running: 3
+#                        cilium-operator    Running: 1
+# Cluster Pods:          9/9 managed by Cilium
+# Helm chart version:    1.14.5
+# Image versions         cilium             quay.io/cilium/cilium:v1.14.5@sha256:d3b287029755b6a47dee01420e2ea469469f1b174a2089c10af7e5e9289ef05b: 3
+#                        cilium-operator    quay.io/cilium/operator-generic:v1.14.5@sha256:303f9076bdc73b3fc32aaedee64a14f6f44c8bb08ee9e3956d443021103ebe7a: 1
+```
+
+#### Verify k3s Cluster Configuration
+
+This command only works out of the box on the first node of the control plane
+node pool with the `cluster_can_init` setting.
+
+```bash
+k3s check-config
+
+# Expected output:
+# ...
+# STATUS: pass
+```
+
 #### Inspect cluster status and logs
 
 ```bash
