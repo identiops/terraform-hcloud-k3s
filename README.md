@@ -12,7 +12,7 @@ years of peace and quiet before having to upgrade the cluster's operating
 system!
 
 Terraform module published at:
-[https://registry.terraform.io/modules/identiops/k3s/hcloud](https://registry.terraform.io/modules/identiops/k3s/hcloud)
+<https://registry.terraform.io/modules/identiops/k3s/hcloud>
 
 What changed in the latest version? See
 [CHANGELOG.md](https://github.com/identiops/terraform-hcloud-k3s/tree/main/CHANGELOG.md).
@@ -57,6 +57,51 @@ What changed in the latest version? See
 
 - OIDC support for user authentication. Some configuration is in place, but it
   hasn't been tested, yet.
+
+<!-- generated with
+!deno run --unstable --allow-read --allow-write https://deno.land/x/remark_format_cli@v0.1.0/remark-format.js %
+-->
+
+## Contents
+
+1. [Getting Started](#getting-started)
+   1. [Prerequisites](#prerequisites)
+   2. [Recommended Tools](#recommended-tools)
+   3. [Installation](#installation)
+   4. [Usage](#usage)
+2. [Maintenance](#maintenance)
+   1. [Ansible: Execute Commands on Nodes](#ansible-execute-commands-on-nodes)
+   2. [Add Ingress Controller and Load Balancer](#add-ingress-controller-and-load-balancer)
+   3. [Add Nodes or Node Pools](#add-nodes-or-node-pools)
+   4. [Remove Nodes or Node Pools](#remove-nodes-or-node-pools)
+   5. [Stop Automated Node Reboots](#stop-automated-node-reboots)
+   6. [Upgrade Operating System](#upgrade-operating-system)
+      1. [Gateway Node](#gateway-node)
+      2. [Node Pools](#node-pools)
+   7. [Update Kubernetes](#update-kubernetes)
+   8. [Update Cilium](#update-cilium)
+   9. [Update Hetzner Cloud Controller Manager (CCM)](#update-hetzner-cloud-controller-manager-ccm)
+   10. [Update Hetzner Cloud Storage Interface (CSI)](#update-hetzner-cloud-storage-interface-csi)
+3. [Deletion](#deletion)
+4. [Troubleshooting](#troubleshooting)
+   1. [Gateway](#gateway)
+      1. [Verify packet masquerading is set up properly](#verify-packet-masquerading-is-set-up-properly)
+      2. [Verify firewall is set up properly](#verify-firewall-is-set-up-properly)
+   2. [Cluster](#cluster)
+      1. [Verify default route is configured properly](#verify-default-route-is-configured-properly)
+      2. [Verify connectivity to the internet](#verify-connectivity-to-the-internet)
+      3. [Verify name resolution](#verify-name-resolution)
+      4. [Verify cluster status](#verify-cluster-status)
+      5. [Verify Cilium Networking Status](#verify-cilium-networking-status)
+      6. [Verify k3s Cluster Configuration](#verify-k3s-cluster-configuration)
+      7. [Inspect cluster status and logs](#inspect-cluster-status-and-logs)
+   3. [Nodes](#nodes)
+      1. [Inspect local firewall settings](#inspect-local-firewall-settings)
+      2. [Verify correctness of date/timezone and locale](#verify-correctness-of-datetimezone-and-locale)
+      3. [Inspect cloud-init logs](#inspect-cloud-init-logs)
+5. [Related Documentation](#related-documentation)
+6. [Similar Projects](#similar-projects)
+7. [Special Thanks](#special-thanks)
 
 ## Getting Started
 
@@ -236,7 +281,7 @@ WARNING: untested!
 An operating system update is not recommended, e.g. from Ubuntu 22.04 to 24.04.
 Instead, the corresponding nodes should be replaced!
 
-#### Gateway
+#### Gateway Node
 
 1. Delete the node in the [Hetzner Console](https://console.hetzner.cloud/)
 2. Reapply the configuration: `terraform apply`
@@ -301,18 +346,16 @@ Perform these steps for all remaining node pools:
 
 ### Update Cilium
 
-See
-[https://docs.cilium.io/en/stable/operations/upgrade/](https://docs.cilium.io/en/stable/operations/upgrade/)
+See <https://docs.cilium.io/en/stable/operations/upgrade/>
 
 ### Update Hetzner Cloud Controller Manager (CCM)
 
 See
-[https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/CHANGELOG.md](https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/CHANGELOG.md)
+<https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/CHANGELOG.md>
 
 ### Update Hetzner Cloud Storage Interface (CSI)
 
-See
-[https://github.com/hetznercloud/csi-driver/blob/main/CHANGELOG.md](https://github.com/hetznercloud/csi-driver/blob/main/CHANGELOG.md)
+See <https://github.com/hetznercloud/csi-driver/blob/main/CHANGELOG.md>
 
 ## Deletion
 
@@ -367,6 +410,41 @@ ufw status
 #
 # Anywhere on eth0           ALLOW FWD   Anywhere on ens10
 # Anywhere (v6) on eth0      ALLOW FWD   Anywhere (v6) on ens10
+```
+
+### Nodes
+
+#### Inspect local firewall settings
+
+```bash
+ufw status
+```
+
+#### Verify correctness of date/timezone and locale
+
+```bash
+date
+
+echo $LANG
+```
+
+#### Inspect cloud-init logs
+
+```bash
+# Retrieve status
+cloud-init status
+
+# Verify configuration
+cloud-init schema --system
+
+# Collect logs for inspection
+cloud-init collect-logs
+tar xvzf cloud-init.tar.gz
+# Inspect cloud-init.log for error messages
+
+# Quickly find runcmd
+find /var/lib/cloud/instances -name runcmd
+sh -ex PATH_TO_RUNCMD
 ```
 
 ### Cluster
@@ -469,41 +547,6 @@ k3s check-config
 systemctl status k3s.service
 
 journalctl -u k3s.service
-```
-
-### Nodes
-
-#### Inspect local firewall settings
-
-```bash
-ufw status
-```
-
-#### Verify correctness of date/timezone and locale
-
-```bash
-date
-
-echo $LANG
-```
-
-#### Inspect cloud-init logs
-
-```bash
-# Retrieve status
-cloud-init status
-
-# Verify configuration
-cloud-init schema --system
-
-# Collect logs for inspection
-cloud-init collect-logs
-tar xvzf cloud-init.tar.gz
-# Inspect cloud-init.log for error messages
-
-# Quickly find runcmd
-find /var/lib/cloud/instances -name runcmd
-sh -ex PATH_TO_RUNCMD
 ```
 
 ## Related Documentation
