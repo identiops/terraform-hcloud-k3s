@@ -43,3 +43,5 @@ unsetkubeconfig
 ssh-node
 scp-node
 ls-nodes
+
+.ansible/hosts
