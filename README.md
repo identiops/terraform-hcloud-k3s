@@ -203,7 +203,7 @@ node pools of the cluster.
 Example: Execute a command on all control plane nodes
 
 ```bash
-ANSIBLE_INVENTORY=$PWD/.ansible/hosts ansible all_control_plane_nodes -a "kubectl cluster-info"
+ANSIBLE_INVENTORY="$PWD/.ansible/hosts" ansible all_control_plane_nodes -a "kubectl cluster-info"
 ```
 
 ### Add Ingress Controller and Load Balancer
