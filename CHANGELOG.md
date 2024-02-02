@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.4.0] - 2024-02-02
+
+### Bug Fixes
+
+- Open all relevant kubernetes ports in the firewall
+- Make kubectl exec and logs commands work
+
+### Documentation
+
+- Add ansible integration as feature
+- Add examples to verify cilium and cluster configuration
+- Describe how to add an ingress controller
+- Add table of contents
+- Add references to updating additional components
+
+### Features
+
+- Add links to charts
+
 ## [2.3.7] - 2024-02-01
 
 ### Features
