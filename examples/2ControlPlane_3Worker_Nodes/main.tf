@@ -8,6 +8,7 @@
 ###########################
 
 terraform {
+  # See Version Constraints: https://developer.hashicorp.com/terraform/language/expressions/version-constraints
   backend "local" {
     path = "terraform.tfstate"
   }
@@ -31,7 +32,7 @@ terraform {
   #     s3  = "https://s3.eu-central-2.wasabisys.com"  # special endpoint URL required, see https://wasabi-support.zendesk.com/hc/en-us/articles/360003362071-How-do-I-use-Terraform-with-Wasabi-
   #   }
   # }
-  required_version = ">= 1.0"
+  required_version = "~> 1.0"
 }
 
 ###########################

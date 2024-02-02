@@ -3,33 +3,34 @@
 
 terraform {
   required_providers {
+    # See Version Constraints: https://developer.hashicorp.com/terraform/language/expressions/version-constraints
     hcloud = {
       # Documentation; https://registry.terraform.io/providers/hetznercloud/hcloud
       source  = "hetznercloud/hcloud"
-      version = "1.45.0"
+      version = "~> 1.45.0"
     }
     http = {
       source  = "hashicorp/http"
-      version = ">= 3.4.1"
+      version = "~> 3.4.1"
     }
     local = {
       source  = "hashicorp/local"
-      version = ">= 2.4.1"
+      version = "~> 2.4.1"
     }
     random = {
       source  = "hashicorp/random"
-      version = ">= 3.6.0"
+      version = "~> 3.6.0"
     }
     template = {
       source  = "hashicorp/template"
-      version = ">= 2.2.0"
+      version = "~> 2.2.0"
     }
     time = {
       source  = "hashicorp/time"
-      version = ">= 0.10.0"
+      version = "~> 0.10.0"
     }
   }
-  required_version = ">= 1.0"
+  required_version = "~> 1.0"
 }
 
 provider "hcloud" {

@@ -3,13 +3,14 @@
 
 terraform {
   required_providers {
+    # See Version Constraints: https://developer.hashicorp.com/terraform/language/expressions/version-constraints
     hcloud = {
       # Documentation; https://registry.terraform.io/providers/hetznercloud/hcloud
       source  = "hetznercloud/hcloud"
-      version = "1.45.0"
+      version = "~> 1.45.0"
     }
   }
-  required_version = ">= 1.0"
+  required_version = "~> 1.0"
 }
 
 resource "hcloud_server" "pool" {
