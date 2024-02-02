@@ -70,13 +70,14 @@ locals {
   --tls-san="${hcloud_server_network.gateway.ip}" \
   --flannel-backend=none \
   --disable-network-policy \
+  --disable-cloud-controller \
+  --egress-selector-mode disabled \
   --cluster-cidr="${local.cluster_cidr_network}" \
   --service-cidr="${local.service_cidr_network}" \
   --disable local-storage \
-  --disable-cloud-controller \
   --disable metrics-server \
-  --disable traefik \
   --disable servicelb \
+  --disable traefik \
   ${local.common_arguments~}
   EOT
   prices                           = jsondecode(data.http.prices.response_body).pricing
