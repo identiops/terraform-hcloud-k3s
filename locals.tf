@@ -34,12 +34,13 @@ locals {
   ufw --force enable
   systemctl restart systemd-networkd.service
   EOT
-  # Required open ports, see https://docs.k3s.io/installation/requirements#inbound-rules-for-k3s-server-nodeshttps://docs.k3s.io/installation/requirements#inbound-rules-for-k3s-server-nodes
+  # Required open ports, see https://kubernetes.io/docs/reference/networking/ports-and-protocols/
   control_plane_k8s_security_setup = <<-EOT
-  ufw allow proto tcp from any to any port 2379,2380,6443
+  ufw allow proto tcp from any to any port 2379:2380,6443,10257,10259
   EOT
   k8s_security_setup               = <<-EOT
   ufw allow proto tcp from any to any port 10250
+  ufw allow proto tcp from any to any port 30000:32767
   # Audit log directory, if required. See https://docs.k3s.io/security/hardening-guide
   mkdir -p -m 700 /var/lib/rancher/k3s/server/logs
   sysctl --system
