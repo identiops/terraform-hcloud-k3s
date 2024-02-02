@@ -82,12 +82,19 @@ What changed in the latest version? See
    8. [Update Cilium](#update-cilium)
    9. [Update Hetzner Cloud Controller Manager (CCM)](#update-hetzner-cloud-controller-manager-ccm)
    10. [Update Hetzner Cloud Storage Interface (CSI)](#update-hetzner-cloud-storage-interface-csi)
+   11. [Update Kured](#update-kured)
+   12. [Update Metrics Server](#update-metrics-server)
+   13. [Update System Upgrade Controller](#update-system-upgrade-controller)
 3. [Deletion](#deletion)
 4. [Troubleshooting](#troubleshooting)
    1. [Gateway](#gateway)
       1. [Verify packet masquerading is set up properly](#verify-packet-masquerading-is-set-up-properly)
       2. [Verify firewall is set up properly](#verify-firewall-is-set-up-properly)
-   2. [Cluster](#cluster)
+   2. [Nodes](#nodes)
+      1. [Inspect local firewall settings](#inspect-local-firewall-settings)
+      2. [Verify correctness of date/timezone and locale](#verify-correctness-of-datetimezone-and-locale)
+      3. [Inspect cloud-init logs](#inspect-cloud-init-logs)
+   3. [Cluster](#cluster)
       1. [Verify default route is configured properly](#verify-default-route-is-configured-properly)
       2. [Verify connectivity to the internet](#verify-connectivity-to-the-internet)
       3. [Verify name resolution](#verify-name-resolution)
@@ -95,10 +102,6 @@ What changed in the latest version? See
       5. [Verify Cilium Networking Status](#verify-cilium-networking-status)
       6. [Verify k3s Cluster Configuration](#verify-k3s-cluster-configuration)
       7. [Inspect cluster status and logs](#inspect-cluster-status-and-logs)
-   3. [Nodes](#nodes)
-      1. [Inspect local firewall settings](#inspect-local-firewall-settings)
-      2. [Verify correctness of date/timezone and locale](#verify-correctness-of-datetimezone-and-locale)
-      3. [Inspect cloud-init logs](#inspect-cloud-init-logs)
 5. [Related Documentation](#related-documentation)
 6. [Similar Projects](#similar-projects)
 7. [Special Thanks](#special-thanks)
@@ -124,7 +127,7 @@ What changed in the latest version? See
    - Register with [Hetzner Cloud](https://console.hetzner.cloud).
    - Create a new project.
    - Navigate to the security settings.
-   - Select the "API tokens" tab and add a new token with **read & write**
+   - Select the "API tokens" tab and add a new token with __read & write__
      access.
    - Pass the token to terraform via an environment variable:
 
@@ -134,7 +137,7 @@ read -sp "Hetzner Cloud API Token: " TF_VAR_hcloud_token
 export TF_VAR_hcloud_token
 ```
 
-2. Create a second Hetzner Cloud API token with just **read** access.
+2. Create a second Hetzner Cloud API token with just __read__ access.
    - Pass the token to terraform via an environment variable:
 
 ```bash
@@ -356,6 +359,18 @@ See
 ### Update Hetzner Cloud Storage Interface (CSI)
 
 See <https://github.com/hetznercloud/csi-driver/blob/main/CHANGELOG.md>
+
+### Update Kured
+
+See <https://github.com/kubereboot/kured>
+
+### Update Metrics Server
+
+See <https://github.com/kubernetes-sigs/metrics-server>
+
+### Update System Upgrade Controller
+
+See <https://github.com/rancher/system-upgrade-controller>
 
 ## Deletion
 
