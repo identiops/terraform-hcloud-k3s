@@ -126,7 +126,10 @@ Enjoy your new cluster! 🚀
 
 ### Usage
 
-Start using your favorite Kubernetes tools to interact with the cluster.
+Start using your favorite Kubernetes tools to interact with the cluster. One of
+the first steps usually involves
+[deploying an ingress controller](#add-ingress-controller-and-load-balancer)
+since this configuration doesn't ship with one.
 
 In addition, a few convenience scripts were created to help with maintenance:
 
@@ -154,24 +157,43 @@ Example: Execute a command on all control plane nodes
 ANSIBLE_INVENTORY=$PWD/.ansible/hosts ansible all_control_plane_nodes -a "kubectl cluster-info"
 ```
 
-### Add Load Balancer
+### Add Ingress Controller and Load Balancer
 
-Add annotations to the service of type load balancer, e.g. the ingress
-controller. A new load balancer will be added via the Hetzner Cloud Controller
-Manager and configured to route traffic to the service.
+Since this module doesn't ship an ingress controller, one of the first
+configurations applied to the cluster is usually an ingress controller. Good
+starting points for an ingress controller are:
 
-See
-[List of supported Load Balancer Annotations](https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/internal/annotation/load_balancer.go).
+- [traefik](https://artifacthub.io/packages/helm/traefik/traefik)
+- [ingress-nginx](https://artifacthub.io/packages/helm/ingress-nginx/ingress-nginx)
 
-Useful annotations:
+The ingress controller, like the rest of the cluster, is not directly exposed to
+the Internet. Therefore, it is necessary to add a load balancer that is directly
+exposed to the Internet and has access to the local network of the cluster. The
+load balancer is added to the cluster simply by adding annotations to the
+ingress controller's service. Hetzner's Cloud Controller Manager will use the
+annotations to deploy and configure the load balancer.
 
-- `load-balancer.hetzner.cloud/name: "traefik-lb"` - name of the load balancer.
-- `load-balancer.hetzner.cloud/protocol: "tcp"`
-- `load-balancer.hetzner.cloud/location: "nbg1"`
-- `load-balancer.hetzner.cloud/use-private-ip: "true"` - required! Route traffic
-  to the internal interface of the servers.
-- `load-balancer.hetzner.cloud/type: "lb11"` - the type of load balancer, see
-  [https://docs.hetzner.com/cloud/load-balancers/overview](https://docs.hetzner.com/cloud/load-balancers/overview).
+The following annotations should be used:
+
+- Resource name: `load-balancer.hetzner.cloud/name: "ingress-lb"`
+- Protocol, just `tcp` - the ingress controller will take care of the HTTP
+  connection: `load-balancer.hetzner.cloud/protocol: "tcp"`
+- Location, same as the one used for the cluster:
+  `load-balancer.hetzner.cloud/location: "nbg1"`
+- Connection to the servers, must be set to `true`:
+  `load-balancer.hetzner.cloud/use-private-ip: "true"`
+- Size, see [options](https://docs.hetzner.com/cloud/load-balancers/overview):
+  `load-balancer.hetzner.cloud/type: "lb11"`
+- See
+  [list of all supported Load Balancer Annotations](https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/internal/annotation/load_balancer.go).
+
+Furthermore, for domain names to work, it is required to point DNS records to
+the IP address of load balancer.
+[external-dns](https://artifacthub.io/packages/helm/external-dns/external-dns)
+is a helpful tool that can automate this task from within the cluster. For this
+to work well with Ingress resources, the ingress controller needs to
+[expose the published service information](https://kubernetes-sigs.github.io/external-dns/v0.14.0/faq/#which-service-and-ingress-controllers-are-supported)
+on the Ingress resources.
 
 ### Add Nodes or Node Pools
 
