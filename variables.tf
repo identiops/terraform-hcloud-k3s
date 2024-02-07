@@ -96,6 +96,12 @@ variable "network_cidr" {
   default     = "10.0.0.0/8"
 }
 
+variable "network_zone" {
+  description = "Network zone, eu-central, us-east, us-west."
+  type        = string
+  default     = "eu-central"
+}
+
 variable "subnet_cidr" {
   description = "CIDR of the private network."
   type        = string

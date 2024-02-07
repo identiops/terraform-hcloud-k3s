@@ -181,6 +181,8 @@ EOF
      and
      [node affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
      to ensure that pods with volumes are schedules in the correct region.
+   - Depending on the selected server regions the `network_zone` setting should
+     be adjusted.
 5. Initialize the configuration: `terraform init`
 6. Apply the configuration: `terraform apply`
 7. Grab a coffee and enjoy the servers popping up in Hetzner's cloud console.
