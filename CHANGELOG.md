@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.5.0] - 2024-02-07
+
+### Documentation
+
+- Correct typos
+- Quote ansible variable contents
+
+### Features
+
+- Add support for multi-region deployments
+- Support image configuration per node pool
+- Make network zone configurable
+
+### Miscellaneous Tasks
+
+- Ignore ansible inventory
+- Update version constraints
+
 ## [2.4.0] - 2024-02-02
 
 ### Bug Fixes
