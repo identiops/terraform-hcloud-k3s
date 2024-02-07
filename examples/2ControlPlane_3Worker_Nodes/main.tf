@@ -50,8 +50,8 @@ module "cluster" {
   # ----------------
   delete_protection = true # Must be set to false + `terraform apply` before destroying the cluster via `terraform destory`!
   cluster_name      = "prod"
-  location          = "nbg1"         # See available locations https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/resources/server#location
   image             = "ubuntu-22.04" # See `HCLOUD_TOKEN=XXXX; curl -H \"Authorization: Bearer $HCLOUD_TOKEN\" https://api.hetzner.cloud/v1/images | jq -r .images[].name | sort`
+  default_location  = "nbg1"         # See available locations https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/resources/server#location
   k3s_version       = "v1.28.5+k3s1" # See available versions, https://update.k3s.io/v1-release/channels regular images: https://hub.docker.com/r/rancher/k3s/tags upgrade images: https://hub.docker.com/r/rancher/k3s-upgrade/tags
 
   # General Settings
@@ -72,6 +72,8 @@ module "cluster" {
   # Example s3 configuration:
   # S3 documentation  https://docs.k3s.io/cli/server
   # control_plane_k3s_init_additional_options = "--etcd-s3 --etcd-s3-region=${var.etcd_s3_region} --etcd-s3-endpoint=s3.${var.etcd_s3_region}.wasabisys.com --etcd-s3-access-key=${var.etcd_s3_access_key} --etcd-s3-secret-key=${var.etcd_s3_secret_key} --etcd-s3-bucket=${var.etcd_s3_bucket} --etcd-s3-folder=etcd/$(hostname)"
+  # etcd tuning documentation for multi-region deployment: https://etcd.io/docs/v3.4/tuning/#time-parameters
+  # control_plane_k3s_additional_options      = "--etcd-arg=heartbeat-interval=120 --etcd-arg=election-timeout=1200" # See https://etcd.io/docs/v3.4/tuning/#time-parameters
   additional_cloud_init = {
     timezone = "Europe/Berlin" # See available time zones https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
   }

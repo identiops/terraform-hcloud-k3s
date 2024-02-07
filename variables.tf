@@ -32,8 +32,8 @@ variable "cluster_name" {
   }
 }
 
-variable "location" {
-  description = "Hetzner server location, see https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/resources/server#location."
+variable "default_location" {
+  description = "Default location for Hetzner servers if not specified in the node pool + location of the gateway, see https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/resources/server#location"
   type        = string
   default     = "nbg1"
 }
@@ -279,6 +279,10 @@ Value an object specifying:
 - `schedule_workloads:` whether and workloads can be scheduled, Note: a change
   of this variable will only affect newly created nodes. So, don't change this
   variable after the node pool has been deployed!
+- `location`: defines the server location. If not set, `default_location` is used,
+  see https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/resources/server#location.
+  Note: a change of this variable will only affect newly created nodes. So,
+  don't change this variable after the node pool has been deployed!
 - `type`: defines the server type, see https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
   Note: a change of this variable will cause a redeployment of the whole pool!
   If this is a control plane pool, mind the initialization settings!
@@ -288,7 +292,8 @@ Value an object specifying:
 - `labels`: defines node labels that will be applied to hetzner console and
   kubernetes. Note: changes to this variable won't affect kubernetes labels of
   existing nodes!
-- `taints`: defines kubernetes taints, see https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+- `taints`: defines kubernetes taints,
+  see https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
 - Note: changes to this variable won't affect tains of
   existing nodes!
 - `cluster_can_init`: defines whether the first node of the control plane pool
@@ -319,6 +324,7 @@ node_pools = {
     }
     is_control_plane   = true
     schedule_workloads = true
+    location           = "nbg1"
     type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
     count              = 3
     labels = {
@@ -348,6 +354,7 @@ EOT
     }), {}),
     is_control_plane   = optional(bool, false),
     schedule_workloads = optional(bool, true),
+    location           = optional(string, ""),
     type               = string,
     count              = number,
     labels             = map(string),

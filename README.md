@@ -29,6 +29,7 @@ What changed in the latest version? See
 - Automated operating system updates with automatic system reboots via
   [kured](https://kured.dev).
 - Creation of placement groups for to improve availability.
+- Multi-region deployments.
 - Secured default configuration:
   - Deletion protection for all cloud resources.
   - SSH key required for remote access.
@@ -129,33 +130,57 @@ What changed in the latest version? See
    - Create a new project.
    - Navigate to the security settings.
    - Select the "API tokens" tab and add a new token with **read & write**
-     access.
-   - Pass the token to terraform via an environment variable:
+     access and a second token with just **read** access.
+   - Either, pass the tokens to terraform via an environment variable or create
+     a file called `terraform.tfvars`:
 
 ```bash
 # Enter your Hetzner Cloud API Token (it will be hidden)
 read -sp "Hetzner Cloud API Token: " TF_VAR_hcloud_token
 export TF_VAR_hcloud_token
-```
-
-2. Create a second Hetzner Cloud API token with just **read** access.
-   - Pass the token to terraform via an environment variable:
-
-```bash
-# Enter your Hetzner Cloud API Token (it will be hidden)
 read -sp "Hetzner Cloud API read only Token: " TF_VAR_hcloud_token_read_only
 export TF_VAR_hcloud_token_read_only
+
+touch terraform.tfvars
+chmod 600 terraform.tfvars
+cat >terraform.tfvars <<EOF
+hcloud_token = "XYZ"
+hcloud_token_read_only = "ABC"
+EOF
 ```
 
-3. Download
+2. Download
    [`examples/2ControlPlane_3Worker_Nodes/main.tf`](https://github.com/identiops/terraform-hcloud-k3s/blob/main/examples/2ControlPlane_3Worker_Nodes/main.tf):
    `curl -LO https://github.com/identiops/terraform-hcloud-k3s/raw/main/examples/2ControlPlane_3Worker_Nodes/main.tf`
-4. Adjust the cluster configuration in `main.tf`, e.g.
+3. Adjust the cluster configuration in `main.tf`, e.g.
    - `cluster_name`
-   - `location`
+   - `default_location`
    - `k3s_version`
    - `ssh_keys` (to create a new ssh key run: `ssh-keygen -t ed25519`)
    - `node_pools`
+4. For multi-region deployments, there are a few things to consider:
+   - It is recommended to distribute the control plane nodes across multiple
+     regions. If 3 control plane nodes shall be used, create 3 node pools and
+     configure a different `location` for each pool.
+   - etcd's default configuration expects a low-latency local network. When
+     distributing nodes across multiple regions, latency will increase. The
+     timing parameters therefore need to be adjusted, see
+     [etcd Tuning](https://etcd.io/docs/v3.4/tuning/#time-parameters). Set
+     `control_plane_k3s_additional_options`, e.g. to
+     `--etcd-arg=heartbeat-interval=120 --etcd-arg=election-timeout=1200`
+     Measurements between Falkenstein, Nuremberg and Helsinki: I measured a
+     latency of 0.7ms (within Nuremberg region), 3ms (Nuremberg -> Falkenstein),
+     and 24ms (Nuremberg -> Helsinki).
+   - Hetzner doesn't support mounting volumes on servers in another region! The
+     most simple setup is to just distribute the control plane nodes across
+     multiple regions, disable the scheduling of workloads on control plane
+     nodes and keep all worker nodes pools within one region. For better
+     availability of workloads, worker node pools should be distributed across
+     regions. This requires a configuration of
+     [taints and tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+     and
+     [node affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+     to ensure that pods with volumes are schedules in the correct region.
 5. Initialize the configuration: `terraform init`
 6. Apply the configuration: `terraform apply`
 7. Grab a coffee and enjoy the servers popping up in Hetzner's cloud console.

@@ -8,7 +8,7 @@ module "node_pools" {
   for_each               = { for k, v in var.node_pools : k => v if !v.cluster_can_init }
   cluster_name           = var.cluster_name
   name                   = each.key
-  location               = var.location
+  location               = each.value.location != "" ? each.value.location : var.default_location
   delete_protection      = var.delete_protection
   node_type              = each.value.type
   node_count             = each.value.count
