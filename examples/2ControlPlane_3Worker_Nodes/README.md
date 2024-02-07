@@ -1,6 +1,7 @@
 # Cluster with 2 Control Plane & 3 Worker Nodes
 
-Download this example:
+Download
+[this example](https://github.com/identiops/terraform-hcloud-k3s/blob/main/examples/2ControlPlane_3Worker_Nodes/main.tf):
 
 ```bash
 curl -LO https://github.com/identiops/terraform-hcloud-k3s/raw/main/examples/2ControlPlane_3Worker_Nodes/main.tf
