@@ -50,8 +50,8 @@ module "cluster" {
   # ----------------
   delete_protection = true # Must be set to false + `terraform apply` before destroying the cluster via `terraform destory`!
   cluster_name      = "prod"
-  image             = "ubuntu-22.04" # See `HCLOUD_TOKEN=XXXX; curl -H \"Authorization: Bearer $HCLOUD_TOKEN\" https://api.hetzner.cloud/v1/images | jq -r .images[].name | sort`
   default_location  = "nbg1"         # See available locations https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/resources/server#location
+  default_image     = "ubuntu-22.04" # See `HCLOUD_TOKEN=XXXX; curl -H \"Authorization: Bearer $HCLOUD_TOKEN\" https://api.hetzner.cloud/v1/images | jq -r .images[].name | sort`
   k3s_version       = "v1.28.5+k3s1" # See available versions, https://update.k3s.io/v1-release/channels regular images: https://hub.docker.com/r/rancher/k3s/tags upgrade images: https://hub.docker.com/r/rancher/k3s-upgrade/tags
 
   # General Settings

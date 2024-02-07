@@ -312,12 +312,19 @@ Instead, the corresponding nodes should be replaced!
 
 #### Gateway Node
 
-1. Delete the node in the [Hetzner Console](https://console.hetzner.cloud/)
-2. Reapply the configuration: `terraform apply`
+1. Set new image as `default_image`. Attention: before changing the default
+   image, make sure that each node pool has its own oppropriate `image` setting.
+2. Delete the node in the [Hetzner Console](https://console.hetzner.cloud/)
+3. Reapply the configuration: `terraform apply`
 
 The gateway will reappear again within a few minutes. This will disrupt the
 Internet access of the cluster's nodes for tasks like fetching package updates.
 However, it will not affect the services that are provided via load balancers!
+
+After redeploying the gateway, ssh connections will fail because a new
+cryptopraphic has been generated for the node. Delete the deprecated key from
+the `.ssh/known_hosts` file, open a new ssh connection and accept the new public
+key.
 
 #### Node Pools
 
@@ -327,9 +334,8 @@ external s3 storage, see [k3s Cluster Datastore](https://docs.k3s.io/datastore).
 
 1. For control plane pools only: Create a new etcd snapshot, see
    [k3s etcd-snapshot](https://docs.k3s.io/cli/etcd-snapshot).
-2. Set the new `image` in the configuration. Then, perform the following steps
-   on consecutively on all existing node pools until they have all been
-   replaced.
+2. Then, perform the following steps on consecutively on all existing node pools
+   until they have all been replaced.
 
 Start the replacement with the node pool with the `cluster_can_init` setting:
 
@@ -352,7 +358,7 @@ Start the replacement with the node pool with the `cluster_can_init` setting:
 
 Perform these steps for all remaining node pools:
 
-5. Add a new node pool.
+5. Add a new node pool and set the `image` setting to the new version.
 6. Once the new node pool is up and running, drain the old nodes:
    `kubectl drain node-xyz`
 7. Once all pods have been migrated, delete the old nodes:

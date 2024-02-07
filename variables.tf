@@ -50,8 +50,8 @@ variable "k3s_version" {
   default     = ""
 }
 
-variable "image" {
-  description = "Node image. See `HCLOUD_TOKEN=XXXX; curl -H \"Authorization: Bearer $HCLOUD_TOKEN\" https://api.hetzner.cloud/v1/images | jq -r .images[].name | sort`"
+variable "default_image" {
+  description = "Default server image if not specified in the node pool + image of the gateway. See `HCLOUD_TOKEN=XXXX; curl -H \"Authorization: Bearer $HCLOUD_TOKEN\" https://api.hetzner.cloud/v1/images | jq -r .images[].name | sort`"
   type        = string
   default     = "ubuntu-22.04"
 }
@@ -283,6 +283,9 @@ Value an object specifying:
   see https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/resources/server#location.
   Note: a change of this variable will only affect newly created nodes. So,
   don't change this variable after the node pool has been deployed!
+- `image[]`: defines the operating system image. If not set, `default_image` is used.
+  Note: a change of this variable will only affect newly created nodes. So,
+  don't change this variable after the node pool has been deployed!
 - `type`: defines the server type, see https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
   Note: a change of this variable will cause a redeployment of the whole pool!
   If this is a control plane pool, mind the initialization settings!
@@ -325,6 +328,7 @@ node_pools = {
     is_control_plane   = true
     schedule_workloads = true
     location           = "nbg1"
+    image              = "ubuntu-22.04"
     type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
     count              = 3
     labels = {
@@ -355,6 +359,7 @@ EOT
     is_control_plane   = optional(bool, false),
     schedule_workloads = optional(bool, true),
     location           = optional(string, ""),
+    image              = optional(string, ""),
     type               = string,
     count              = number,
     labels             = map(string),

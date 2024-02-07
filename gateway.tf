@@ -18,8 +18,8 @@ resource "hcloud_server" "gateway" {
   name               = "${var.cluster_name}-gateway"
   delete_protection  = var.delete_protection
   rebuild_protection = var.delete_protection
-  image              = var.image
   location           = var.default_location
+  image              = var.default_image
   server_type        = var.gateway_server_type
   ssh_keys           = [for k in hcloud_ssh_key.pub_keys : k.name]
   labels             = var.gateway_labels

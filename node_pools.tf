@@ -13,7 +13,7 @@ module "node_pools" {
   node_type              = each.value.type
   node_count             = each.value.count
   node_labels            = merge(each.value.labels, each.value.is_control_plane ? { "control-plane" = "true" } : {})
-  image                  = var.image
+  image                  = each.value.image != "" ? each.value.image : var.default_image
   ssh_keys               = [for k in hcloud_ssh_key.pub_keys : k.name]
   firewall_ids           = each.value.is_control_plane ? var.control_plane_firewall_ids : var.worker_node_firewall_ids
   hcloud_network_id      = hcloud_network.private.id
