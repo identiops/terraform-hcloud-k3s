@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.5.1] - 2024-02-08
+
+### Documentation
+
+- Add link to the example
+- Name load balancing challenges when zone outages occur
+
+### Features
+
+- Use read only token to fetch prices
+- Add multi-region example and improve default example
+
 ## [2.5.0] - 2024-02-07
 
 ### Documentation
