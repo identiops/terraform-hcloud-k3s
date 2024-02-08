@@ -30,8 +30,8 @@ output "total_monthly_costs" {
   description = "Total monthly costs for running the cluster."
   value = {
     node_count = sum(concat([1, 1], [for pool in module.node_pools : pool.node_count]))
-    net        = sum(concat([local.costs_gateway.net], [for pool in merge(module.node_pool_cluster_init, module.node_pools) : pool.costs.net]))
-    gross      = sum(concat([local.costs_gateway.gross], [for pool in merge(module.node_pool_cluster_init, module.node_pools) : pool.costs.gross]))
+    net        = tonumber(format("%.2f", sum(concat([local.costs_gateway.net], [for pool in merge(module.node_pool_cluster_init, module.node_pools) : pool.costs.net]))))
+    gross      = tonumber(format("%.2f", sum(concat([local.costs_gateway.gross], [for pool in merge(module.node_pool_cluster_init, module.node_pools) : pool.costs.gross]))))
     currency   = local.prices.currency
     vat_rate   = tonumber(local.prices.vat_rate)
   }
