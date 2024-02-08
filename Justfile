@@ -53,7 +53,7 @@ release LEVEL="patch":
     print "Changelog:\n"
     git cliff --strip all -u -t $new_version
     input -s $"Version will be bumped from ($current_version) to ($new_version).\nPress enter to confirm.\n"
-    ["examples/1Region_3ControlPlane_3Worker_Nodes/main.tf", "examples/3Regions_3ControlPlane_3Worker_Nodes/main.tf"] | par-each {|file|
+    ["examples/1Region_3ControlPlane_3Worker_Nodes/main.tf", "examples/3Regions_3ControlPlane_3Worker_Nodes/main.tf"] | each {|file|
       open --raw $file | str replace -r "\\?ref=.*" $"?ref=($new_version)\"" | str replace -r ' version *= *".*"' $" version = \"($new_version)\"" | save -f $file
       tofu fmt $file
       git add $file
