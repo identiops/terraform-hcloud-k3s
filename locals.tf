@@ -88,7 +88,7 @@ data "http" "prices" {
   url = "https://api.hetzner.cloud/v1/pricing"
   request_headers = {
     Accept        = "application/json"
-    Authorization = "Bearer ${var.hcloud_token}"
+    Authorization = "Bearer ${var.hcloud_token_read_only}"
   }
   lifecycle {
     postcondition {
