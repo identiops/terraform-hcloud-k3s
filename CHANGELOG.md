@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.5.2] - 2024-02-08
+
+### Bug Fixes
+
+- Sequentially process examples to mitigate locking issues
+
 ## [2.5.1] - 2024-02-08
 
 ### Documentation
