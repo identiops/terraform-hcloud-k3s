@@ -183,6 +183,12 @@ EOF
      to ensure that pods with volumes are schedules in the correct region.
    - Depending on the selected server regions the `network_zone` setting should
      be adjusted.
+   - Hetzner's load balancers are bound to one region. Therefore, a
+     multi-regional cluster with one load balancer is not sufficent for dealing
+     with zone outages. The load balancer would go down with the region it's
+     hosted in. If a protection against zone outages is required, a global load
+     balancer should be deployed elsewhere, as
+     [descirbed by Google](https://cloud.google.com/load-balancing/docs/load-balancing-overview).
 5. Initialize the configuration: `terraform init`
 6. Apply the configuration: `terraform apply`
 7. Grab a coffee and enjoy the servers popping up in Hetzner's cloud console.
