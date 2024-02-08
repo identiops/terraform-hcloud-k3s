@@ -12,6 +12,7 @@ module "node_pools" {
   delete_protection      = var.delete_protection
   node_type              = each.value.type
   node_count             = each.value.count
+  node_count_width       = each.value.count_width
   node_labels            = merge(each.value.labels, each.value.is_control_plane ? { "control-plane" = "true" } : {})
   image                  = each.value.image != "" ? each.value.image : var.default_image
   ssh_keys               = [for k in hcloud_ssh_key.pub_keys : k.name]

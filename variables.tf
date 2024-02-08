@@ -298,6 +298,10 @@ Value an object specifying:
 - `count`: defines the nubmer of nodes. Note: before reducing this count and
   running `terraform apply`, drain and delete the nodes from kubernetes. The
   nodes will be removed in descending order - highest number first.
+- `count_width`: defines the width of the number in the nodes' names. If the node's
+  number is doesn't fill the whole width, it is left-padded with 0s. Note:  a change
+  of this variable will only affect newly created nodes. So, don't change this
+  variable after the node pool has been deployed!
 - `labels`: defines node labels that will be applied to hetzner console and
   kubernetes. Note: changes to this variable won't affect kubernetes labels of
   existing nodes!
@@ -337,6 +341,7 @@ node_pools = {
     image              = "ubuntu-22.04"
     type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
     count              = 3
+    count_width        = 1
     labels = {
       # "my" = "label"
     }
@@ -347,8 +352,11 @@ node_pools = {
   workers = {
     is_control_plane   = false
     schedule_workloads = true
+    location           = "nbg1"
+    image              = "ubuntu-22.04"
     type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
-    count              = 2
+    count              = 3
+    count_width        = 2
     labels             = {}
     taints             = {}
   }
@@ -368,6 +376,7 @@ EOT
     image              = optional(string, ""),
     type               = string,
     count              = number,
+    count_width        = optional(number, 1),
     labels             = map(string),
     taints             = map(string)
   }))
@@ -375,6 +384,10 @@ EOT
   validation {
     condition     = alltrue([for pool in var.node_pools : pool.count > 0])
     error_message = "`count` must be greater or equal to 1."
+  }
+  validation {
+    condition     = alltrue([for pool in var.node_pools : pool.count_width > 0])
+    error_message = "`count_width` must be greater or equal to 1."
   }
   validation {
     condition     = alltrue([for pool in var.node_pools : (!pool.schedule_workloads && pool.is_control_plane) || pool.schedule_workloads])

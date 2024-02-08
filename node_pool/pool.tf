@@ -29,7 +29,7 @@ resource "hcloud_server" "pool" {
   }
 
   count              = var.node_count
-  name               = "${var.cluster_name}-${var.name}-${format("%02d", count.index)}"
+  name               = "${var.cluster_name}-${var.name}-${format("%0${var.node_count_width}d", count.index)}"
   delete_protection  = var.delete_protection
   rebuild_protection = var.delete_protection
   server_type        = var.node_type
@@ -177,6 +177,11 @@ variable "cluster_name" {
 
 variable "node_count" {
   description = "Count on nodes in pool."
+  type        = number
+}
+
+variable "node_count_width" {
+  description = "Width of the number in the nodes' names."
   type        = number
 }
 

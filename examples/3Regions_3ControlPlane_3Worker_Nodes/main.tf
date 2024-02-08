@@ -128,6 +128,7 @@ module "cluster" {
       schedule_workloads = true
       type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
       count              = 3
+      count_width        = 2
       labels             = {}
       taints             = {}
     }
