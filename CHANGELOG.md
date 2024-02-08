@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.5.3] - 2024-02-08
+
+### Features
+
+- Display net and gross with a precision of 2
+- Make count width in node names configurable
+
 ## [2.5.2] - 2024-02-08
 
 ### Bug Fixes
