@@ -94,7 +94,7 @@ module "cluster" {
       is_control_plane   = true
       schedule_workloads = true
       type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
-      count              = 2
+      count              = 3
       labels = {
         # "control-plane" = "yes"
       }

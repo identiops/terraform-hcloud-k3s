@@ -53,11 +53,14 @@ release LEVEL="patch":
     print "Changelog:\n"
     git cliff --strip all -u -t $new_version
     input -s $"Version will be bumped from ($current_version) to ($new_version).\nPress enter to confirm.\n"
-    open --raw examples/2ControlPlane_3Worker_Nodes/main.tf | str replace -r "\\?ref=.*" $"?ref=($new_version)\"" | str replace -r ' version *= *".*"' $" version = \"($new_version)\"" | save -f examples/2ControlPlane_3Worker_Nodes/main.tf
-    tofu fmt examples/2ControlPlane_3Worker_Nodes/main.tf
+    ["examples/1Region_3ControlPlane_3Worker_Nodes/main.tf", "examples/3Regions_3ControlPlane_3Worker_Nodes/main.tf"] | par-each {|file|
+      open --raw $file | str replace -r "\\?ref=.*" $"?ref=($new_version)\"" | str replace -r ' version *= *".*"' $" version = \"($new_version)\"" | save -f $file
+      tofu fmt $file
+      git add $file
+    }
     git cliff -t $new_version -o CHANGELOG.md
-    git add examples/2ControlPlane_3Worker_Nodes/main.tf CHANGELOG.md
+    git add CHANGELOG.md
     git commit -m $"Bump version to ($new_version)"
     git tag -s -m $new_version $new_version
     git push --atomic origin refs/heads/main $"refs/tags/($new_version)"
-    git cliff --strip all --current | gh release create -F - $new_version examples/2ControlPlane_3Worker_Nodes/main.tf
+    git cliff --strip all --current | gh release create -F - $new_version examples/1Region_3ControlPlane_3Worker_Nodes/main.tf
