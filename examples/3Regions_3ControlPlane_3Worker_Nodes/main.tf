@@ -60,12 +60,12 @@ module "cluster" {
     "john" = file("~/.ssh/id_ed25519.pub")
     "jane" = "ssh-xxxx xxxxx jane@example"
   }
-  cilium_version                    = "1.14.5"  # See available versions https://github.com/cilium/cilium
-  hcloud_ccm_driver_chart_version   = "1.19.0"  # Check k8s compatibility https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy
-  hcloud_csi_driver_chart_version   = "2.6.0"   # Check k8s compatibility https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy
-  kured_chart_version               = "5.4.1"   # See available versions https://artifacthub.io/packages/helm/kured/kured
-  metrics_server_chart_version      = "3.11.0"  # See available versions https://artifacthub.io/packages/helm/metrics-server/metrics-server
-  system_upgrade_controller_version = "v0.13.2" # See available versions https://github.com/rancher/system-upgrade-controller
+  cilium_version                    = "1.15.1"          # See available versions https://github.com/cilium/cilium
+  hcloud_ccm_driver_chart_version   = "1.19.0"          # Check k8s compatibility https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy
+  hcloud_csi_driver_chart_version   = "2.6.0"           # Check k8s compatibility https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy
+  kured_chart_version               = "5.4.1"           # See available versions https://artifacthub.io/packages/helm/kured/kured
+  metrics_server_chart_version      = "3.11.0"          # See available versions https://artifacthub.io/packages/helm/metrics-server/metrics-server
+  system_upgrade_controller_version = "103.0.0+up0.6.0" # See available versions https://github.com/rancher/charts/tree/dev-v2.9/charts/system-upgrade-controller
 
   # Control Plane Settings
   # ----------------------
@@ -94,7 +94,7 @@ module "cluster" {
       is_control_plane   = true
       schedule_workloads = false
       location           = "nbg1"
-      type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
+      type               = "cx31" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
       count              = 1
       labels = {
         # "control-plane" = "yes"
@@ -108,7 +108,7 @@ module "cluster" {
       is_control_plane   = true
       schedule_workloads = false
       location           = "fsn1"
-      type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
+      type               = "cx31" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
       count              = 1
       labels             = {}
       taints             = {}
@@ -118,7 +118,7 @@ module "cluster" {
       is_control_plane   = true
       schedule_workloads = false
       location           = "hel1"
-      type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
+      type               = "cx31" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
       count              = 1
       labels             = {}
       taints             = {}
@@ -126,7 +126,7 @@ module "cluster" {
     workers = {
       is_control_plane   = false
       schedule_workloads = true
-      type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
+      type               = "cx31" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
       count              = 3
       count_width        = 2
       labels             = {}
