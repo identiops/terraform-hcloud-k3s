@@ -58,8 +58,10 @@ module "node_pool_cluster_init" {
       sha256sum --check cilium-linux-$CLI_ARCH.tar.gz.sha256sum
       tar xzvfC cilium-linux-$CLI_ARCH.tar.gz /usr/local/bin
       rm -f cilium-linux-$CLI_ARCH.tar.gz{,.sha256sum}
-      cilium install --version '${var.cilium_version}' --set-string routingMode=native,ipv4NativeRoutingCIDR=${var.network_cidr},ipam.operator.clusterPoolIPv4PodCIDRList=${local.cluster_cidr_network},k8sServiceHost=${local.cmd_node_ip}
+      cilium install --version '${var.cilium_version}' --set-string "routingMode=native,ipv4NativeRoutingCIDR=${var.network_cidr},ipam.operator.clusterPoolIPv4PodCIDRList=${local.cluster_cidr_network},k8sServiceHost=${hcloud_server_network.gateway.ip},k8sServicePort=6443"
       # rm /usr/local/bin/cilium
+      # helm repo add cilium https://helm.cilium.io/
+      # helm install cilium cilium/cilium -n kube-system --version '${var.cilium_version}' --set "routingMode=native,ipv4NativeRoutingCIDR=${var.network_cidr},ipam.operator.clusterPoolIPv4PodCIDRList=${local.cluster_cidr_network},k8sServiceHost=${hcloud_server_network.gateway.ip},k8sServicePort=6443,operator.replicas=1"
 
       ## See https://github.com/hetznercloud/csi-driver
       helm install hcloud-csi hcloud/hcloud-csi -n kube-system --version '${var.hcloud_csi_driver_chart_version}' --set 'storageClasses[0].name=hcloud-volumes,storageClasses[0].defaultStorageClass=true,storageClasses[0].retainPolicy=Retain'
