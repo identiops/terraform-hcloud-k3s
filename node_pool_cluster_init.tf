@@ -41,7 +41,15 @@ module "node_pool_cluster_init" {
         echo "Waiting for '/var/lib/rancher/k3s/server/manifests'"
         sleep 1
       done
+
+      ## Chart setup
       export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+      curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash -
+
+      ## See https://github.com/hetznercloud/hcloud-cloud-controller-manager
+      kubectl -n kube-system create secret generic hcloud --from-literal='token=${var.hcloud_token}' --from-literal='network=${hcloud_network.private.id}'
+      helm repo add hcloud https://charts.hetzner.cloud
+      helm install hcloud-ccm hcloud/hcloud-cloud-controller-manager -n kube-system --version '${var.hcloud_ccm_driver_chart_version}' --set 'networking.enabled=true,networking.clusterCIDR=${local.cluster_cidr_network},additionalTolerations[0].key=node.kubernetes.io/not-ready,additionalTolerations[0].value=NoExecute'
 
       ## See https://artifacthub.io/packages/helm/cilium/cilium
       CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
@@ -52,12 +60,6 @@ module "node_pool_cluster_init" {
       rm -f cilium-linux-$CLI_ARCH.tar.gz{,.sha256sum}
       cilium install --version '${var.cilium_version}' --set-string routingMode=native,ipv4NativeRoutingCIDR=${var.network_cidr},ipam.operator.clusterPoolIPv4PodCIDRList=${local.cluster_cidr_network},k8sServiceHost=${local.cmd_node_ip}
       # rm /usr/local/bin/cilium
-
-      ## See https://github.com/hetznercloud/hcloud-cloud-controller-manager
-      kubectl -n kube-system create secret generic hcloud --from-literal='token=${var.hcloud_token}' --from-literal='network=${hcloud_network.private.id}'
-      curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash -
-      helm repo add hcloud https://charts.hetzner.cloud
-      helm install hcloud-ccm hcloud/hcloud-cloud-controller-manager -n kube-system --version '${var.hcloud_ccm_driver_chart_version}' --set 'networking.enabled=true,networking.clusterCIDR=${local.cluster_cidr_network}'
 
       ## See https://github.com/hetznercloud/csi-driver
       helm install hcloud-csi hcloud/hcloud-csi -n kube-system --version '${var.hcloud_csi_driver_chart_version}' --set 'storageClasses[0].name=hcloud-volumes,storageClasses[0].defaultStorageClass=true,storageClasses[0].retainPolicy=Retain'
