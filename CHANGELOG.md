@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.6.0] - 2024-02-16
+
+### Features
+
+- Install ccm earlier and set additional tolerations
+- Set k8sServiceHost to load balancer
+
+### Miscellaneous Tasks
+
+- Add infrastructure image source
+- Migrate to system-upgrade-controller helm chart
+
 ## [2.5.3] - 2024-02-08
 
 ### Features
