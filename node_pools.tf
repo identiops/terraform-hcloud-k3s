@@ -8,6 +8,7 @@ module "node_pools" {
   for_each               = { for k, v in var.node_pools : k => v if !v.cluster_can_init }
   cluster_name           = var.cluster_name
   name                   = each.key
+  hcloud_token_read_only = var.hcloud_token_read_only
   location               = each.value.location != "" ? each.value.location : var.default_location
   delete_protection      = var.delete_protection
   node_type              = each.value.type
@@ -22,12 +23,15 @@ module "node_pools" {
   enable_public_net_ipv6 = var.enable_public_net_ipv6
   default_gateway        = local.default_gateway
   is_control_plane       = each.value.is_control_plane
+  k8s_ha_host            = local.k8s_ha_host
+  k8s_ha_port            = local.k8s_ha_port
 
   runcmd = concat([
     local.security_setup,
     each.value.is_control_plane ? local.control_plane_k8s_security_setup : "",
     local.k8s_security_setup,
     local.package_updates,
+    local.haproxy_setup,
     local.k3s_url,
     each.value.is_control_plane ?
     <<-EOT

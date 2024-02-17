@@ -28,7 +28,7 @@ resource "hcloud_server" "gateway" {
     package_update             = true
     package_upgrade            = true
     package_reboot_if_required = true
-    packages                   = concat(["netcat-openbsd", "haproxy"], local.base_packages) # netcat is required for acting as an ssh jump jost
+    packages                   = concat(["netcat-openbsd"], local.base_packages) # netcat is required for acting as an ssh jump jost
     # Find runcmd: find /var/lib/cloud/instances -name runcmd
     runcmd = concat([
       local.security_setup,
@@ -44,8 +44,12 @@ resource "hcloud_server" "gateway" {
     ], var.additional_runcmd)
     write_files = [
       {
-        path        = "/usr/local/bin/haproxy-k8s.nu"
-        content     = templatefile("${path.module}/templates/haproxy-k8s.nu", { token = var.hcloud_token_read_only })
+        path = "/usr/local/bin/haproxy-k8s.nu"
+        content = templatefile("${path.module}/templates/haproxy-k8s.nu", {
+          token = var.hcloud_token_read_only
+          host  = "[::]"
+          port  = "6443"
+        })
         permissions = "0700"
       },
       {

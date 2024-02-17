@@ -6,6 +6,7 @@ locals {
   base_packages = [
     "ca-certificates",
     "fail2ban",
+    "haproxy",
     "jq",
     "unattended-upgrades",
   ]
@@ -30,6 +31,7 @@ locals {
   echo 'EXTRAOPTS="-f /etc/haproxy/haproxy.d"' >> /etc/default/haproxy
   systemctl restart haproxy
   systemctl enable --now haproxy-k8s.timer
+  systemctl start haproxy-k8s
   EOT
   security_setup  = <<-EOT
   set -eu
@@ -58,11 +60,13 @@ locals {
   package_updates                  = <<-EOT
   killall apt-get || true
   apt-get update
-  DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y
+  # DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y
   DEBIAN_FRONTEND=noninteractive apt-get install -y ${join(" ", concat(local.base_packages, var.additional_packages))}
   EOT
+  k8s_ha_host                      = "127.0.0.1"
+  k8s_ha_port                      = 16443
   k3s_url                          = <<-EOT
-  export K3S_URL='https://${hcloud_server_network.gateway.ip}:6443'
+  export K3S_URL='https://${local.k8s_ha_host}:${local.k8s_ha_port}'
   check-cluster-readiness 600 "$K3S_URL/cacerts"
   EOT
   k3s_install                      = <<-EOT

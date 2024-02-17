@@ -85,6 +85,23 @@ resource "hcloud_server" "pool" {
           fs.inotify.max_user_watches = 262144;
         EOT
       },
+      {
+        path = "/usr/local/bin/haproxy-k8s.nu"
+        content = templatefile("${path.module}/../templates/haproxy-k8s.nu", {
+          token = var.hcloud_token_read_only
+          host  = var.k8s_ha_host
+          port  = var.k8s_ha_port
+        })
+        permissions = "0700"
+      },
+      {
+        path    = "/etc/systemd/system/haproxy-k8s.service"
+        content = file("${path.module}/../templates/haproxy-k8s.service")
+      },
+      {
+        path    = "/etc/systemd/system/haproxy-k8s.timer"
+        content = file("${path.module}/../templates/haproxy-k8s.timer")
+      },
     ]
     }),
     yamlencode(var.additional_cloud_init)
@@ -128,6 +145,22 @@ variable "name" {
     )
     error_message = "Node pool can't be named control-plane and must only contain characters allowed in DNS names (`^[a-z0-9-]+$`)."
   }
+}
+
+variable "k8s_ha_host" {
+  description = "Kubernetes HA Host."
+  type        = string
+}
+
+variable "k8s_ha_port" {
+  description = "Kubernetes HA Host."
+  type        = number
+}
+
+variable "hcloud_token_read_only" {
+  description = "Hetzner cloud auth token, read only - used by the gateway and all cluster servers to proxy kubernetes traffic to control plane nodes."
+  type        = string
+  sensitive   = true
 }
 
 variable "delete_protection" {
