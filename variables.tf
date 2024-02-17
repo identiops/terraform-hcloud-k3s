@@ -8,7 +8,7 @@ variable "hcloud_token" {
 }
 
 variable "hcloud_token_read_only" {
-  description = "Hetzner cloud auth token, read only - used by the gateway to proxy kubernetes traffic to control plane nodes."
+  description = "Hetzner cloud auth token, read only - used by the gateway and all cluster servers to proxy kubernetes traffic to control plane nodes."
   type        = string
   sensitive   = true
 }
@@ -195,6 +195,12 @@ variable "metrics_server_chart_version" {
 variable "system_upgrade_controller_version" {
   description = "System Upgarde Controller version, see available versions https://github.com/rancher/system-upgrade-controller"
   type        = string
+}
+
+variable "nu_version" {
+  description = "NuShell version"
+  type        = string
+  default     = "0.90.1"
 }
 
 variable "additional_packages" {

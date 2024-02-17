@@ -38,15 +38,9 @@ resource "hcloud_server" "gateway" {
       # Enable packet forwarding
       ufw route allow in on ens10 out on eth0
       systemctl daemon-reload
-      export NU_VERSION="0.89.0"
-      curl -Lo /tmp/nu.tar.gz https://github.com/nushell/nushell/releases/download/$NU_VERSION/nu-$NU_VERSION-x86_64-linux-gnu-full.tar.gz
-      tar xvzfC /tmp/nu.tar.gz /tmp nu-$NU_VERSION-x86_64-linux-gnu-full/nu
-      mv /tmp/nu-$NU_VERSION-x86_64-linux-gnu-full/nu /usr/local/bin
-      mkdir -p /etc/haproxy/haproxy.d
-      echo 'EXTRAOPTS="-f /etc/haproxy/haproxy.d"' >> /etc/default/haproxy
-      systemctl restart haproxy
-      systemctl enable --now haproxy-k8s.timer
       EOT
+      ,
+      local.haproxy_setup,
     ], var.additional_runcmd)
     write_files = [
       {

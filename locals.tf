@@ -21,6 +21,16 @@ locals {
     oidc-client-id      = var.oidc_client_id
   } : {}
   default_gateway = cidrhost(var.network_cidr, 1)
+  haproxy_setup   = <<-EOT
+  export NU_VERSION="${var.nu_version}"
+  curl -Lo /tmp/nu.tar.gz "https://github.com/nushell/nushell/releases/download/$NU_VERSION/nu-$NU_VERSION-x86_64-linux-gnu-full.tar.gz"
+  tar xvzfC /tmp/nu.tar.gz /tmp "nu-$NU_VERSION-x86_64-linux-gnu-full/nu"
+  mv "/tmp/nu-$NU_VERSION-x86_64-linux-gnu-full/nu" /usr/local/bin
+  mkdir -p /etc/haproxy/haproxy.d
+  echo 'EXTRAOPTS="-f /etc/haproxy/haproxy.d"' >> /etc/default/haproxy
+  systemctl restart haproxy
+  systemctl enable --now haproxy-k8s.timer
+  EOT
   security_setup  = <<-EOT
   set -eu
   # SSH
