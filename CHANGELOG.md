@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.1] - 2024-02-17
+
+### Documentation
+
+- Add an additional installation step
+
 ## [3.0.0] - 2024-02-17
 
 ### Bug Fixes
