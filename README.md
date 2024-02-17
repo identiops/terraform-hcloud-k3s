@@ -17,7 +17,7 @@ Terraform module published at:
 What changed in the latest version? See
 [CHANGELOG.md](https://github.com/identiops/terraform-hcloud-k3s/tree/main/CHANGELOG.md).
 
-![infrastructure](https://github.com/identiops/terraform-hcloud-k3s/blob/main/figures/infrastructure.png)
+![infrastructure](https://raw.githubusercontent.com/identiops/terraform-hcloud-k3s/main/figures/infrastructure.png)
 
 ## Features
 
@@ -150,7 +150,7 @@ hcloud_token_read_only = "ABC"
 EOF
 ```
 
-![API Token Generation](https://github.com/identiops/terraform-hcloud-k3s/blob/main/figures/hetzner_api_token.png)
+![API Token Generation](https://raw.githubusercontent.com/identiops/terraform-hcloud-k3s/main/figures/hetzner_api_token.png)
 
 2. Download
    [`examples/2ControlPlane_3Worker_Nodes/main.tf`](https://github.com/identiops/terraform-hcloud-k3s/blob/main/examples/2ControlPlane_3Worker_Nodes/main.tf):
@@ -197,7 +197,7 @@ EOF
 7. Grab a coffee and enjoy the servers popping up in Hetzner's cloud console.
    Wait for about 5 minutes.
 
-![Servers overview](https://github.com/identiops/terraform-hcloud-k3s/blob/main/figures/hetzner_servers.png)
+![Servers overview](https://raw.githubusercontent.com/identiops/terraform-hcloud-k3s/main/figures/hetzner_servers.png)
 
 8. Test SSH access to the cluster: `./ssh-node cluster`
    - ATTENTION: don't hammer the cluster with failing SSH requests, or you'll be
