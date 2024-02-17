@@ -6,4 +6,4 @@
 
 set -eEuo pipefail
 
-sed -ne "s/^Host //p" "${cwd}/.ssh/config"
+sed -ne "s/^Host //p" "${cwd}/.ssh/config" | grep -v '*'
