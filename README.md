@@ -17,7 +17,7 @@ Terraform module published at:
 What changed in the latest version? See
 [CHANGELOG.md](https://github.com/identiops/terraform-hcloud-k3s/tree/main/CHANGELOG.md).
 
-![infrastructure](https://raw.githubusercontent.com/identiops/terraform-hcloud-k3s/main/infrastructure.png)
+![infrastructure](https://github.com/identiops/terraform-hcloud-k3s/blob/main/figures/infrastructure.png)
 
 ## Features
 
@@ -135,12 +135,13 @@ What changed in the latest version? See
      a file called `terraform.tfvars`:
 
 ```bash
-# Enter your Hetzner Cloud API Token (it will be hidden)
+# Either, enter your Hetzner Cloud API Token (it will be hidden)
 read -sp "Hetzner Cloud API Token: " TF_VAR_hcloud_token
 export TF_VAR_hcloud_token
 read -sp "Hetzner Cloud API read only Token: " TF_VAR_hcloud_token_read_only
 export TF_VAR_hcloud_token_read_only
 
+# Or store the token in terraform.tfvars
 touch terraform.tfvars
 chmod 600 terraform.tfvars
 cat >terraform.tfvars <<EOF
@@ -148,6 +149,8 @@ hcloud_token = "XYZ"
 hcloud_token_read_only = "ABC"
 EOF
 ```
+
+![API Token Generation](https://github.com/identiops/terraform-hcloud-k3s/blob/main/figures/hetzner_api_token.png)
 
 2. Download
    [`examples/2ControlPlane_3Worker_Nodes/main.tf`](https://github.com/identiops/terraform-hcloud-k3s/blob/main/examples/2ControlPlane_3Worker_Nodes/main.tf):
@@ -193,6 +196,9 @@ EOF
 6. Apply the configuration: `terraform apply`
 7. Grab a coffee and enjoy the servers popping up in Hetzner's cloud console.
    Wait for about 5 minutes.
+
+![Servers overview](https://github.com/identiops/terraform-hcloud-k3s/blob/main/figures/hetzner_servers.png)
+
 8. Test SSH access to the cluster: `./ssh-node cluster`
    - ATTENTION: don't hammer the cluster with failing SSH requests, or you'll be
      banned by your cluster automatically! If the request fails, because the
