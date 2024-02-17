@@ -131,8 +131,11 @@ What changed in the latest version? See
    - Navigate to the security settings.
    - Select the "API tokens" tab and add a new token with **read & write**
      access and a second token with just **read** access.
-   - Either, pass the tokens to terraform via an environment variable or create
-     a file called `terraform.tfvars`:
+
+![API Token Generation](https://raw.githubusercontent.com/identiops/terraform-hcloud-k3s/main/figures/hetzner_api_token.png)
+
+2. Store Hetzner Cloud API token locally. Either, pass the tokens to terraform
+   via an environment variable or create a file called `terraform.tfvars`:
 
 ```bash
 # Either, enter your Hetzner Cloud API Token (it will be hidden)
@@ -150,18 +153,16 @@ hcloud_token_read_only = "ABC"
 EOF
 ```
 
-![API Token Generation](https://raw.githubusercontent.com/identiops/terraform-hcloud-k3s/main/figures/hetzner_api_token.png)
-
-2. Download
+3. Download
    [`examples/2ControlPlane_3Worker_Nodes/main.tf`](https://github.com/identiops/terraform-hcloud-k3s/blob/main/examples/2ControlPlane_3Worker_Nodes/main.tf):
    `curl -LO https://github.com/identiops/terraform-hcloud-k3s/raw/main/examples/2ControlPlane_3Worker_Nodes/main.tf`
-3. Adjust the cluster configuration in `main.tf`, e.g.
+4. Adjust the cluster configuration in `main.tf`, e.g.
    - `cluster_name`
    - `default_location`
    - `k3s_version`
    - `ssh_keys` (to create a new ssh key run: `ssh-keygen -t ed25519`)
    - `node_pools`
-4. For multi-region deployments, there are a few things to consider:
+5. For multi-region deployments, there are a few things to consider:
    - It is recommended to distribute the control plane nodes across multiple
      regions. If 3 control plane nodes shall be used, create 3 node pools and
      configure a different `location` for each pool.
@@ -192,22 +193,22 @@ EOF
      hosted in. If a protection against zone outages is required, a global load
      balancer should be deployed elsewhere, as
      [descirbed by Google](https://cloud.google.com/load-balancing/docs/load-balancing-overview).
-5. Initialize the configuration: `terraform init`
-6. Apply the configuration: `terraform apply`
-7. Grab a coffee and enjoy the servers popping up in Hetzner's cloud console.
+6. Initialize the configuration: `terraform init`
+7. Apply the configuration: `terraform apply`
+8. Grab a coffee and enjoy the servers popping up in Hetzner's cloud console.
    Wait for about 5 minutes.
 
 ![Servers overview](https://raw.githubusercontent.com/identiops/terraform-hcloud-k3s/main/figures/hetzner_servers.png)
 
-8. Test SSH access to the cluster: `./ssh-node cluster`
+9. Test SSH access to the cluster: `./ssh-node cluster`
    - ATTENTION: don't hammer the cluster with failing SSH requests, or you'll be
      banned by your cluster automatically! If the request fails, because the
      cluster node isn't ready yet, wait another minute.
-9. Once SSH connection is established, double check that everything is working
-   as expected:
-   - Did the node initialization finish successfully? `cloud-init status`
-   - Is the cluster up and running? `kubectl cluster-info`
-10. If the tests were successful, retrieve the Kubernetes configuration locally:
+10. Once SSH connection is established, double check that everything is working
+    as expected:
+    - Did the node initialization finish successfully? `cloud-init status`
+    - Is the cluster up and running? `kubectl cluster-info`
+11. If the tests were successful, retrieve the Kubernetes configuration locally:
     `./setkubeconfig`
 
 Enjoy your new cluster! 🚀
