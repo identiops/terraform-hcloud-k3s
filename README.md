@@ -213,6 +213,8 @@ EOF
 
 Enjoy your new cluster! 🚀
 
+![k9s CLI](https://raw.githubusercontent.com/identiops/terraform-hcloud-k3s/main/figures/k9s.png)
+
 ### Usage
 
 Start using your favorite Kubernetes tools to interact with the cluster. One of
