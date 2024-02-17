@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.0] - 2024-02-17
+
+### Bug Fixes
+
+- Hide virtual `*` host
+
+### Documentation
+
+- Add more figures
+- Correct reference to pictures
+
+### Features
+
+- Add local haproxy to all nodes to get high availibility
+
+### Miscellaneous Tasks
+
+- Make nu shell version configurable
+
 ## [2.6.0] - 2024-02-16
 
 ### Features
