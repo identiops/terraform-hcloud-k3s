@@ -60,12 +60,6 @@ module "cluster" {
     "john" = file("~/.ssh/id_ed25519.pub")
     "jane" = "ssh-xxxx xxxxx jane@example"
   }
-  cilium_version                    = "1.15.1"          # See available versions https://github.com/cilium/cilium
-  hcloud_ccm_driver_chart_version   = "1.19.0"          # Check k8s compatibility https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy
-  hcloud_csi_driver_chart_version   = "2.6.0"           # Check k8s compatibility https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy
-  kured_chart_version               = "5.4.1"           # See available versions https://artifacthub.io/packages/helm/kured/kured
-  metrics_server_chart_version      = "3.11.0"          # See available versions https://artifacthub.io/packages/helm/metrics-server/metrics-server
-  system_upgrade_controller_version = "103.0.0+up0.6.0" # See available versions https://github.com/rancher/charts/tree/dev-v2.9/charts/system-upgrade-controller
 
   # Control Plane Settings
   # ----------------------
@@ -126,7 +120,7 @@ variable "hcloud_token" {
 }
 
 variable "hcloud_token_read_only" {
-  description = "Hetzner cloud auth token, read only - used by the gateway to proxy kubernetes traffic to control plane nodes."
+  description = "Hetzner cloud auth token, read only - used by the gateway and all cluster servers to proxy kubernetes traffic to control plane nodes."
   type        = string
   sensitive   = true
 }

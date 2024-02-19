@@ -152,11 +152,13 @@ variable "ssh_keys" {
 variable "cilium_version" {
   description = "Cilium version, see https://github.com/cilium/cilium"
   type        = string
+  default     = "1.15.1"
 }
 
 variable "kured_chart_version" {
   description = "Kured chart version, see https://artifacthub.io/packages/helm/kured/kured"
   type        = string
+  default     = "5.4.1"
 }
 
 variable "kured_reboot_days" {
@@ -178,23 +180,27 @@ variable "kured_end_time" {
 }
 
 variable "hcloud_ccm_driver_chart_version" {
-  description = "Hetzner CCM chart version, see https://github.com/hetznercloud/hcloud-cloud-controller-manager"
+  description = "Hetzner CCM chart version, see https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy"
   type        = string
+  default     = "1.19.0"
 }
 
 variable "hcloud_csi_driver_chart_version" {
-  description = "Hetzner CSI driver chart version, see https://github.com/hetznercloud/csi-driver"
+  description = "Hetzner CSI driver chart version, see https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy"
   type        = string
+  default     = "2.6.0"
 }
 
 variable "metrics_server_chart_version" {
   description = "Metrics server chart version, see https://artifacthub.io/packages/helm/metrics-server/metrics-server"
   type        = string
+  default     = "3.11.0"
 }
 
 variable "system_upgrade_controller_version" {
-  description = "System Upgarde Controller version, see available versions https://github.com/rancher/system-upgrade-controller"
+  description = "System Upgarde Controller version, see available versions https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.9/charts/system-upgrade-controller"
   type        = string
+  default     = "103.0.0+up0.6.0"
 }
 
 variable "nu_version" {
