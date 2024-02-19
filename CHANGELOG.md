@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.4] - 2024-02-19
+
+### Features
+
+- Perform dist-upgrade after initializing the cluster
+
 ## [3.0.3] - 2024-02-19
 
 ### Documentation
