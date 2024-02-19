@@ -403,28 +403,160 @@ Perform these steps for all remaining node pools:
 
 ### Update Cilium
 
-See <https://docs.cilium.io/en/stable/operations/upgrade/>
+- Available versions: <https://github.com/cilium/cilium>
+- Update instructions: <https://docs.cilium.io/en/stable/operations/upgrade/>
+
+```bash
+helm repo add cilium https://helm.cilium.io/
+helm repo update
+helm upgrade --reuse-values cilium cilium/cilium -n kube-system --version '<NEW_VERSION>'
+```
+
+`values.yaml`:
+
+```yaml
+# Documentation: https://artifacthub.io/packages/helm/cilium/cilium
+
+# WARNING: needs to be in line with the cluster configuration
+routingMode: native
+ipv4NativeRoutingCIDR: 10.0.0.0/8
+ipam:
+  operator:
+    clusterPoolIPv4PodCIDRList: 10.244.0.0/16
+k8sServiceHost: 10.0.1.1
+k8sServicePort: "6443"
+operator:
+  replicas: 2
+```
 
 ### Update Hetzner Cloud Controller Manager (CCM)
 
-See
-<https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/CHANGELOG.md>
+- Available versions:
+  <https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy>
+- Update instructions:
+  <https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/CHANGELOG.md>
+
+```bash
+helm repo add hcloud https://charts.hetzner.cloud
+helm repo update
+helm upgrade --reuse-values hcloud-ccm hcloud/hcloud-cloud-controller-manager -n kube-system --version '<NEW_VERSION>'
+```
+
+`values.yaml`:
+
+```yaml
+# Documentation: https://github.com/hetznercloud/hcloud-cloud-controller-manager/tree/main/chart
+
+# WARNING: needs to be in line with the cluster configuration
+networking:
+  enabled: true
+  clusterCIDR: 10.244.0.0/16
+
+additionalTolerations:
+  # INFO: this taint occurred but isn't coveryd by default .. and caused the
+  # whole cluster to not start properly
+  - key: node.kubernetes.io/not-ready
+    value: NoSchedule
+```
 
 ### Update Hetzner Cloud Storage Interface (CSI)
 
-See <https://github.com/hetznercloud/csi-driver/blob/main/CHANGELOG.md>
+- Available versions:
+  <https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy>
+- Update instructions:
+  <https://github.com/hetznercloud/csi-driver/blob/main/CHANGELOG.md>
+
+```bash
+helm repo add hcloud https://charts.hetzner.cloud
+helm repo update
+helm upgrade --reuse-values hcloud-csi hcloud/hcloud-csi -n kube-system --version '<NEW_VERSION>'
+```
+
+`values.yaml`:
+
+```yaml
+# Documentation: https://github.com/hetznercloud/csi-driver/tree/main/chart
+
+storageClasses:
+  - name: hcloud-volumes
+    defaultStorageClass: true
+    retainPolicy: Retain
+```
 
 ### Update Kured
 
-See <https://github.com/kubereboot/kured>
+- Available versions: <https://artifacthub.io/packages/helm/kured/kured>
+- Update instructions: <https://github.com/kubereboot/kured>
+
+```bash
+helm repo add kubereboot https://kubereboot.github.io/charts
+helm repo update
+helm upgrade --reuse-values kured kubereboot/kured -n kube-system --version '<NEW_VERSION>'
+```
+
+`values.yaml`:
+
+```yaml
+# Documentation: https://artifacthub.io/packages/helm/kured/kured
+
+configuration:
+  timeZone: Europe/Berlin
+  startTime: 1am
+  endTime: 5am
+  rebootDays:
+    - mo
+    - tu
+    - we
+    - th
+    - fr
+    - sa
+    - su
+tolerations:
+  - key: CriticalAddonsOnly
+    operator: Exists
+```
 
 ### Update Metrics Server
 
-See <https://github.com/kubernetes-sigs/metrics-server>
+- Available versions:
+  <https://artifacthub.io/packages/helm/metrics-server/metrics-server>
+- Update instructions: <https://github.com/kubernetes-sigs/metrics-server>
+
+```bash
+helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
+helm repo update
+helm upgrade --reuse-values metrics-server metrics-server/metrics-server -n kube-system --version '<NEW_VERSION>'
+```
+
+`values.yaml`:
+
+```yaml
+# Documentation: https://artifacthub.io/packages/helm/metrics-server/metrics-server
+```
 
 ### Update System Upgrade Controller
 
-See <https://github.com/rancher/system-upgrade-controller>
+- Available versions:
+  <https://github.com/rancher/charts/tree/dev-v2.9/charts/system-upgrade-controller>
+- Update instructions: <https://github.com/rancher/system-upgrade-controller>
+
+```bash
+helm repo add rancher https://charts.rancher.io
+helm repo update
+helm upgrade --reuse-values system-upgrade-controller rancher/system-upgrade-controller -n cattle-system --version '<NEW_VERSION>'
+```
+
+`values.yaml`:
+
+```yaml
+# Documentation: https://github.com/rancher/system-upgrade-controller
+# Documentation: https://github.com/rancher/charts/tree/dev-v2.9/charts/system-upgrade-controller
+
+global:
+  cattle:
+    psp:
+      enabled: false
+```
 
 ## Deletion
 
