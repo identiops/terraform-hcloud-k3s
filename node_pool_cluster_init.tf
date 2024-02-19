@@ -84,6 +84,8 @@ module "node_pool_cluster_init" {
       helm install --create-namespace -n cattle-system system-upgrade-controller rancher/system-upgrade-controller --version '${var.system_upgrade_controller_version}' --set 'global.cattle.psp.enabled=false'
       # rm /usr/local/bin/helm
       EOT
+    ,
+    local.dist_upgrade,
   ], var.additional_runcmd) : []
   runcmd = concat([
     local.security_setup,
@@ -105,6 +107,8 @@ module "node_pool_cluster_init" {
       ${local.k3s_install~}
       sh -s - agent ${local.common_arguments~}
       EOT
+    ,
+    local.dist_upgrade,
   ], var.additional_runcmd)
   additional_cloud_init = var.additional_cloud_init
   prices                = local.prices

@@ -60,8 +60,10 @@ locals {
   package_updates                  = <<-EOT
   killall apt-get || true
   apt-get update
-  # DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y
   DEBIAN_FRONTEND=noninteractive apt-get install -y ${join(" ", concat(local.base_packages, var.additional_packages))}
+  EOT
+  dist_upgrade                     = <<-EOT
+  DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y
   EOT
   k8s_ha_host                      = "127.0.0.1"
   k8s_ha_port                      = 16443

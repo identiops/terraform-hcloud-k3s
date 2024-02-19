@@ -41,6 +41,7 @@ resource "hcloud_server" "gateway" {
       EOT
       ,
       local.haproxy_setup,
+      local.dist_upgrade,
     ], var.additional_runcmd)
     write_files = [
       {

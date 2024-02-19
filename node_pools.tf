@@ -46,6 +46,8 @@ module "node_pools" {
       ${local.k3s_install~}
       sh -s - agent ${local.common_arguments~}
       EOT
+    ,
+    local.dist_upgrade,
   ], var.additional_runcmd)
   additional_cloud_init = var.additional_cloud_init
   prices                = local.prices
