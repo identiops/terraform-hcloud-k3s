@@ -114,14 +114,19 @@ What changed in the latest version? See
 
 - [Terraform](https://terraform.io) or [OpenTofu](https://opentofu.org/). Note
   that you'll need Terraform v1.0 or newer to run this project.
-- `bash`
-- `ssh`
-- `kubectl`
-- `jq`
+- `bash` for executing the generated scripts.
+- `jq` for executing the generated scripts.
+- `kubectl` for interacting wthe the Kubernetes cluster.
+- `ssh` for connecting to cluster nodes.
 
 ### Recommended Tools
 
-- [Ansible](https://www.ansible.com/)
+- [Ansible cli](https://www.ansible.com/) for executing commands simultaneously
+  on multiple cluster nodes.
+- [Cilium cli](https://github.com/cilium/cilium-cli) for verifying and
+  interacting with the Kubernetes networking layer.
+- [Helm cli](https://helm.sh/) for installing and updating components inside the
+  cluster.
 
 ### Installation
 
@@ -567,11 +572,12 @@ k3s kubectl get nodes
 
 #### Verify Cilium Networking Status
 
-This command only works out of the box on the first node of the control plane
-node pool with the `cluster_can_init` setting.
+This command only works after installing the
+[cilium cli](https://github.com/cilium/cilium-cli).
+
+- [cilium cli](https://www.klarmobil.de/)
 
 ```bash
-export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 cilium status
 
 # Expected output:
