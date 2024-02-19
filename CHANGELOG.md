@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.5] - 2024-02-19
+
+### Documentation
+
+- Correct links in toc
+
 ## [3.0.4] - 2024-02-19
 
 ### Features
