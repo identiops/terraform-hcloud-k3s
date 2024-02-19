@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.3] - 2024-02-19
+
+### Documentation
+
+- Add helm and cilium as recommended tools
+- Add detailed component update instructions
+
+### Features
+
+- Move component versions into module to simplify examples
+
 ## [3.0.2] - 2024-02-17
 
 ### Documentation
