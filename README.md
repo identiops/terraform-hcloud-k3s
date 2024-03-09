@@ -159,8 +159,8 @@ EOF
 ```
 
 3. Download
-   [`examples/2ControlPlane_3Worker_Nodes/main.tf`](https://github.com/identiops/terraform-hcloud-k3s/blob/main/examples/2ControlPlane_3Worker_Nodes/main.tf):
-   `curl -LO https://github.com/identiops/terraform-hcloud-k3s/raw/main/examples/2ControlPlane_3Worker_Nodes/main.tf`
+   [`examples/1Region_3ControlPlane_3Worker_Nodes/main.tf`](https://github.com/identiops/terraform-hcloud-k3s/blob/main/examples/1Region_3ControlPlane_3Worker_Nodes/main.tf):
+   `curl -LO https://github.com/identiops/terraform-hcloud-k3s/raw/main/examples/1Region_3ControlPlane_3Worker_Nodes/main.tf`
 4. Adjust the cluster configuration in `main.tf`, e.g.
    - `cluster_name`
    - `default_location`
