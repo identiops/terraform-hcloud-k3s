@@ -21,10 +21,6 @@ terraform {
       source  = "hashicorp/random"
       version = "~> 3.6.0"
     }
-    template = {
-      source  = "hashicorp/template"
-      version = "~> 2.2.0"
-    }
     time = {
       source  = "hashicorp/time"
       version = "~> 0.10.0"
