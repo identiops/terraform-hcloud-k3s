@@ -719,7 +719,7 @@ cilium status
 #  /¯¯\__/¯¯\    Envoy DaemonSet:    disabled (using embedded mode)
 #  \__/¯¯\__/    Hubble Relay:       disabled
 #     \__/       ClusterMesh:        disabled
-# 
+#
 # Deployment             cilium-operator    Desired: 1, Ready: 1/1, Available: 1/1
 # DaemonSet              cilium             Desired: 3, Ready: 3/3, Available: 3/3
 # Containers:            cilium             Running: 3
@@ -762,6 +762,8 @@ journalctl -u k3s.service
 
 ## Similar Projects
 
+- [hcloud-kube-hetzner](https://github.com/kube-hetzner/terraform-hcloud-kube-hetzner)
+  very popular k3s stack based on openSUSE MicroOS.
 - [hcloud-k3s](https://github.com/cicdteam/terraform-hcloud-k3s) Original
   project that this project has been forked from.
 - [hetzner-cloud-k3s](https://github.com/vitobotta/hetzner-cloud-k3s) A fully
