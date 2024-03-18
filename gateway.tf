@@ -75,7 +75,11 @@ resource "hcloud_server" "gateway" {
     }),
     yamlencode(var.additional_cloud_init)
   )
-  firewall_ids = concat([hcloud_firewall.gateway.id], var.gateway_firewall_ids)
+  firewall_ids = concat(
+    [hcloud_firewall.gateway_ssh.id],
+    var.gateway_firewall_icmp_open ? [hcloud_firewall.gateway_icmp.id] : [],
+    var.gateway_firewall_k8s_open ? [hcloud_firewall.gateway_k8s.id] : [],
+  var.gateway_firewall_ids)
 
   public_net {
     ipv4_enabled = true
@@ -101,16 +105,11 @@ resource "hcloud_network_route" "default" {
   gateway     = hcloud_server_network.gateway.ip
 }
 
-resource "hcloud_firewall" "gateway" {
+resource "hcloud_firewall" "gateway_icmp" {
   lifecycle {
     prevent_destroy = false
-    ignore_changes = [
-      name,
-    ]
   }
-
-  name = "${var.cluster_name}-gateway"
-
+  name = "${var.cluster_name}-gateway-icmp"
   rule {
     direction = "in"
     protocol  = "icmp"
@@ -120,7 +119,13 @@ resource "hcloud_firewall" "gateway" {
       "::/0"
     ]
   }
+}
 
+resource "hcloud_firewall" "gateway_ssh" {
+  lifecycle {
+    prevent_destroy = false
+  }
+  name = "${var.cluster_name}-gateway-ssh"
   rule {
     direction = "in"
     protocol  = "tcp"
@@ -130,7 +135,13 @@ resource "hcloud_firewall" "gateway" {
       "::/0"
     ]
   }
+}
 
+resource "hcloud_firewall" "gateway_k8s" {
+  lifecycle {
+    prevent_destroy = false
+  }
+  name = "${var.cluster_name}-gateway-k8s"
   rule {
     direction = "in"
     protocol  = "tcp"

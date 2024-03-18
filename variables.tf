@@ -247,6 +247,18 @@ variable "gateway_firewall_ids" {
   default     = []
 }
 
+variable "gateway_firewall_icmp_open" {
+  description = "Allow ping."
+  type        = bool
+  default     = true
+}
+
+variable "gateway_firewall_k8s_open" {
+  description = "Open kubernetes port to the Internet. If it's not open, SSH port fowarding should be used gain access to the cluster."
+  type        = bool
+  default     = false
+}
+
 variable "gateway_server_type" {
   description = "Gateway node type (size)."
   type        = string

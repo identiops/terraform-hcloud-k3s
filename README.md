@@ -213,8 +213,12 @@ EOF
     as expected:
     - Did the node initialization finish successfully? `cloud-init status`
     - Is the cluster up and running? `kubectl cluster-info`
-11. If the tests were successful, retrieve the Kubernetes configuration locally:
-    `./setkubeconfig`
+11. If the tests were successful, retrieve the Kubernetes configuration and
+    store it locally: `./setkubeconfig`
+12. Forward the cluster port locally since it's not exposed to the Internet by
+    default. Do this every time you want to interact with the cluster:
+    `./ssh-node gateway`
+13. Test cluster access from your local machine: `kubectl get nodes`
 
 Enjoy your new cluster! 🚀
 
@@ -236,7 +240,9 @@ In addition, a few convenience scripts were created to help with maintenance:
   `ssh-node` and `scp-node`.
 - `ssh-node`: SSH wrapper for connecting to cluster nodes.
 - `scp-node`: SCP wrapper for connecting to cluster nodes.
-- `.ssh/config`: SSH configuration for the cluster nodes.
+- `.ssh/config`: SSH configuration for connecting to cluster nodes.
+- `.ansible/hosts`: Ansible hosts configuration for executing commands on
+  multiple nodes in parallel.
 
 ## Maintenance
 

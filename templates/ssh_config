@@ -8,6 +8,9 @@ User root
 
 Host gateway
 HostName ${cluster_ip}
+%{ if !firewall_k8s_open ~}
+LocalForward 6443 localhost:6443
+%{ endif ~}
 Port 22
 
 # Alias for control plane main serever

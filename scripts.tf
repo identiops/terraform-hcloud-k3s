@@ -19,12 +19,12 @@ resource "local_file" "ssh_config" {
   filename = "./.ssh/config"
   content = templatefile(
     "${path.module}/templates/ssh_config", {
-      cluster_name = var.cluster_name
-      cluster_ip   = hcloud_server.gateway.ipv4_address
-      control_plane_init_ip = [for pool in module.node_pool_cluster_init :
-      [for node in pool.nodes : node.private[0]][0]][0]
-      node_pools = merge(module.node_pool_cluster_init, module.node_pools)
-      cwd        = path.cwd
+      cluster_name          = var.cluster_name
+      cluster_ip            = hcloud_server.gateway.ipv4_address
+      control_plane_init_ip = [for pool in module.node_pool_cluster_init : [for node in pool.nodes : node.private[0]][0]][0]
+      node_pools            = merge(module.node_pool_cluster_init, module.node_pools)
+      firewall_k8s_open     = var.gateway_firewall_k8s_open
+      cwd                   = path.cwd
     }
   )
   file_permission = "0600"
@@ -69,7 +69,7 @@ resource "local_file" "setkubeconfig" {
   content = templatefile(
     "${path.module}/templates/kubeconfig_setkubeconfig", {
       cluster_name       = var.cluster_name
-      cluster_ip         = hcloud_server.gateway.ipv4_address
+      cluster_ip         = var.gateway_firewall_k8s_open ? hcloud_server.gateway.ipv4_address : "localhost"
       oidc_enabled       = var.oidc_enabled
       oidc_issuer_url    = var.oidc_issuer_url
       oidc_client_id     = var.oidc_client_id
