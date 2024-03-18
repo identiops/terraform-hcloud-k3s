@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.6] - 2024-03-18
+
+### Documentation
+
+- Add reference to kube-hetzner
+
+### Features
+
+- Make ICMP and kubernetes configurable in firewall
+
 ## [3.0.5] - 2024-02-19
 
 ### Documentation
