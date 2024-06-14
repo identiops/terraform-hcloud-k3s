@@ -197,7 +197,7 @@ EOF
      with zone outages. The load balancer would go down with the region it's
      hosted in. If a protection against zone outages is required, a global load
      balancer should be deployed elsewhere, as
-     [descirbed by Google](https://cloud.google.com/load-balancing/docs/load-balancing-overview).
+     [described by Google](https://cloud.google.com/load-balancing/docs/load-balancing-overview).
 6. Initialize the configuration: `terraform init`
 7. Apply the configuration: `terraform apply`
 8. Grab a coffee and enjoy the servers popping up in Hetzner's cloud console.
