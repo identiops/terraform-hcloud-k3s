@@ -218,7 +218,7 @@ EOF
 12. Forward the cluster port locally since it's not exposed to the Internet by
     default. Do this every time you want to interact with the cluster:
     `./ssh-node gateway`
-13. Test cluster access from your local machine: `kubectl get nodes`
+13. **On your local machine** test cluster access: `kubectl get nodes`
 
 Enjoy your new cluster! 🚀
 
