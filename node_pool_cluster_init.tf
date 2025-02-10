@@ -79,9 +79,9 @@ module "node_pool_cluster_init" {
       helm repo add kubereboot https://kubereboot.github.io/charts
       helm install -n kube-system kured kubereboot/kured --version '${var.kured_chart_version}' --set 'configuration.timeZone=${var.additional_cloud_init.timezone},configuration.startTime=${var.kured_start_time},configuration.endTime=${var.kured_end_time},configuration.rebootDays={${var.kured_reboot_days}},tolerations[0].key=CriticalAddonsOnly,tolerations[0].operator=Exists'
 
-      ## See https://github.com/rancher/charts/tree/dev-v2.9/charts/system-upgrade-controller and https://github.com/rancher/system-upgrade-controller
+      ## See https://github.com/rancher/charts/tree/release-v2.8/charts/system-upgrade-controller and https://github.com/rancher/system-upgrade-controller
       helm repo add rancher https://charts.rancher.io
-      helm install --create-namespace -n cattle-system system-upgrade-controller rancher/system-upgrade-controller --version '${var.system_upgrade_controller_version}' --set 'global.cattle.psp.enabled=false'
+      helm install --create-namespace -n cattle-system system-upgrade-controller rancher/system-upgrade-controller --version '${var.system_upgrade_controller_version}' --set 'global.cattle.psp.enabled=false,systemUpgradeJobTTLSecondsAfterFinish=86400'
       # rm /usr/local/bin/helm
       EOT
     ,

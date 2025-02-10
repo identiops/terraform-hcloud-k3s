@@ -562,6 +562,7 @@ global:
   cattle:
     psp:
       enabled: false
+systemUpgradeJobTTLSecondsAfterFinish: 86400 # retain jobs for 1 day for inspection purposes
 ```
 
 ## Deletion
