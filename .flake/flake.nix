@@ -5,21 +5,27 @@
   description = "Dependencies";
 
   # inputs.nixpkgs.url = "github:identinet/nixpkgs/identinet";
-  inputs.nixpkgs_unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+  # inputs.nixpkgs_unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
-  outputs = { self, nixpkgs, nixpkgs_unstable, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      # nixpkgs_unstable,
+      flake-utils,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        unstable = nixpkgs_unstable.legacyPackages.${system};
-        my-python-packages = python-packages:
-          with python-packages;
-          [
-            pyyaml # YAML module
-          ];
-        python-with-my-packages = pkgs.python3.withPackages my-python-packages;
+        # unstable = nixpkgs_unstable.legacyPackages.${system};
+        # my-python-packages =
+        #   python-packages: with python-packages; [
+        #     pyyaml # YAML module
+        #   ];
+        # python-with-my-packages = pkgs.python3.withPackages my-python-packages;
         allOsPackages = with pkgs; [
           # Nix packages: https://search.nixos.org/packages
           # Shared dependencies
@@ -31,7 +37,7 @@
           # terraform # Infrastructure as code https://www.terraform.io/
           opentofu # Terraform OSS https://opentofu.org/
           tflint # Terraform linter https://github.com/terraform-linters/tflint
-          unstable.nushell # Nu Shell https://www.nushell.sh/
+          nushell # Nu Shell https://www.nushell.sh/
 
           # Kubernetes tools
           # k9s # interactive kubectl interface  https://k9scli.io/
@@ -41,17 +47,16 @@
           # yq-go # YAML and JSON CLI parser https://mikefarah.gitbook.io/yq/
           # python-with-my-packages
         ];
-        linuxOnlyPackages = with pkgs;
-          [
-            # datree # kubernetes configuration validation and verification https://datree.io/
-          ];
-      in {
+        linuxOnlyPackages = with pkgs; [
+          # datree # kubernetes configuration validation and verification https://datree.io/
+        ];
+      in
+      {
         devShell = pkgs.mkShell {
-          nativeBuildInputs = if pkgs.system == "x86_64-linux" then
-            allOsPackages ++ linuxOnlyPackages
-          else
-            allOsPackages;
+          nativeBuildInputs =
+            if pkgs.system == "x86_64-linux" then allOsPackages ++ linuxOnlyPackages else allOsPackages;
           buildInputs = [ ];
         };
-      });
+      }
+    );
 }
