@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.0] - 2025-02-10
+
+### Bug Fixes
+
+- Link to simple example in README
+- Drop template dependency
+- Change default node type to an existing type and validate node type in pools #11
+
+### Documentation
+
+- Fix topy
+- Emphasize that the kubectl command is executed locally #13
+
+### Miscellaneous Tasks
+
+- Lift required version to 0.12.0
+- Update dependencies
+- Update bump version task
+- Cleanup links
+- Increase time to live for upgrade jobs
+- Update dependencies
+- Update terraform versions
+- [**breaking**] Update ubuntu version to 24.04 and update dependencies #12
+
 ## [3.0.6] - 2024-03-18
 
 ### Documentation
@@ -404,7 +428,6 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
-- Adds firewall configuration
 - Add feature to create floating IPs
 - Use internal network for cluster networking
 - Add feature to run scripts with cloud-init
@@ -412,6 +435,7 @@ All notable changes to this project will be documented in this file.
 - Output IPv6 addresses
 - Add Nürnberg datacenter and location
 - Set hcloud version
+- Adds firewall configuration
 - Replace csi/ccm manifests with links to upstream
 - Add support for k3s_version
 - Update to version 1.32.2
