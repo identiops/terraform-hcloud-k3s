@@ -61,7 +61,7 @@ What changed in the latest version? See
 - Support for [cluster auto scaler](https://github.com/kubernetes/autoscaler).
 
 <!-- generated with
-!deno run --unstable --allow-read --allow-write https://deno.land/x/remark_format_cli@v0.1.0/remark-format.js %
+!deno run --allow-read --allow-write https://deno.land/x/remark_format_cli@0.4.0/remark-format.js %
 -->
 
 ## Contents
@@ -329,7 +329,7 @@ Removing nodes requires the following steps:
 Nodes are rebooting automatically when they receive updates that require a
 reboot. The kured service triggers reboots of nodes one by one. Reboots can be
 disabled system-wide by annotating the Daemonset, see
-https://kured.dev/docs/operation/.
+<https://kured.dev/docs/operation/>.
 
 ### Upgrade Operating System
 
@@ -556,7 +556,7 @@ helm upgrade --reuse-values system-upgrade-controller rancher/system-upgrade-con
 
 ```yaml
 # Documentation: https://github.com/rancher/system-upgrade-controller
-# Documentation: https://github.com/rancher/charts/tree/dev-v2.9/charts/system-upgrade-controller
+# Documentation: https://github.com/rancher/charts/tree/release-v2.8/charts/system-upgrade-controller
 
 global:
   cattle:
