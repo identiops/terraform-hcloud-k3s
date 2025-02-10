@@ -112,6 +112,9 @@ What changed in the latest version? See
 
 ### Prerequisites
 
+WARNING: Apple Silicon is apparently not supported by important terraform
+modules, see <https://github.com/identiops/terraform-hcloud-k3s/issues/19>.
+
 - [Terraform](https://terraform.io) or [OpenTofu](https://opentofu.org/). Note
   that you'll need Terraform v1.0 or newer to run this project.
 - `bash` for executing the generated scripts.
