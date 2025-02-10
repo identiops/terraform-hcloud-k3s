@@ -36,7 +36,7 @@ resource "hcloud_server" "gateway" {
       <<-EOT
       echo 'Unattended-Upgrade::Automatic-Reboot "true";' >> /etc/apt/apt.conf.d/50unattended-upgrades
       # Enable packet forwarding
-      ufw route allow in on ens10 out on eth0
+      ufw route allow in on enp7s0 out on eth0
       systemctl daemon-reload
       EOT
       ,

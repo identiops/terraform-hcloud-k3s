@@ -51,9 +51,9 @@ variable "k3s_version" {
 }
 
 variable "default_image" {
-  description = "Default server image if not specified in the node pool + image of the gateway. See `HCLOUD_TOKEN=XXXX; curl -H \"Authorization: Bearer $HCLOUD_TOKEN\" https://api.hetzner.cloud/v1/images | jq -r .images[].name | sort`"
+  description = "Default server image if not specified in the node pool + image of the gateway. See `HCLOUD_TOKEN=XXXX; curl -H \"Authorization: Bearer $HCLOUD_TOKEN\" https://api.hetzner.cloud/v1/images?per_page=50 | jq -r .images[].name | sort`"
   type        = string
-  default     = "ubuntu-22.04"
+  default     = "ubuntu-24.04"
 }
 
 variable "oidc_enabled" {
@@ -152,13 +152,13 @@ variable "ssh_keys" {
 variable "cilium_version" {
   description = "Cilium version, see https://github.com/cilium/cilium"
   type        = string
-  default     = "1.15.1"
+  default     = "1.17.0"
 }
 
 variable "kured_chart_version" {
   description = "Kured chart version, see https://artifacthub.io/packages/helm/kured/kured"
   type        = string
-  default     = "5.4.1"
+  default     = "5.6.0"
 }
 
 variable "kured_reboot_days" {
@@ -182,31 +182,31 @@ variable "kured_end_time" {
 variable "hcloud_ccm_driver_chart_version" {
   description = "Hetzner CCM chart version, see https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy"
   type        = string
-  default     = "1.19.0"
+  default     = "1.23.0"
 }
 
 variable "hcloud_csi_driver_chart_version" {
   description = "Hetzner CSI driver chart version, see https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy"
   type        = string
-  default     = "2.6.0"
+  default     = "2.12.0"
 }
 
 variable "metrics_server_chart_version" {
   description = "Metrics server chart version, see https://artifacthub.io/packages/helm/metrics-server/metrics-server"
   type        = string
-  default     = "3.11.0"
+  default     = "3.12.2"
 }
 
 variable "system_upgrade_controller_version" {
-  description = "System Upgarde Controller version, see available versions https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.9/charts/system-upgrade-controller"
+  description = "System Upgarde Controller version, see available versions https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.10/charts/system-upgrade-controller"
   type        = string
-  default     = "103.0.0+up0.6.0"
+  default     = "104.0.0+up0.7.0"
 }
 
 variable "nu_version" {
-  description = "NuShell version"
+  description = "NuShell version, see available version https://github.com/nushell/nushell/releases"
   type        = string
-  default     = "0.90.1"
+  default     = "0.102.0"
 }
 
 variable "additional_packages" {
@@ -362,7 +362,7 @@ node_pools = {
     is_control_plane   = true
     schedule_workloads = true
     location           = "nbg1"
-    image              = "ubuntu-22.04"
+    image              = "ubuntu-24.04"
     type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
     count              = 3
     count_width        = 1
@@ -377,7 +377,7 @@ node_pools = {
     is_control_plane   = false
     schedule_workloads = true
     location           = "nbg1"
-    image              = "ubuntu-22.04"
+    image              = "ubuntu-24.04"
     type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
     count              = 3
     count_width        = 2

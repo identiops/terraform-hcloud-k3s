@@ -6,7 +6,7 @@
 
 This Terraform module creates a Kubernetes Cluster on
 [Hetzner Cloud](https://console.hetzner.cloud/) infrastructure running Ubuntu
-22.04. The module aims to be simple to use while providing an out-of-the-box
+24.04. The module aims to be simple to use while providing an out-of-the-box
 secure and maintainable setup. Thanks to Ubuntu's LTS version we get up to 5
 years of peace and quiet before having to upgrade the cluster's operating
 system!
@@ -333,8 +333,6 @@ disabled system-wide by annotating the Daemonset, see
 
 ### Upgrade Operating System
 
-WARNING: untested!
-
 An operating system update is not recommended, e.g. from Ubuntu 22.04 to 24.04.
 Instead, the corresponding nodes should be replaced!
 
@@ -543,7 +541,7 @@ helm upgrade --reuse-values metrics-server metrics-server/metrics-server -n kube
 ### Update System Upgrade Controller
 
 - Available versions:
-  <https://github.com/rancher/charts/tree/dev-v2.9/charts/system-upgrade-controller>
+  <https://github.com/rancher/charts/tree/dev-v2.10/charts/system-upgrade-controller>
 - Update instructions: <https://github.com/rancher/system-upgrade-controller>
 
 ```bash
@@ -616,8 +614,8 @@ ufw status
 # 22,6443/tcp                ALLOW       Anywhere
 # 22,6443/tcp (v6)           ALLOW       Anywhere (v6)
 #
-# Anywhere on eth0           ALLOW FWD   Anywhere on ens10
-# Anywhere (v6) on eth0      ALLOW FWD   Anywhere (v6) on ens10
+# Anywhere on eth0           ALLOW FWD   Anywhere on enp7s0
+# Anywhere (v6) on eth0      ALLOW FWD   Anywhere (v6) on enp7s0
 ```
 
 ### Nodes
@@ -665,10 +663,10 @@ Ensure cluster is set up correctly: `./ssh-node cluster`
 ip r s
 
 # Expected output:
-# default via 10.0.0.1 dev ens10 proto static onlink <-- this is the important line
-# 10.0.0.0/8 via 10.0.0.1 dev ens10 proto dhcp src 10.0.1.2 metric 1024
-# 10.0.0.1 dev ens10 proto dhcp scope link src 10.0.1.2 metric 1024
-# 169.254.169.254 via 10.0.0.1 dev ens10 proto dhcp src 10.0.1.2 metric 1024
+# default via 10.0.0.1 dev enp7s0 proto static onlink <-- this is the important line
+# 10.0.0.0/8 via 10.0.0.1 dev enp7s0 proto dhcp src 10.0.1.2 metric 1024
+# 10.0.0.1 dev enp7s0 proto dhcp scope link src 10.0.1.2 metric 1024
+# 169.254.169.254 via 10.0.0.1 dev enp7s0 proto dhcp src 10.0.1.2 metric 1024
 ```
 
 #### Verify connectivity to the Internet

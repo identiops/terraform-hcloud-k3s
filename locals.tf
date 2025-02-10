@@ -12,7 +12,7 @@ locals {
   ]
   cluster_cidr_network = cidrsubnet(var.network_cidr, var.cluster_cidr_network_bits - 8, var.cluster_cidr_network_offset)
   service_cidr_network = cidrsubnet(var.network_cidr, var.service_cidr_network_bits - 8, var.service_cidr_network_offset)
-  cmd_node_ip          = "$(ip -4 -j a s dev ens10 | jq '.[0].addr_info[0].local' -r)"
+  cmd_node_ip          = "$(ip -4 -j a s dev enp7s0 | jq '.[0].addr_info[0].local' -r)"
   # cmd_node_external_ip = "$(ip -4 -j a s dev eth0 | jq '.[0].addr_info[0].local' -r),$(ip -6 -j a s dev eth0 | jq '.[0].addr_info[0].local' -r)"
   cmd_node_external_ip = hcloud_server.gateway.ipv4_address
   kube-apiserver-args = var.oidc_enabled ? {
@@ -24,9 +24,9 @@ locals {
   default_gateway = cidrhost(var.network_cidr, 1)
   haproxy_setup   = <<-EOT
   export NU_VERSION="${var.nu_version}"
-  curl -Lo /tmp/nu.tar.gz "https://github.com/nushell/nushell/releases/download/$NU_VERSION/nu-$NU_VERSION-x86_64-linux-gnu-full.tar.gz"
-  tar xvzfC /tmp/nu.tar.gz /tmp "nu-$NU_VERSION-x86_64-linux-gnu-full/nu"
-  mv "/tmp/nu-$NU_VERSION-x86_64-linux-gnu-full/nu" /usr/local/bin
+  curl -Lo /tmp/nu.tar.gz "https://github.com/nushell/nushell/releases/download/$NU_VERSION/nu-$NU_VERSION-x86_64-unknown-linux-gnu.tar.gz"
+  tar xvzfC /tmp/nu.tar.gz /tmp "nu-$NU_VERSION-x86_64-unknown-linux-gnu/nu"
+  mv "/tmp/nu-$NU_VERSION-x86_64-unknown-linux-gnu/nu" /usr/local/bin
   mkdir -p /etc/haproxy/haproxy.d
   echo 'EXTRAOPTS="-f /etc/haproxy/haproxy.d"' >> /etc/default/haproxy
   systemctl restart haproxy
@@ -38,7 +38,7 @@ locals {
   # SSH
   sed -i -e 's/^#*PermitRootLogin .*/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
   sed -i -e 's/^#*PasswordAuthentication .*/PasswordAuthentication no/g' /etc/ssh/sshd_config
-  systemctl restart sshd
+  systemctl restart ssh
   # Firewall - all other ports are opened automatically by kubernetes
   ufw allow proto tcp from any to any port 22
   ufw default deny incoming

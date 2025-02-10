@@ -27,13 +27,14 @@ resource "hcloud_server" "pool" {
   labels             = var.node_labels
   placement_group_id = hcloud_placement_group.pool.id
   user_data = format("%s\n%s\n%s", "#cloud-config", yamlencode({
-    # not sure if I need these settings now that the software installation is done later
+    # Documentation: https://cloudinit.readthedocs.io/en/latest/reference
+    # not sure if these settings are required here, now that the software installation is done later
     network = {
       version = 1
       config = [
         {
           type = "physical"
-          name = "ens10"
+          name = "enp7s0"
           subnets = [
             { type    = "dhcp"
               gateway = var.default_gateway
