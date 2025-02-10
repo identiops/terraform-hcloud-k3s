@@ -122,7 +122,11 @@ resource "hcloud_placement_group" "pool" {
 }
 
 locals {
-  costs_node = [for server_type in var.prices.server_types : [for price in server_type.prices : { net = tonumber(price.price_monthly.net), gross = tonumber(price.price_monthly.gross) } if price.location == var.location][0] if server_type.name == var.node_type][0]
+  costs_node = [for server_type in var.prices.server_types :
+    [for price in server_type.prices :
+      { net = tonumber(price.price_monthly.net), gross = tonumber(price.price_monthly.gross) } if price.location == var.location
+    ][0] if server_type.name == var.node_type
+  ][0]
 }
 
 variable "name" {

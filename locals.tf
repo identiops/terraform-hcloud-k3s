@@ -97,7 +97,10 @@ locals {
   ${local.common_arguments~}
   EOT
   prices                           = jsondecode(data.http.prices.response_body).pricing
-  costs_gateway                    = [for server_type in local.prices.server_types : [for price in server_type.prices : { net = tonumber(price.price_monthly.net), gross = tonumber(price.price_monthly.gross) } if price.location == var.default_location][0] if server_type.name == var.gateway_server_type][0]
+  costs_gateway = [for server_type in local.prices.server_types :
+    [for price in server_type.prices :
+      { net = tonumber(price.price_monthly.net), gross = tonumber(price.price_monthly.gross) } if price.location == var.default_location
+  ][0] if server_type.name == var.gateway_server_type][0]
 }
 
 data "http" "prices" {

@@ -87,7 +87,7 @@ module "cluster" {
       }
       is_control_plane   = true
       schedule_workloads = true
-      type               = "cx31" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
+      type               = "cpx31" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
       count              = 3
       labels = {
         # "control-plane" = "yes"
@@ -99,7 +99,7 @@ module "cluster" {
     workers = {
       is_control_plane   = false
       schedule_workloads = true
-      type               = "cx31" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
+      type               = "cpx31" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
       count              = 3
       count_width        = 2
       labels             = {}

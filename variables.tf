@@ -51,6 +51,7 @@ variable "k3s_version" {
 }
 
 variable "default_image" {
+  # http get --headers [Authorization $"Bearer ($env.TF_VAR_hcloud_token)"] https://api.hetzner.cloud/v1/images | $in.images | where type == "system"
   description = "Default server image if not specified in the node pool + image of the gateway. See `HCLOUD_TOKEN=XXXX; curl -H \"Authorization: Bearer $HCLOUD_TOKEN\" https://api.hetzner.cloud/v1/images?per_page=50 | jq -r .images[].name | sort`"
   type        = string
   default     = "ubuntu-24.04"
@@ -262,9 +263,10 @@ variable "gateway_firewall_k8s_open" {
 variable "gateway_server_type" {
   description = "Gateway node type (size)."
   type        = string
-  default     = "cx11"
+  default     = "cpx11"
   validation {
-    condition     = can(regex("^(cp?x[1-5]1|cax[1-4]1|ccx[1-6]3)$", var.gateway_server_type))
+    # http get --headers [Authorization $"Bearer ($env.TF_VAR_hcloud_token)"] https://api.hetzner.cloud/v1/server_types | $in.server_types | each {{deprecated: $in.deprecated, name: $in.name, cores: $in.cores, cpu_type: $in.cpu_type, memory: $in.memory, disk: $in.disk, prices: ($in.prices.location | str join ', ')}}
+    condition     = can(regex("^(cpx[1-5]1|cx[2-5]2|cax[1-4]1|ccx[1-6]3)$", var.gateway_server_type))
     error_message = "Node type is not valid."
   }
 }
@@ -363,7 +365,7 @@ node_pools = {
     schedule_workloads = true
     location           = "nbg1"
     image              = "ubuntu-24.04"
-    type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
+    type               = "cpx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
     count              = 3
     count_width        = 1
     labels = {
@@ -378,7 +380,7 @@ node_pools = {
     schedule_workloads = true
     location           = "nbg1"
     image              = "ubuntu-24.04"
-    type               = "cx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
+    type               = "cpx21" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
     count              = 3
     count_width        = 2
     labels             = {}
@@ -436,6 +438,11 @@ EOT
       (pool.cluster_init_action.reset && pool.cluster_init_action.reset_restore_path != "") if pool.cluster_can_init && pool.cluster_init_action.reset
     ])
     error_message = "`cluster_init_action.reset` requires `cluster_init_action.reset_restore_path` to be non-empty."
+  }
+  validation {
+    # http get --headers [Authorization $"Bearer ($env.TF_VAR_hcloud_token)"] https://api.hetzner.cloud/v1/server_types | $in.server_types | each {{deprecated: $in.deprecated, name: $in.name, cores: $in.cores, cpu_type: $in.cpu_type, memory: $in.memory, disk: $in.disk, prices: ($in.prices.location | str join ', ')}}
+    condition     = alltrue([for pool in var.node_pools : can(regex("^(cpx[1-5]1|cx[2-5]2|cax[1-4]1|ccx[1-6]3)$", pool.type))])
+    error_message = "`type` is not valid."
   }
 }
 
