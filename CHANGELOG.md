@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.1.1] - 2025-02-11
+
+### Features
+
+- Add kubeapi jump account on gateway
+
 ## [4.1.0] - 2025-02-11
 
 ### Documentation
