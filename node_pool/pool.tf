@@ -29,24 +29,24 @@ resource "hcloud_server" "pool" {
   user_data = format("%s\n%s\n%s", "#cloud-config", yamlencode({
     # Documentation: https://cloudinit.readthedocs.io/en/latest/reference
     # not sure if these settings are required here, now that the software installation is done later
-    network = {
-      version = 1
-      config = [
-        {
-          type = "physical"
-          name = "enp7s0"
-          subnets = [
-            { type    = "dhcp"
-              gateway = var.default_gateway
-              dns_nameservers = [
-                "1.1.1.1",
-                "1.0.0.1",
-              ]
-            }
-          ]
-        },
-      ]
-    }
+    # network = {
+    #   version = 1
+    #   config = [
+    #     {
+    #       type = "physical"
+    #       name = var.network_intreface
+    #       subnets = [
+    #         { type    = "dhcp"
+    #           gateway = var.default_gateway
+    #           dns_nameservers = [
+    #             "1.1.1.1",
+    #             "1.0.0.1",
+    #           ]
+    #         }
+    #       ]
+    #     },
+    #   ]
+    # }
     package_update  = false
     package_upgrade = false
     runcmd          = count.index == 0 && length(var.runcmd_first) > 0 ? var.runcmd_first : var.runcmd
@@ -60,7 +60,8 @@ resource "hcloud_server" "pool" {
         path = "/etc/systemd/network/default-route.network"
         content = templatefile("${path.module}/../templates/default-route.network",
           {
-            default_gateway = var.default_gateway
+            default_gateway   = var.default_gateway
+            network_interface = var.network_interface
         })
       },
       {
@@ -265,6 +266,11 @@ variable "additional_cloud_init" {
     locale   = ""
     users    = []
   }
+}
+
+variable "network_interface" {
+  description = "Network interface name"
+  type        = string
 }
 
 variable "prices" {

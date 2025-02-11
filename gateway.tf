@@ -1,6 +1,12 @@
 # Copyright 2024, identinet GmbH. All rights reserved.
 # SPDX-License-Identifier: MIT
 
+module "gateway_network_interface" {
+  source = "./network_interface"
+  image  = var.default_image
+  any    = {}
+}
+
 resource "hcloud_server" "gateway" {
   lifecycle {
     prevent_destroy = false
@@ -36,7 +42,7 @@ resource "hcloud_server" "gateway" {
       <<-EOT
       echo 'Unattended-Upgrade::Automatic-Reboot "true";' >> /etc/apt/apt.conf.d/50unattended-upgrades
       # Enable packet forwarding
-      ufw route allow in on enp7s0 out on eth0
+      ufw route allow in on ${module.gateway_network_interface.network_interface} out on eth0
       systemctl daemon-reload
       EOT
       ,
@@ -63,7 +69,7 @@ resource "hcloud_server" "gateway" {
       },
       {
         path    = "/etc/systemd/network/gateway-forwarding.network"
-        content = file("${path.module}/templates/gateway-forwarding.network")
+        content = templatefile("${path.module}/templates/gateway-forwarding.network", { network_interface = module.gateway_network_interface.network_interface })
       },
       {
         # Enable postrouting with ufw

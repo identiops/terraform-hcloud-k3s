@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 [Match]
-Name=enp7s0
+Name=${network_interface}
 
 [Network]
 DHCP=yes

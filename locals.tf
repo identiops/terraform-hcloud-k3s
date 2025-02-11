@@ -12,7 +12,6 @@ locals {
   ]
   cluster_cidr_network = cidrsubnet(var.network_cidr, var.cluster_cidr_network_bits - 8, var.cluster_cidr_network_offset)
   service_cidr_network = cidrsubnet(var.network_cidr, var.service_cidr_network_bits - 8, var.service_cidr_network_offset)
-  cmd_node_ip          = "$(ip -4 -j a s dev enp7s0 | jq '.[0].addr_info[0].local' -r)"
   # cmd_node_external_ip = "$(ip -4 -j a s dev eth0 | jq '.[0].addr_info[0].local' -r),$(ip -6 -j a s dev eth0 | jq '.[0].addr_info[0].local' -r)"
   cmd_node_external_ip = hcloud_server.gateway.ipv4_address
   kube-apiserver-args = var.oidc_enabled ? {
@@ -78,7 +77,6 @@ locals {
   wget -qO- https://get.k3s.io | \
   EOT
   common_arguments                 = <<-EOT
-  --node-ip="${local.cmd_node_ip}" \
   --node-external-ip="${local.cmd_node_external_ip}" \
   --kubelet-arg 'cloud-provider=external' \
   EOT
