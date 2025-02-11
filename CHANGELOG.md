@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.1.0] - 2025-02-11
+
+### Documentation
+
+- Add apple silicon warning #19
+
+### Features
+
+- Support different network interface names depending on OS image
+
+### Miscellaneous Tasks
+
+- Silent _bump_files task
+
 ## [4.0.0] - 2025-02-10
 
 ### Bug Fixes
