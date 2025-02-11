@@ -247,6 +247,21 @@ In addition, a few convenience scripts were created to help with maintenance:
 - `.ansible/hosts`: Ansible hosts configuration for executing commands on
   multiple nodes in parallel.
 
+#### Usage Jump Host
+
+By default, the Kubernetes API port is not exposed on the internet, see option
+`gateway_firewall_k8s_open`. Therefore, it is required to forward the Kubernetes
+API port `6443` from the gateway.
+
+A limited account `kubeapi` was created on the gateway that restricts SSH keys
+configured via option `ssh_keys_kubeapi` to forward the single port. A
+corresponding SSH config entry is created. The following command connects to the
+gateway with the restricted user account:
+
+```bash
+./ssh-node kubeapi
+```
+
 ## Maintenance
 
 ### Ansible: Execute Commands on Nodes
