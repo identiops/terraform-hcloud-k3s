@@ -73,6 +73,7 @@ _bump_files CURRENT_VERSION NEW_VERSION:
       tofu fmt $file
       git add $file
     }
+    null
 
 # Bump version. LEVEL can be one of: major, minor, patch, premajor, preminor, prepatch, or prerelease.
 bump LEVEL="patch" NEW_VERSION="":
