@@ -1,0 +1,3 @@
+%{ for name, key in ssh_keys ~}
+restrict,port-forwarding,permitopen="localhost:6443" ${key}
+%{ endfor ~}

@@ -146,8 +146,14 @@ variable "enable_public_net_ipv6" {
 }
 
 variable "ssh_keys" {
-  description = "Map of public ssh keys."
+  description = "Map of public ssh keys that will receive root access."
   type        = map(string)
+}
+
+variable "ssh_keys_kubeapi" {
+  description = "Map of public ssh keys that will just receive access to the kubernetes API port on the gateway system."
+  type        = map(string)
+  default     = {}
 }
 
 variable "cilium_version" {

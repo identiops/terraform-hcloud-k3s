@@ -29,7 +29,7 @@ resource "hcloud_server" "gateway" {
   server_type        = var.gateway_server_type
   ssh_keys           = [for k in hcloud_ssh_key.pub_keys : k.name]
   labels             = var.gateway_labels
-  # Documentation https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install
+  # Documentation https://cloudinit.readthedocs.io/en/latest/reference
   user_data = format("%s\n%s\n%s", "#cloud-config", yamlencode({
     package_update             = true
     package_upgrade            = true
@@ -72,6 +72,11 @@ resource "hcloud_server" "gateway" {
         content = templatefile("${path.module}/templates/gateway-forwarding.network", { network_interface = module.gateway_network_interface.network_interface })
       },
       {
+        path        = "/home/kubeapi/.ssh/authorized_keys"
+        content     = templatefile("${path.module}/templates/ssh_authorized_keys", { ssh_keys = var.ssh_keys_kubeapi })
+        permissions = "0444"
+      },
+      {
         # Enable postrouting with ufw
         path    = "/etc/ufw/before.rules"
         content = templatefile("${path.module}/templates/gateway-ufw-before.rules", { subnet = var.subnet_cidr })
@@ -79,7 +84,19 @@ resource "hcloud_server" "gateway" {
       },
     ]
     }),
-    yamlencode(var.additional_cloud_init)
+
+    yamlencode(merge(var.additional_cloud_init,
+      {
+        users = concat(var.additional_cloud_init.users,
+          [
+            {
+              # kubeapi user that allows users to locally forward and access the kubernetes API port and nothing else
+              name  = "kubeapi"
+              shell = "/usr/sbin/nologin"
+            }
+        ])
+      },
+    ))
   )
   firewall_ids = concat(
     [hcloud_firewall.gateway_ssh.id],

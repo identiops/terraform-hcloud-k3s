@@ -4,10 +4,19 @@
 
 Host *
 UserKnownHostsFile ${cwd}/.ssh/known_hosts
-User root
+
+Host kubeapi
+HostName ${cluster_ip}
+User kubeapi
+SessionType none
+%{ if !firewall_k8s_open ~}
+LocalForward 6443 localhost:6443
+%{ endif ~}
+Port 22
 
 Host gateway
 HostName ${cluster_ip}
+User root
 %{ if !firewall_k8s_open ~}
 LocalForward 6443 localhost:6443
 %{ endif ~}
@@ -15,11 +24,13 @@ Port 22
 
 # Alias for control plane main serever
 Host cluster
+User root
 ProxyCommand ${cwd}/ssh-node gateway nc ${control_plane_init_ip} %p
 %{ for pool in node_pools ~}
 %{ for name, node in pool.nodes ~}
 
 Host ${name}
+User root
 ProxyCommand ${cwd}/ssh-node gateway nc ${node.private.0} %p
 %{ endfor ~}
 %{ endfor ~}
