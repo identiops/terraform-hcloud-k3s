@@ -430,6 +430,69 @@ Perform these steps for all remaining node pools:
 4. Update the `image` variable in the configuration for future nodes to be
    deployed with the correct image.
 
+Example upgrade plan:
+
+```yaml
+# Documentation: https://github.com/rancher/system-upgrade-controller
+# Upgrade plan for control plane nodes
+apiVersion: upgrade.cattle.io/v1
+kind: Plan
+metadata:
+  name: k3s-server
+  namespace: cattle-system
+spec:
+  # When a channel is used, rather than a specific version,
+  # the plan keeps updating the cluster continuously
+  channel: https://update.k3s.io/v1-release/channels/v1.32
+  # version v1.30.0+k3s1
+  concurrency: 1
+  drain:
+    # disableEviction: true
+    force: true
+    skipWaitForDeleteTimeout: 60
+  nodeSelector:
+    matchExpressions:
+      - { key: k3s-upgrade, operator: Exists }
+      # Updates can be disabled by setting this label on nodes
+      - { key: k3s-upgrade, operator: NotIn, values: ["disabled", "false"] }
+      - { key: k3os.io/mode, operator: DoesNotExist }
+      - { key: node-role.kubernetes.io/control-plane, operator: Exists }
+  serviceAccountName: system-upgrade-controller
+  upgrade:
+    image: rancher/k3s-upgrade
+---
+# Upgrade plan for worker nodes
+apiVersion: upgrade.cattle.io/v1
+kind: Plan
+metadata:
+  name: k3s-agent
+  namespace: cattle-system
+spec:
+  # When a channel is used, rather than a specific version,
+  # the plan keeps updating the cluster continuously
+  channel: https://update.k3s.io/v1-release/channels/v1.32
+  # version v1.30.0+k3s1
+  concurrency: 1
+  drain:
+    # disableEviction: true
+    force: true
+    skipWaitForDeleteTimeout: 60
+  nodeSelector:
+    matchExpressions:
+      - { key: k3s-upgrade, operator: Exists }
+      # Updates can be disabled by setting this label on nodes
+      - { key: k3s-upgrade, operator: NotIn, values: ["disabled", "false"] }
+      - { key: k3os.io/mode, operator: DoesNotExist }
+      - { key: node-role.kubernetes.io/control-plane, operator: DoesNotExist }
+  serviceAccountName: system-upgrade-controller
+  prepare:
+    # Defaults to the same "resolved" tag that is used for the `upgrade` container, NOT `latest`
+    image: rancher/k3s-upgrade
+    args: ["prepare", "k3s-server"]
+  upgrade:
+    image: rancher/k3s-upgrade
+```
+
 ### Update Cilium
 
 - Available versions: <https://github.com/cilium/cilium>
