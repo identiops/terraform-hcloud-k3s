@@ -91,7 +91,7 @@ module "node_pool_cluster_init" {
 
       ## See https://github.com/rancher/charts/tree/release-v2.8/charts/system-upgrade-controller and https://github.com/rancher/system-upgrade-controller
       helm repo add rancher https://charts.rancher.io
-      helm install --create-namespace -n cattle-system system-upgrade-controller rancher/system-upgrade-controller --version '${var.system_upgrade_controller_version}' --set 'global.cattle.psp.enabled=false,systemUpgradeJobTTLSecondsAfterFinish=86400'
+      helm install --create-namespace -n cattle-system system-upgrade-controller rancher/system-upgrade-controller --version '${var.system_upgrade_controller_version}' --set 'systemUpgradeJobTTLSecondsAfterFinish=86400'
       # rm /usr/local/bin/helm
       EOT
     ,

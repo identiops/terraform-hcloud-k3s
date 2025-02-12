@@ -574,10 +574,6 @@ helm upgrade --reuse-values system-upgrade-controller rancher/system-upgrade-con
 # Documentation: https://github.com/rancher/system-upgrade-controller
 # Documentation: https://github.com/rancher/charts/tree/release-v2.8/charts/system-upgrade-controller
 
-global:
-  cattle:
-    psp:
-      enabled: false
 systemUpgradeJobTTLSecondsAfterFinish: 86400 # retain jobs for 1 day for inspection purposes
 ```
 
