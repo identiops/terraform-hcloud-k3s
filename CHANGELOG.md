@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.1.2] - 2025-02-12
+
+### Bug Fixes
+
+- Properly replace version in examples
+
+### Documentation
+
+- Describe how to use the kubeapi jump host configuration
+- Move kubeapi docs do maintenance section
+- Add an upgrade plan example
+
+### Miscellaneous Tasks
+
+- Update system-upgrade-controller to version 105.0.1
+- Update system-upgrade-controller configuration
+- Add ssh port-forwarding configuration
+
 ## [4.1.1] - 2025-02-11
 
 ### Features
