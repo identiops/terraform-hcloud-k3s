@@ -207,7 +207,7 @@ variable "metrics_server_chart_version" {
 variable "system_upgrade_controller_version" {
   description = "System Upgarde Controller version, see available versions https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.10/charts/system-upgrade-controller"
   type        = string
-  default     = "104.0.0+up0.7.0"
+  default     = "105.0.1"
 }
 
 variable "nu_version" {
