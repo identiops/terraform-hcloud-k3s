@@ -69,7 +69,7 @@ lint:
 _bump_files CURRENT_VERSION NEW_VERSION:
     #!/usr/bin/env nu
     ["examples/1Region_3ControlPlane_3Worker_Nodes/main.tf", "examples/3Regions_3ControlPlane_3Worker_Nodes/main.tf"] | each {|file|
-      open --raw $file | str replace -r '\?ref=[^"]*' "?ref={{ NEW_VERSION }}" | str replace -r '^\s*version *= *".*"' 'version = "{{ NEW_VERSION }}"' | collect | save -f $file
+      open --raw $file | lines | str replace -ar '\?ref=[^"]*' "?ref={{ NEW_VERSION }}" | str replace -ar '^\s*version\s*=\s*".*"' 'version = "{{ NEW_VERSION }}"' | collect | save -f $file
       tofu fmt $file
       git add $file
     }
