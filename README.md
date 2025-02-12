@@ -247,7 +247,9 @@ In addition, a few convenience scripts were created to help with maintenance:
 - `.ansible/hosts`: Ansible hosts configuration for executing commands on
   multiple nodes in parallel.
 
-#### Usage Jump Host
+## Maintenance
+
+### Access Kubernetes API via Port-Forwarding from Gateway
 
 By default, the Kubernetes API port is not exposed on the internet, see option
 `gateway_firewall_k8s_open`. Therefore, it is required to forward the Kubernetes
@@ -262,7 +264,12 @@ gateway with the restricted user account:
 ./ssh-node kubeapi
 ```
 
-## Maintenance
+With the established connection and a proper `KUBECONFIG`, the cluster can be
+accessed:
+
+```bash
+kubectl get nodes
+```
 
 ### Ansible: Execute Commands on Nodes
 
