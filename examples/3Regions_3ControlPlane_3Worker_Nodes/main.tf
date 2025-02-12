@@ -56,9 +56,15 @@ module "cluster" {
 
   # General Settings
   # ----------------
+  # Root access to all systems
   ssh_keys = {
     "john" = file("~/.ssh/id_ed25519.pub")
     "jane" = "ssh-xxxx xxxxx jane@example"
+  }
+
+  # Just kubeapi access via port-forwarding
+  ssh_keys_kubeapi = {
+    "joe" = "ssh-xxxx xxxxx joe@example"
   }
 
   # Control Plane Settings
