@@ -1,5 +1,6 @@
 # Terraform language documentation: https://www.terraform.io/docs/language/index.html
 # HCL language specification: https://github.com/hashicorp/hcl/blob/main/hclsyntax/spec.md
+# Module documentation: https://registry.terraform.io/modules/identiops/k3s/hcloud/latest
 # Copyright 2024, identinet GmbH. All rights reserved.
 # SPDX-License-Identifier: MIT
 
@@ -52,7 +53,7 @@ module "cluster" {
   cluster_name      = "prod"
   default_location  = "nbg1"         # See available locations https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/resources/server#location
   default_image     = "ubuntu-24.04" # See `HCLOUD_TOKEN=XXXX; curl -H \"Authorization: Bearer $HCLOUD_TOKEN\" https://api.hetzner.cloud/v1/images | jq -r .images[].name | sort`
-  k3s_version       = "v1.31.5+k3s1" # See available versions, https://update.k3s.io/v1-release/channels regular images: https://hub.docker.com/r/rancher/k3s/tags upgrade images: https://hub.docker.com/r/rancher/k3s-upgrade/tags
+  k3s_version       = "v1.32.1+k3s1" # See available versions, https://update.k3s.io/v1-release/channels regular images: https://hub.docker.com/r/rancher/k3s/tags upgrade images: https://hub.docker.com/r/rancher/k3s-upgrade/tags
 
   # General Settings
   # ----------------
@@ -66,6 +67,11 @@ module "cluster" {
   ssh_keys_kubeapi = {
     "joe" = "ssh-xxxx xxxxx joe@example"
   }
+
+  # Gateway Settings
+  # ----------------------
+  gateway_firewall_k8s_open = false   # Open kubeapi port on the internet
+  gateway_server_type       = "cpx11" # See available types https://docs.hetzner.com/cloud/servers/overview#shared-vcpu
 
   # Control Plane Settings
   # ----------------------
