@@ -159,7 +159,7 @@ variable "ssh_keys_kubeapi" {
 variable "cilium_version" {
   description = "Cilium version, see https://github.com/cilium/cilium"
   type        = string
-  default     = "1.17.0"
+  default     = "1.17.1"
 }
 
 variable "kured_chart_version" {
