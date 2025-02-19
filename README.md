@@ -119,7 +119,7 @@ modules, see <https://github.com/identiops/terraform-hcloud-k3s/issues/19>.
   that you'll need Terraform v1.0 or newer to run this project.
 - `bash` for executing the generated scripts.
 - `jq` for executing the generated scripts.
-- `kubectl` for interacting wthe the Kubernetes cluster.
+- `kubectl` for interacting with the Kubernetes cluster.
 - `ssh` for connecting to cluster nodes.
 
 ### Recommended Tools
@@ -364,7 +364,7 @@ Instead, the corresponding nodes should be replaced!
 #### Gateway Node
 
 1. Set new image as `default_image`. Attention: before changing the default
-   image, make sure that each node pool has its own oppropriate `image` setting.
+   image, make sure that each node pool has its own appropriate `image` setting.
 2. Delete the node in the [Hetzner Console](https://console.hetzner.cloud/)
 3. Reapply the configuration: `terraform apply`
 
@@ -373,7 +373,7 @@ Internet access of the cluster's nodes for tasks like fetching package updates.
 However, it will not affect the services that are provided via load balancers!
 
 After redeploying the gateway, ssh connections will fail because a new
-cryptopraphic has been generated for the node. Delete the deprecated key from
+cryptographic has been generated for the node. Delete the deprecated key from
 the `.ssh/known_hosts` file, open a new ssh connection and accept the new public
 key.
 
@@ -657,7 +657,7 @@ terraform destroy -force
 ```
 
 Be sure to clean up any CSI created Block Storage Volumes, and CCM created
-NodeBalancers that you no longer require.
+LoadBalancers that you no longer require.
 
 ## Troubleshooting
 
