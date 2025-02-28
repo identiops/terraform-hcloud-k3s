@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.1.3] - 2025-02-28
+
+### Documentation
+
+- Correct typos
+
+### Miscellaneous Tasks
+
+- Add gateway configuration
+- Update to version 1.17.1
+
 ## [4.1.2] - 2025-02-12
 
 ### Bug Fixes
