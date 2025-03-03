@@ -2,7 +2,7 @@
 
 [![stars](https://img.shields.io/github/stars/identiops/terraform-hcloud-k3s)](https://github.com/identiops/terraform-hcloud-k3s)
 
-# Kubernetes Terraform installer for Hetzner Cloud
+# Private k3s Kubernetes Terraform installer for Hetzner Cloud
 
 This Terraform module creates a Kubernetes Cluster on
 [Hetzner Cloud](https://console.hetzner.cloud/) infrastructure running Ubuntu
@@ -11,8 +11,11 @@ secure and maintainable setup. Thanks to Ubuntu's LTS version we get up to 5
 years of peace and quiet before having to upgrade the cluster's operating
 system!
 
-Terraform module published at:
-<https://registry.terraform.io/modules/identiops/k3s/hcloud>
+Module published at:
+
+- Terraform registry:
+  <https://registry.terraform.io/modules/identiops/k3s/hcloud>
+- OpenTofu registry: <https://search.opentofu.org/module/identiops/k3s/hcloud>
 
 What changed in the latest version? See
 [CHANGELOG.md](https://github.com/identiops/terraform-hcloud-k3s/tree/main/CHANGELOG.md).
@@ -72,21 +75,22 @@ What changed in the latest version? See
    3. [Installation](#installation)
    4. [Usage](#usage)
 2. [Maintenance](#maintenance)
-   1. [Ansible: Execute Commands on Nodes](#ansible-execute-commands-on-nodes)
-   2. [Add Ingress Controller and Load Balancer](#add-ingress-controller-and-load-balancer)
-   3. [Add Nodes or Node Pools](#add-nodes-or-node-pools)
-   4. [Remove Nodes or Node Pools](#remove-nodes-or-node-pools)
-   5. [Stop Automated Node Reboots](#stop-automated-node-reboots)
-   6. [Upgrade Operating System](#upgrade-operating-system)
+   1. [Access Kubernetes API via Port-Forwarding from Gateway](#access-kubernetes-api-via-port-forwarding-from-gateway)
+   2. [Ansible: Execute Commands on Nodes](#ansible-execute-commands-on-nodes)
+   3. [Add Ingress Controller and Load Balancer](#add-ingress-controller-and-load-balancer)
+   4. [Add Nodes or Node Pools](#add-nodes-or-node-pools)
+   5. [Remove Nodes or Node Pools](#remove-nodes-or-node-pools)
+   6. [Stop Automated Node Reboots](#stop-automated-node-reboots)
+   7. [Upgrade Operating System](#upgrade-operating-system)
       1. [Gateway Node](#gateway-node)
       2. [Node Pools](#node-pools)
-   7. [Update Kubernetes](#update-kubernetes)
-   8. [Update Cilium](#update-cilium)
-   9. [Update Hetzner Cloud Controller Manager (CCM)](#update-hetzner-cloud-controller-manager-ccm)
-   10. [Update Hetzner Cloud Storage Interface (CSI)](#update-hetzner-cloud-storage-interface-csi)
-   11. [Update Kured](#update-kured)
-   12. [Update Metrics Server](#update-metrics-server)
-   13. [Update System Upgrade Controller](#update-system-upgrade-controller)
+   8. [Update Kubernetes](#update-kubernetes)
+   9. [Update Cilium](#update-cilium)
+   10. [Update Hetzner Cloud Controller Manager (CCM)](#update-hetzner-cloud-controller-manager-ccm)
+   11. [Update Hetzner Cloud Storage Interface (CSI)](#update-hetzner-cloud-storage-interface-csi)
+   12. [Update Kured](#update-kured)
+   13. [Update Metrics Server](#update-metrics-server)
+   14. [Update System Upgrade Controller](#update-system-upgrade-controller)
 3. [Deletion](#deletion)
 4. [Troubleshooting](#troubleshooting)
    1. [Gateway](#gateway)
