@@ -514,12 +514,18 @@ helm upgrade --reuse-values cilium cilium/cilium -n kube-system --version '<NEW_
 # Documentation: https://artifacthub.io/packages/helm/cilium/cilium
 
 # WARNING: needs to be in line with the cluster configuration
+MTU: "1450"
+endpointRoutes:
+  enabled: true
+k8s:
+  requireIPv4PodCIDR: true
 routingMode: native
 ipv4NativeRoutingCIDR: 10.0.0.0/8
 ipam:
+  mode: kubernetes
   operator:
     clusterPoolIPv4PodCIDRList: 10.244.0.0/16
-k8sServiceHost: 10.0.1.1
+k8sServiceHost: 127.0.0.1
 k8sServicePort: "6443"
 operator:
   replicas: 2
