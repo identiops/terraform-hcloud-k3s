@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.2.1] - 2025-03-03
+
+### Documentation
+
+- Add link to OpenTofu registry and update ToC
+
 ## [4.2.0] - 2025-03-03
 
 ### Miscellaneous Tasks
