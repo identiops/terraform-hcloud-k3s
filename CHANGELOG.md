@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.2.0] - 2025-03-03
+
+### Miscellaneous Tasks
+
+- Open cilium hubble port 4244 on all nodes
+
 ## [4.1.3] - 2025-02-28
 
 ### Documentation
