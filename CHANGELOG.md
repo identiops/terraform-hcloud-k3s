@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.0.0] - 2025-03-03
+
+### Bug Fixes
+
+- [**breaking**] Correct cilium installation that was broken when more than 1 node was part of the cluster
+
+### Documentation
+
+- Correct typos
+
 ## [4.2.1] - 2025-03-03
 
 ### Documentation
