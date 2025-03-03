@@ -46,10 +46,12 @@ locals {
   systemctl restart systemd-networkd.service
   EOT
   # Required open ports, see https://kubernetes.io/docs/reference/networking/ports-and-protocols/
+  # + 4244 for Cilium hubble https://docs.cilium.io/en/stable/observability/hubble/setup/
   control_plane_k8s_security_setup = <<-EOT
   ufw allow proto tcp from any to any port 2379:2380,6443,10257,10259
   EOT
   k8s_security_setup               = <<-EOT
+  ufw allow proto tcp from any to any port 4244
   ufw allow proto tcp from any to any port 10250
   ufw allow proto tcp from any to any port 30000:32767
   # Audit log directory, if required. See https://docs.k3s.io/security/hardening-guide
