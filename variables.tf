@@ -224,7 +224,7 @@ variable "additional_packages" {
 
 variable "additional_runcmd" {
   description = "List of additional shell commands to append to the cloud-init runcmd section on all servers."
-  type        = list(any)
+  type        = list(string)
   default     = []
 }
 
@@ -453,7 +453,7 @@ EOT
 }
 
 variable "worker_node_firewall_ids" {
-  description = "A list of firewall IDs to apply on the work node servers."
+  description = "A list of firewall IDs to apply on the worker node servers."
   type        = list(number)
   default     = []
 }
