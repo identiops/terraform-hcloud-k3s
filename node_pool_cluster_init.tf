@@ -66,17 +66,8 @@ module "node_pool_cluster_init" {
       helm install hcloud-ccm hcloud/hcloud-cloud-controller-manager -n kube-system --version '${var.hcloud_ccm_driver_chart_version}' --set 'networking.enabled=true,networking.clusterCIDR=${local.cluster_cidr_network},additionalTolerations[0].key=node.kubernetes.io/not-ready,additionalTolerations[0].effect=NoSchedule'
 
       ## See https://artifacthub.io/packages/helm/cilium/cilium
-      # CILIUM_CLI_VERSION="$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)"
-      # CLI_ARCH="amd64"
-      # curl -L --fail --remote-name-all "https://github.com/cilium/cilium-cli/releases/download/$CILIUM_CLI_VERSION/cilium-linux-$CLI_ARCH.tar.gz"
-      # curl -L --fail --remote-name-all "https://github.com/cilium/cilium-cli/releases/download/$CILIUM_CLI_VERSION/cilium-linux-$CLI_ARCH.tar.gz.sha256sum"
-      # sha256sum --check "cilium-linux-$CLI_ARCH.tar.gz.sha256sum"
-      # tar xzvfC "cilium-linux-$CLI_ARCH.tar.gz" /usr/local/bin
-      # rm -f "cilium-linux-$CLI_ARCH.tar.gz" "cilium-linux-$CLI_ARCH.tar.gz.sha256sum"
-      # cilium install --version '${var.cilium_version}' --set "routingMode=native,ipv4NativeRoutingCIDR=${var.network_cidr},ipam.operator.clusterPoolIPv4PodCIDRList=${local.cluster_cidr_network},k8sServiceHost=${local.k8s_ha_host},k8sServicePort=${local.k8s_ha_port}"
-      # rm /usr/local/bin/cilium
       helm repo add cilium https://helm.cilium.io/
-      helm install cilium cilium/cilium -n kube-system --version '${var.cilium_version}' --set "MTU=1450,endpointRoutes.enabled=true,k8s.requireIPv4PodCIDR=true,routingMode=native,ipv4NativeRoutingCIDR=${var.network_cidr},ipam.mode=kubernetes,ipam.operator.clusterPoolIPv4PodCIDRList=${local.cluster_cidr_network},k8sServiceHost=${local.k8s_ha_host},k8sServicePort=${local.k8s_ha_port},operator.replicas=2"
+      helm install cilium cilium/cilium -n kube-system --version '${var.cilium_version}' --set "masquerade=true,bpf.masquerade=true,endpointRoutes.enabled=true,k8s.requireIPv4PodCIDR=true,routingMode=native,ipv4NativeRoutingCIDR=${var.network_cidr},ipam.mode=kubernetes,ipam.operator.clusterPoolIPv4PodCIDRList=${local.cluster_cidr_network},operator.replicas=2,kubeProxyReplacement=true,nodePort.enabled=true,k8sServiceHost=${local.k8s_ha_host},k8sServicePort=${local.k8s_ha_port}"
 
       ## See https://github.com/hetznercloud/csi-driver
       helm install hcloud-csi hcloud/hcloud-csi -n kube-system --version '${var.hcloud_csi_driver_chart_version}' --set 'storageClasses[0].name=hcloud-volumes-retain,storageClasses[0].defaultStorageClass=true,storageClasses[0].reclaimPolicy=Retain,storageClasses[1].name=hcloud-volumes-delete,storageClasses[1].defaultStorageClass=true,storageClasses[1].reclaimPolicy=Delete'

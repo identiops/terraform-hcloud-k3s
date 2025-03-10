@@ -512,23 +512,43 @@ helm upgrade --reuse-values cilium cilium/cilium -n kube-system --version '<NEW_
 
 ```yaml
 # Documentation: https://artifacthub.io/packages/helm/cilium/cilium
+# Chart Values: https://github.com/cilium/cilium/blob/main/install/kubernetes/cilium/values.yaml
 
-# WARNING: needs to be in line with the cluster configuration
-MTU: "1450"
+# Hetzner networking configuration: https://github.com/hetznercloud/hcloud-cloud-controller-manager/blob/main/docs/deploy_with_networks.md
+# See also kube-hetzner configuration of cilium: https://github.com/kube-hetzner/terraform-hcloud-kube-hetzner
+
+# MTU: 1450
+masquerade: true
+bpf:
+  masquerade: true
 endpointRoutes:
   enabled: true
 k8s:
   requireIPv4PodCIDR: true
+# Native routing saves one layer of packet encapsulation
 routingMode: native
+# WARNING: IP address ranges need to be in line with the cluster configuration
 ipv4NativeRoutingCIDR: 10.0.0.0/8
 ipam:
   mode: kubernetes
   operator:
     clusterPoolIPv4PodCIDRList: 10.244.0.0/16
-k8sServiceHost: 127.0.0.1
-k8sServicePort: "6443"
 operator:
   replicas: 2
+kubeProxyReplacement: true
+nodePort:
+  enabled: true
+loadBalancer:
+  acceleration: native
+hubble:
+  enabled: true
+# Enable, if needed. By default it isn't needed
+# egressGateway:
+#   enabled: true
+
+# HAproxy runs on every node to provide HA access to control plane nodes
+k8sServiceHost: 127.0.0.1
+k8sServicePort: 16443
 ```
 
 ### Update Hetzner Cloud Controller Manager (CCM)
