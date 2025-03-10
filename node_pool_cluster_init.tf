@@ -79,7 +79,7 @@ module "node_pool_cluster_init" {
       helm install cilium cilium/cilium -n kube-system --version '${var.cilium_version}' --set "MTU=1450,endpointRoutes.enabled=true,k8s.requireIPv4PodCIDR=true,routingMode=native,ipv4NativeRoutingCIDR=${var.network_cidr},ipam.mode=kubernetes,ipam.operator.clusterPoolIPv4PodCIDRList=${local.cluster_cidr_network},k8sServiceHost=${local.k8s_ha_host},k8sServicePort=${local.k8s_ha_port},operator.replicas=2"
 
       ## See https://github.com/hetznercloud/csi-driver
-      helm install hcloud-csi hcloud/hcloud-csi -n kube-system --version '${var.hcloud_csi_driver_chart_version}' --set 'storageClasses[0].name=hcloud-volumes,storageClasses[0].defaultStorageClass=true,storageClasses[0].retainPolicy=Retain'
+      helm install hcloud-csi hcloud/hcloud-csi -n kube-system --version '${var.hcloud_csi_driver_chart_version}' --set 'storageClasses[0].name=hcloud-volumes-retain,storageClasses[0].defaultStorageClass=true,storageClasses[0].reclaimPolicy=Retain,storageClasses[1].name=hcloud-volumes-delete,storageClasses[1].defaultStorageClass=true,storageClasses[1].reclaimPolicy=Delete'
 
       ## See https://artifacthub.io/packages/helm/metrics-server/metrics-server
       helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/

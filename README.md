@@ -580,9 +580,12 @@ helm upgrade --reuse-values hcloud-csi hcloud/hcloud-csi -n kube-system --versio
 # Documentation: https://github.com/hetznercloud/csi-driver/tree/main/chart
 
 storageClasses:
-  - name: hcloud-volumes
+  - name: hcloud-volumes-retain
     defaultStorageClass: true
-    retainPolicy: Retain
+    reclaimPolicy: Retain
+  - name: hcloud-volumes-delete
+    defaultStorageClass: false
+    reclaimPolicy: Delete
 ```
 
 ### Update Kured
