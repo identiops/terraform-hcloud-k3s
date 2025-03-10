@@ -356,7 +356,8 @@ Value an object specifying:
      https://docs.k3s.io/cli/etcd-snapshot?_highlight=reset
 
 Example:
-```
+
+```terraform
 node_pools = {
   system = {
     cluster_can_init = true # Required for one node pool to perform initializing actions.
@@ -448,7 +449,7 @@ EOT
   validation {
     # http get --headers [Authorization $"Bearer ($env.TF_VAR_hcloud_token)"] https://api.hetzner.cloud/v1/server_types | $in.server_types | each {{deprecated: $in.deprecated, name: $in.name, cores: $in.cores, cpu_type: $in.cpu_type, memory: $in.memory, disk: $in.disk, prices: ($in.prices.location | str join ', ')}}
     condition     = alltrue([for pool in var.node_pools : can(regex("^(cpx[1-5]1|cx[2-5]2|cax[1-4]1|ccx[1-6]3)$", pool.type))])
-    error_message = "`type` is not valid."
+    error_message = "Node `type` is not valid."
   }
 }
 
