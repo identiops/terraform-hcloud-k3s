@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.0.0] - 2025-03-10
+
+### Bug Fixes
+
+- Rename hcloud-volumes to hcloud-volumes-retain and correct setting reclaim policy
+- [**breaking**] Correct and optimize configuration, esp. replace kube-proxy
+
+### Miscellaneous Tasks
+
+- Correct typos
+- Update kured to version 5.6.1
+- Disable kube-proxy and disable k3s helm-controller
+
 ## [5.0.0] - 2025-03-03
 
 ### Bug Fixes
