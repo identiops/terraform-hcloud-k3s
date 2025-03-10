@@ -85,8 +85,10 @@ locals {
   control_plane_arguments          = <<-EOT
   --tls-san="${hcloud_server_network.gateway.ip}" \
   --flannel-backend=none \
+  --disable-kube-proxy \
   --disable-network-policy \
   --disable-cloud-controller \
+  --disable-helm-controller \
   --egress-selector-mode disabled \
   --cluster-cidr="${local.cluster_cidr_network}" \
   --service-cidr="${local.service_cidr_network}" \
