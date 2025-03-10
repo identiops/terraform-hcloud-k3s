@@ -165,7 +165,7 @@ variable "cilium_version" {
 variable "kured_chart_version" {
   description = "Kured chart version, see https://artifacthub.io/packages/helm/kured/kured"
   type        = string
-  default     = "5.6.0"
+  default     = "5.6.1"
 }
 
 variable "kured_reboot_days" {
