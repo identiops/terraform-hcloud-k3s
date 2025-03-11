@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.0.1] - 2025-03-11
+
+### Documentation
+
+- Don't remove newlines in variable description
+
+### Miscellaneous Tasks
+
+- Correct link to system-upgrade-controller chart
+- Install system-upgrade-controller CRDs before helmchart
+
 ## [6.0.0] - 2025-03-10
 
 ### Bug Fixes
