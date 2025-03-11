@@ -308,10 +308,10 @@ variable "control_plane_k3s_additional_options" {
 # ------------------
 
 variable "node_pools" {
-  description = <<-EOT
+  description = <<EOT
 Map of node pools with control plane and worker nodes.
-Key is the node pool's name.
-Value an object specifying:
+The key is the node pool's name.
+The value is an object with the following properties:
 - `is_control_plane`: whether it's a control plane pool. Note: don't change this
   variable after the node pool has been deployed!
 - `schedule_workloads:` whether and workloads can be scheduled, Note: a change
