@@ -195,7 +195,7 @@ variable "hcloud_ccm_driver_chart_version" {
 variable "hcloud_csi_driver_chart_version" {
   description = "Hetzner CSI driver chart version, see https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy"
   type        = string
-  default     = "2.12.0"
+  default     = "2.13.0"
 }
 
 variable "metrics_server_chart_version" {
