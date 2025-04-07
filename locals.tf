@@ -34,6 +34,8 @@ locals {
   EOT
   security_setup  = <<-EOT
   set -eu
+  # Remove hc-utils package due to the conflict it causes between dhcpd and systemd-networkd https://github.com/identiops/terraform-hcloud-k3s/issues/27
+  dpkg -r hc-utils
   # SSH
   sed -i -e 's/^#*PermitRootLogin .*/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
   sed -i -e 's/^#*PasswordAuthentication .*/PasswordAuthentication no/g' /etc/ssh/sshd_config
