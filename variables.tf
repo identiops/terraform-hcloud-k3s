@@ -210,6 +210,12 @@ variable "system_upgrade_controller_version" {
   default     = "105.0.1"
 }
 
+variable "system_upgrade_controller_app_version" {
+  description = "System Upgarde Controller app version, must be in sync with variable system_upgrade_controller_version. See Chart.yaml/appVersion in https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.10/charts/system-upgrade-controller"
+  type        = string
+  default     = "v0.14.2"
+}
+
 variable "nu_version" {
   description = "NuShell version, see available version https://github.com/nushell/nushell/releases"
   type        = string
