@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.1] - 2025-04-09
+
+### Bug Fixes
+
+- [c67352b](https://github.com/identiops/terraform-hcloud-k3s/commit/c67352bf61032a174fa3c4673b7b3541872306a3) Pin CRD version
+
 ## [6.1.0] - 2025-04-07
 
 ### Miscellaneous Tasks
