@@ -31,8 +31,8 @@ locals {
     nu_arch="x86_64"
   else
     echo "Unsupported architecture for nushell download: $arch" >&2
-    # Decide how to handle unsupported arch: exit 1 or default to x86_64? Exiting is safer but for now lets use x86.
-    nu_arch="x86_64"
+    # Decide how to handle unsupported arch: exit 1 or default to x86_64? Exiting is safer, so we use that.
+    exit 1
   fi
   # Construct release tag based on detected architecture
   nu_release_tag="nu-$NU_VERSION-$nu_arch-unknown-linux-gnu"
