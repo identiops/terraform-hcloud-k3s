@@ -23,9 +23,28 @@ locals {
   default_gateway = cidrhost(var.network_cidr, 1)
   haproxy_setup   = <<-EOT
   export NU_VERSION="${var.nu_version}"
-  curl -Lo /tmp/nu.tar.gz "https://github.com/nushell/nushell/releases/download/$NU_VERSION/nu-$NU_VERSION-x86_64-unknown-linux-gnu.tar.gz"
-  tar xvzfC /tmp/nu.tar.gz /tmp "nu-$NU_VERSION-x86_64-unknown-linux-gnu/nu"
-  mv "/tmp/nu-$NU_VERSION-x86_64-unknown-linux-gnu/nu" /usr/local/bin
+  # Detect architecture and set nu_arch variable
+  arch=$(uname -m)
+  if [ "$arch" = "aarch64" ] || [ "$arch" = "arm64" ]; then
+    nu_arch="aarch64"
+  elif [ "$arch" = "x86_64" ]; then
+    nu_arch="x86_64"
+  else
+    echo "Unsupported architecture for nushell download: $arch" >&2
+    # Decide how to handle unsupported arch: exit 1 or default to x86_64? Exiting is safer, so we use that.
+    exit 1
+  fi
+  # Construct release tag based on detected architecture
+  nu_release_tag="nu-$NU_VERSION-$nu_arch-unknown-linux-gnu"
+  # Download using dynamic URL
+  curl -Lo /tmp/nu.tar.gz "https://github.com/nushell/nushell/releases/download/$NU_VERSION/$nu_release_tag.tar.gz"
+  # Extract using dynamic path, placing binary directly in /tmp
+  tar xvzfC /tmp/nu.tar.gz /tmp "$nu_release_tag/nu"
+  # Move using dynamic path
+  mv "/tmp/$nu_release_tag/nu" /usr/local/bin/nu
+  # Ensure correct permissions if needed
+  chmod +x /usr/local/bin/nu
+  # Continue with HAProxy setup
   mkdir -p /etc/haproxy/haproxy.d
   echo 'EXTRAOPTS="-f /etc/haproxy/haproxy.d"' >> /etc/default/haproxy
   systemctl restart haproxy
