@@ -18,6 +18,7 @@ module "node_pools" {
   hcloud_token_read_only = var.hcloud_token_read_only
   location               = each.value.any.location != "" ? each.value.any.location : var.default_location
   delete_protection      = var.delete_protection
+  sysctl_settings        = var.sysctl_settings
   node_type              = each.value.any.type
   node_count             = each.value.any.count
   node_count_width       = each.value.any.count_width
