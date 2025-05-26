@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.2] - 2025-05-26
+
+### Added Features
+
+- [85001a7](https://github.com/identiops/terraform-hcloud-k3s/commit/85001a73b90ef4aa28d48e92e8bb83703d6841b2) Enable sysctl configuration via sysctl_settings variable
+
+### Bug Fixes
+
+- [d4b3485](https://github.com/identiops/terraform-hcloud-k3s/commit/d4b348505c691c80ae25b1866d03cbeb3081a654) Correct regex to match server types #35
+- [0558854](https://github.com/identiops/terraform-hcloud-k3s/commit/05588548bd8f8df65e3e9ff7680842c3ebc8c0b5) Correct computation of nodes
+
+### Miscellaneous Tasks
+
+- [be55d87](https://github.com/identiops/terraform-hcloud-k3s/commit/be55d87d9e36cf131eed592f0d64d7a03df665d3) Update chart versions
+
 ## [6.1.1] - 2025-04-09
 
 ### Bug Fixes
