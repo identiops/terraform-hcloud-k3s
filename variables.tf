@@ -159,7 +159,7 @@ variable "ssh_keys_kubeapi" {
 variable "cilium_version" {
   description = "Cilium version, see https://github.com/cilium/cilium"
   type        = string
-  default     = "1.17.1"
+  default     = "1.17.4"
 }
 
 variable "kured_chart_version" {
@@ -189,13 +189,13 @@ variable "kured_end_time" {
 variable "hcloud_ccm_driver_chart_version" {
   description = "Hetzner CCM chart version, see https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy"
   type        = string
-  default     = "1.23.0"
+  default     = "1.25.1"
 }
 
 variable "hcloud_csi_driver_chart_version" {
   description = "Hetzner CSI driver chart version, see https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy"
   type        = string
-  default     = "2.13.0"
+  default     = "2.14.0"
 }
 
 variable "metrics_server_chart_version" {
@@ -207,7 +207,7 @@ variable "metrics_server_chart_version" {
 variable "system_upgrade_controller_version" {
   description = "System Upgarde Controller version, see available versions https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.10/charts/system-upgrade-controller"
   type        = string
-  default     = "105.0.1"
+  default     = "106.0.0"
 }
 
 variable "system_upgrade_controller_app_version" {
