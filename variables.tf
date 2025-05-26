@@ -156,6 +156,15 @@ variable "ssh_keys_kubeapi" {
   default     = {}
 }
 
+variable "sysctl_settings" {
+  description = "Sysctl settings, see `sysctl -a`"
+  type        = map(string)
+  default = {
+    "fs.inotify.max_user_instances" = "524288"
+    "fs.inotify.max_user_watches"   = "524288"
+  }
+}
+
 variable "cilium_version" {
   description = "Cilium version, see https://github.com/cilium/cilium"
   type        = string

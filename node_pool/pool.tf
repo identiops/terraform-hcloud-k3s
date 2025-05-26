@@ -69,11 +69,9 @@ resource "hcloud_server" "pool" {
         content = file("${path.module}/../templates/90-kubelet.conf")
       },
       {
-        path    = "/etc/sysctl.d/99-increase-inotify-limits"
-        content = <<-EOT
-          fs.inotify.max_user_instances = 512;
-          fs.inotify.max_user_watches = 262144;
-        EOT
+        path        = "/etc/sysctl.d/98-settings.conf"
+        content     = join("\n", formatlist("%s=%s", keys(var.sysctl_settings), values(var.sysctl_settings)))
+        permissions = "0644"
       },
       {
         path = "/usr/local/bin/haproxy-k8s.nu"
@@ -139,6 +137,11 @@ variable "name" {
     )
     error_message = "Node pool can't be named control-plane and must only contain characters allowed in DNS names (`^[a-z0-9-]+$`)."
   }
+}
+
+variable "sysctl_settings" {
+  description = "Systctl settings, see `sysctl -a`"
+  type        = map(string)
 }
 
 variable "k8s_ha_host" {
