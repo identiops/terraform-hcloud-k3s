@@ -77,7 +77,7 @@ module "cluster" {
   # ----------------------
   # Example s3 configuration:
   # S3 documentation  https://docs.k3s.io/cli/server
-  # control_plane_k3s_init_additional_options = "--etcd-s3 --etcd-s3-region=${var.etcd_s3_region} --etcd-s3-endpoint=s3.${var.etcd_s3_region}.wasabisys.com --etcd-s3-access-key=${var.etcd_s3_access_key} --etcd-s3-secret-key=${var.etcd_s3_secret_key} --etcd-s3-bucket=${var.etcd_s3_bucket} --etcd-s3-folder=etcd/$(hostname)"
+  # control_plane_k3s_init_additional_options = "--etcd-s3 --etcd-s3-region=${var.etcd_s3_region} --etcd-s3-endpoint=s3.${var.etcd_s3_endpoint} --etcd-s3-access-key=${var.etcd_s3_access_key} --etcd-s3-secret-key=${var.etcd_s3_secret_key} --etcd-s3-bucket=${var.etcd_s3_bucket} --etcd-s3-folder=etcd/$(hostname)"
   # etcd tuning documentation for multi-region deployment: https://etcd.io/docs/v3.4/tuning/#time-parameters
   # control_plane_k3s_additional_options      = "--etcd-arg=heartbeat-interval=120 --etcd-arg=election-timeout=1200" # See https://etcd.io/docs/v3.4/tuning/#time-parameters
   additional_cloud_init = {
@@ -137,22 +137,27 @@ variable "hcloud_token_read_only" {
   sensitive   = true
 }
 
-# Example s3 configuraiton:
+# Example s3 configuration:
 # variable "etcd_s3_region" {
 #   type      = string
 #   sensitive = true
 # }
-# 
+#
+# variable "etcd_s3_endpoint" {
+#   type      = string
+#   sensitive = true
+# }
+#
 # variable "etcd_s3_access_key" {
 #   type      = string
 #   sensitive = true
 # }
-# 
+#
 # variable "etcd_s3_secret_key" {
 #   type      = string
 #   sensitive = true
 # }
-# 
+#
 # variable "etcd_s3_bucket" {
 #   type      = string
 #   sensitive = true

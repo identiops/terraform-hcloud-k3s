@@ -74,7 +74,13 @@ What changed in the latest version? See
    2. [Recommended Tools](#recommended-tools)
    3. [Installation](#installation)
    4. [Usage](#usage)
-2. [Maintenance](#maintenance)
+2. [Configuration](#configuration)
+   1. [Store terraform state in S3 bucket](#store-terraform-state-in-s3-bucket)
+   2. [Enable etcd backup to S3](#enable-etcd-backup-to-s3)
+   3. [OpenID Connect (OIDC) Authentication](#openid-connect-oidc-authentication)
+   4. [Persistent Volume Encryption](#persistent-volume-encryption)
+   5. [Adjust Sysctl Parameters](#adjust-sysctl-parameters)
+3. [Maintenance](#maintenance)
    1. [Access Kubernetes API via Port-Forwarding from Gateway](#access-kubernetes-api-via-port-forwarding-from-gateway)
    2. [Ansible: Execute Commands on Nodes](#ansible-execute-commands-on-nodes)
    3. [Add Ingress Controller and Load Balancer](#add-ingress-controller-and-load-balancer)
@@ -91,8 +97,8 @@ What changed in the latest version? See
    12. [Update Kured](#update-kured)
    13. [Update Metrics Server](#update-metrics-server)
    14. [Update System Upgrade Controller](#update-system-upgrade-controller)
-3. [Deletion](#deletion)
-4. [Troubleshooting](#troubleshooting)
+4. [Deletion](#deletion)
+5. [Troubleshooting](#troubleshooting)
    1. [Gateway](#gateway)
       1. [Verify packet masquerading is set up properly](#verify-packet-masquerading-is-set-up-properly)
       2. [Verify firewall is set up properly](#verify-firewall-is-set-up-properly)
@@ -108,9 +114,9 @@ What changed in the latest version? See
       5. [Verify Cilium Networking Status](#verify-cilium-networking-status)
       6. [Verify k3s Cluster Configuration](#verify-k3s-cluster-configuration)
       7. [Inspect cluster status and logs](#inspect-cluster-status-and-logs)
-5. [Related Documentation](#related-documentation)
-6. [Similar Projects](#similar-projects)
-7. [Special Thanks](#special-thanks)
+6. [Related Documentation](#related-documentation)
+7. [Similar Projects](#similar-projects)
+8. [Special Thanks](#special-thanks)
 
 ## Getting Started
 
@@ -174,6 +180,7 @@ EOF
    - `k3s_version`
    - `ssh_keys` (to create a new ssh key run: `ssh-keygen -t ed25519`)
    - `node_pools`
+   - More options described in section [Configurtion](#configuration)
 5. For multi-region deployments, there are a few things to consider:
    - It is recommended to distribute the control plane nodes across multiple
      regions. If 3 control plane nodes shall be used, create 3 node pools and
@@ -250,6 +257,106 @@ In addition, a few convenience scripts were created to help with maintenance:
 - `.ssh/config`: SSH configuration for connecting to cluster nodes.
 - `.ansible/hosts`: Ansible hosts configuration for executing commands on
   multiple nodes in parallel.
+
+## Configuration
+
+### Store terraform state in S3 bucket
+
+- Add an "s3" backend section to `main.tf`, with the appropriate parameters. See
+  example below for Wasabi.
+- Set access key id and access key in environment variables `AWS_ACCESS_KEY_ID`
+  and `AWS_SECRET_ACCESS_KEY`.
+- Reconfigure terraform: `terraform init -reconfigure`
+
+```terraform
+terraform {
+  # ...
+  backend "s3" {
+    # INFO: Set via `terraform init -reconfigure`
+    bucket = "terraform"
+    key    = "prod/terraform.tfstate"
+    # access_key                  = {}
+    # secret_key                  = {}
+    # skip_get_ec2_platforms      = true
+    region                      = "eu-central-2"
+    skip_credentials_validation = true
+    skip_metadata_api_check     = true
+    skip_region_validation      = true
+    skip_requesting_account_id  = true
+    skip_s3_checksum            = true
+    use_path_style              = true
+    endpoints = {
+      iam = "https://iam.eu-central-2.wasabisys.com" # special endpoint URL required, see https://wasabi-support.zendesk.com/hc/en-us/articles/360003362071-How-do-I-use-Terraform-with-Wasabi-
+      sts = "https://sts.eu-central-2.wasabisys.com" # special endpoint URL required, see https://wasabi-support.zendesk.com/hc/en-us/articles/360003362071-How-do-I-use-Terraform-with-Wasabi-
+      s3  = "https://s3.eu-central-2.wasabisys.com"  # special endpoint URL required, see https://wasabi-support.zendesk.com/hc/en-us/articles/360003362071-How-do-I-use-Terraform-with-Wasabi-
+    }
+  }
+  # ...
+}
+```
+
+### Enable etcd backup to S3
+
+- Extend `main.tf` with the following variables:
+
+```terraform
+variable "etcd_s3_region" {
+  type      = string
+  sensitive = true
+}
+
+variable "etcd_s3_endpoint" {
+  type      = string
+  sensitive = true
+}
+
+variable "etcd_s3_access_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "etcd_s3_secret_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "etcd_s3_bucket" {
+  type      = string
+  sensitive = true
+}
+```
+
+- Set the following module parameters before initializing the cluster's control
+  plane nodes:
+
+```terraform
+control_plane_k3s_init_additional_options = "--etcd-s3 --etcd-s3-region=${var.etcd_s3_region} --etcd-s3-endpoint=s3.${var.etcd_s3_endpoint} --etcd-s3-access-key=${var.etcd_s3_access_key} --etcd-s3-secret-key=${var.etcd_s3_secret_key} --etcd-s3-bucket=${var.etcd_s3_bucket} --etcd-s3-folder=$(hostname)"
+```
+
+- Etcd will automatically create a snapshot every day and keep it for three
+  days.
+
+### OpenID Connect (OIDC) Authentication
+
+TODO: add example
+
+### Persistent Volume Encryption
+
+- Ensure `cryptsetup` is installed on all nodes. By default it is installed.
+- Encryption is configured per `StorageClass`.
+- Follow the instructions at
+  [hcloud-csi Volumes Encrypted with LUKS](https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#volumes-encrypted-with-luks)
+  to create a secret and link it to a storage class.
+- All future volumes created with this `StorageClass` will be encrypted.
+
+### Adjust Sysctl Parameters
+
+- Sysctl paramerts can be adjusted if needed via the `sysctl_settings` variable.
+- Caution is advised!
+- A common issue are truncated `kubectl log` outputs when the variables
+  `fs.inotify.max_user_instances` and `fs.inotify.max_user_watches` are set too
+  low. The values are increased by the default configuration. Furthere
+  adjustments might be needed.
 
 ## Maintenance
 
