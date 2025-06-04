@@ -4,27 +4,33 @@
 {
   description = "Dependencies";
 
-  # inputs.nixpkgs.url = "github:identinet/nixpkgs/identinet";
-  # inputs.nixpkgs_unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
 
   outputs =
     {
       self,
       nixpkgs,
-      # nixpkgs_unstable,
+      nixpkgs-unstable,
       flake-utils,
     }:
     flake-utils.lib.eachDefaultSystem (
       system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
-        # unstable = nixpkgs_unstable.legacyPackages.${system};
-        # my-python-packages =
-        #   python-packages: with python-packages; [
-        #     pyyaml # YAML module
-        #   ];
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [
+            (self: super: {
+              unstable = import nixpkgs-unstable {
+                inherit system;
+                # config.allowUnfree = true;
+              };
+            })
+          ];
+        };
         # python-with-my-packages = pkgs.python3.withPackages my-python-packages;
         allOsPackages = with pkgs; [
           # Nix packages: https://search.nixos.org/packages
