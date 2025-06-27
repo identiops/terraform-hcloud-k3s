@@ -85,6 +85,7 @@ What changed in the latest version? See
    3. [OpenID Connect (OIDC) Authentication](#openid-connect-oidc-authentication)
    4. [Persistent Volume Encryption](#persistent-volume-encryption)
    5. [Adjust Sysctl Parameters](#adjust-sysctl-parameters)
+   6. [Private Registry Access](#private-registry-access)
 3. [Maintenance](#maintenance)
    1. [Access Kubernetes API via Port-Forwarding from Gateway](#access-kubernetes-api-via-port-forwarding-from-gateway)
    2. [Ansible: Execute Commands on Nodes](#ansible-execute-commands-on-nodes)
