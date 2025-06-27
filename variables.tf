@@ -168,7 +168,7 @@ variable "sysctl_settings" {
 variable "cilium_version" {
   description = "Cilium version, see https://github.com/cilium/cilium"
   type        = string
-  default     = "1.17.4"
+  default     = "1.17.5"
 }
 
 variable "kured_chart_version" {
@@ -204,7 +204,7 @@ variable "hcloud_ccm_driver_chart_version" {
 variable "hcloud_csi_driver_chart_version" {
   description = "Hetzner CSI driver chart version, see https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy"
   type        = string
-  default     = "2.14.0"
+  default     = "2.15.1"
 }
 
 variable "metrics_server_chart_version" {
@@ -228,7 +228,7 @@ variable "system_upgrade_controller_app_version" {
 variable "nu_version" {
   description = "NuShell version, see available version https://github.com/nushell/nushell/releases"
   type        = string
-  default     = "0.102.0"
+  default     = "0.104.1"
 }
 
 variable "additional_packages" {
