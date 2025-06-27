@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.2.1] - 2025-06-27
+
+### Documentation
+
+- [9d9316d](https://github.com/identiops/terraform-hcloud-k3s/commit/9d9316dfacdb21663afc6adb5ff9a091e86ca2af) Update toc
+
 ## [6.2.0] - 2025-06-27
 
 ### Added Features
