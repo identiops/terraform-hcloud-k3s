@@ -84,6 +84,20 @@ module "cluster" {
     timezone = "Europe/Berlin" # See available time zones https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
   }
 
+  # Private registry configuration, see https://docs.k3s.io/installation/private-registry
+  registries = {
+    mirrors = {
+      "*" = null
+    }
+    configs = {
+      # "registry-1.docker.io" = {
+      #   auth = {
+      #     token = var.dockerio_access_token
+      #   }
+      # }
+    }
+  }
+
   # Node Group Settings
   # -------------------
   # Map of worker node groups, key is server_type, value is count of nodes in group
@@ -180,6 +194,12 @@ variable "hcloud_token_read_only" {
 # }
 #
 # variable "etcd_s3_bucket" {
+#   type      = string
+#   sensitive = true
+# }
+
+# Example registry token configuration:
+# variable "dockerio_access_token" {
 #   type      = string
 #   sensitive = true
 # }

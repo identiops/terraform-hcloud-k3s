@@ -19,6 +19,7 @@ module "node_pools" {
   location               = each.value.any.location != "" ? each.value.any.location : var.default_location
   delete_protection      = var.delete_protection
   sysctl_settings        = var.sysctl_settings
+  registries             = var.registries
   node_type              = each.value.any.type
   node_count             = each.value.any.count
   node_count_width       = each.value.any.count_width

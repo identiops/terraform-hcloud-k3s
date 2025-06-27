@@ -165,6 +165,17 @@ variable "sysctl_settings" {
   }
 }
 
+variable "registries" {
+  description = "Registry mirror and authentication configuration. By default all registries are mirrored. See https://docs.k3s.io/installation/private-registry"
+  type = object({
+    mirrors = optional(map(any))
+    configs = optional(map(any))
+  })
+  default = {
+    mirrors = { "*" = null }
+  }
+}
+
 variable "cilium_version" {
   description = "Cilium version, see https://github.com/cilium/cilium"
   type        = string

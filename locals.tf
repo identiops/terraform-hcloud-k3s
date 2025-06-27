@@ -75,6 +75,7 @@ locals {
   ufw allow proto tcp from any to any port 4244
   ufw allow proto tcp from any to any port 10250
   ufw allow proto tcp from any to any port 30000:32767
+  ufw allow proto tcp from any to any port 5001,6443 # Spegel Embedded Registry Mirror
   # Audit log directory, if required. See https://docs.k3s.io/security/hardening-guide
   mkdir -p -m 700 /var/lib/rancher/k3s/server/logs
   sysctl --system
@@ -113,6 +114,7 @@ locals {
   --egress-selector-mode disabled \
   --cluster-cidr="${local.cluster_cidr_network}" \
   --service-cidr="${local.service_cidr_network}" \
+  --embedded-registry \
   --disable local-storage \
   --disable metrics-server \
   --disable servicelb \

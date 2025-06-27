@@ -31,6 +31,11 @@ What changed in the latest version? See
   [System Upgrade Controller](https://github.com/rancher/system-upgrade-controller).
 - Automated operating system updates with automatic system reboots via
   [kured](https://kured.dev).
+- [Embedded container registry mirror](https://docs.k3s.io/installation/registry-mirror)
+  for fast pod startup times across nodes.
+- [Private registry configuration](https://docs.k3s.io/installation/private-registry?_highlight=registries#configs)
+  to avoid manual configuration of
+  [pull secrets](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/).
 - Creation of placement groups for to improve availability.
 - Multi-region deployments.
 - Secured default configuration:
@@ -357,6 +362,39 @@ TODO: add example
   `fs.inotify.max_user_instances` and `fs.inotify.max_user_watches` are set too
   low. The values are increased by the default configuration. Furthere
   adjustments might be needed.
+
+### Private Registry Access
+
+Usually,
+[pull secrets](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
+need to be configured to access container images stored in private registries.
+This terraform module provides access to k3s'
+[Private Registry Configuration](https://docs.k3s.io/installation/private-registry).
+
+Add a private registry configuration with the following setting:
+
+```terraform
+module "cluster" {
+  # ...
+  registries = {
+    mirrors = {
+      "*" = null
+    }
+    configs = {
+      "registry-1.docker.io" = {
+        auth = {
+          token = var.dockerio_access_token
+        }
+      }
+    }
+  }
+  # ...
+}
+variable "dockerio_access_token" {
+ type      = string
+ sensitive = true
+}
+```
 
 ## Maintenance
 

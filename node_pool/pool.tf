@@ -65,6 +65,11 @@ resource "hcloud_server" "pool" {
         })
       },
       {
+        path        = "/etc/rancher/k3s/registries.yaml"
+        content     = yamlencode(var.registries)
+        permissions = "0600"
+      },
+      {
         path    = "/etc/sysctl.d/90-kubelet.conf"
         content = file("${path.module}/../templates/90-kubelet.conf")
       },
@@ -142,6 +147,15 @@ variable "name" {
 variable "sysctl_settings" {
   description = "Systctl settings, see `sysctl -a`"
   type        = map(string)
+}
+
+variable "registries" {
+  description = "Registry mirror and authentication configuration. See https://docs.k3s.io/installation/private-registry"
+  type = object({
+    mirrors = optional(map(any))
+    configs = optional(map(any))
+  })
+  default = {}
 }
 
 variable "k8s_ha_host" {
