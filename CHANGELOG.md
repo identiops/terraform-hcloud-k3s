@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.2.0] - 2025-06-27
+
+### Added Features
+
+- [7d40ee6](https://github.com/identiops/terraform-hcloud-k3s/commit/7d40ee6dbff7aec5ca083d71dea54235f16692f0) Enabled embedded registry and add registries.yaml configuration
+
+### Documentation
+
+- [bea8357](https://github.com/identiops/terraform-hcloud-k3s/commit/bea835738d43c094fafa4ce4c6c826e0723a6c1b) Add configuration section
+
+### Miscellaneous Tasks
+
+- [632104a](https://github.com/identiops/terraform-hcloud-k3s/commit/632104a45f02f30b784765a9b3d749b0b595a8d0) Update cilium, hcloud-csi and hcloud-ccm
+
+### Other
+
+- [f6c768a](https://github.com/identiops/terraform-hcloud-k3s/commit/f6c768a0e3b430a0a290e086e39cc3be8daa3cfa) Update dependencies
+- [0340ee2](https://github.com/identiops/terraform-hcloud-k3s/commit/0340ee2e0e6941d7d09953fce18596a902028a06) Update dependencies
+
 ## [6.1.2] - 2025-05-26
 
 ### Added Features
