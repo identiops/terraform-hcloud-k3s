@@ -1057,3 +1057,5 @@ journalctl -u k3s.service
   running via terraform.
 - And to God for providing and enabling me to do my share of this work. Solo Deo
   Gloria.
+
+<script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
