@@ -68,7 +68,7 @@ module "node_pool_cluster_init" {
       ## See https://github.com/hetznercloud/hcloud-cloud-controller-manager
       kubectl -n kube-system create secret generic hcloud --from-literal='token=${var.hcloud_token}' --from-literal='network=${hcloud_network.private.id}'
       helm repo add hcloud https://charts.hetzner.cloud
-      helm install hcloud-ccm hcloud/hcloud-cloud-controller-manager -n kube-system --version '${var.hcloud_ccm_driver_chart_version}' --set 'networking.enabled=true,networking.clusterCIDR=${local.cluster_cidr_network},additionalTolerations[0].key=node.kubernetes.io/not-ready,additionalTolerations[0].effect=NoSchedule'
+      helm install hcloud-ccm hcloud/hcloud-cloud-controller-manager -n kube-system --version '${var.hcloud_ccm_driver_chart_version}' --set 'networking.enabled=true,networking.clusterCIDR=${local.cluster_cidr_network},additionalTolerations[0].key=node.kubernetes.io/not-ready,additionalTolerations[0].effect=NoSchedule,clusterId=${var.cluster_name}'
 
       ## See https://artifacthub.io/packages/helm/cilium/cilium
       helm repo add cilium https://helm.cilium.io/
