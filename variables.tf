@@ -330,6 +330,30 @@ variable "control_plane_k3s_additional_options" {
   default     = ""
 }
 
+variable "k3s_features" {
+  description = "Configurable k3s features that can be enabled or disabled. Each feature can have enabled flag and optional custom configuration content that will be written to /etc/rancher/k3s/{feature}-config.yaml"
+  type = map(object({
+    enabled       = bool
+    custom_config = string
+  }))
+  default = {}
+}
+
+variable "k3s_feature_list" {
+  description = "List of k3s features."
+  type        = list(string)
+  default     = [
+    "kube-proxy",
+    "network-policy",
+    "cloud-controller",
+    "helm-controller",
+    "local-storage",
+    "metrics-server",
+    "servicelb",
+    "traefik"
+  ]
+}
+
 # Node Pool Settings
 # ------------------
 
@@ -483,4 +507,10 @@ variable "worker_node_firewall_ids" {
   description = "A list of firewall IDs to apply on the worker node servers."
   type        = list(number)
   default     = []
+}
+
+variable "debug_cloudinit" {
+  description = "If true, saves the generated cloud-init user_data to YAML files in the root module for debugging."
+  type        = bool
+  default     = false
 }
