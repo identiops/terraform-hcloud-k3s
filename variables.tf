@@ -226,7 +226,7 @@ variable "metrics_server_chart_version" {
   description = "Metrics server chart version, see https://artifacthub.io/packages/helm/metrics-server/metrics-server"
   type        = string
   # renovate: datasource=helm registryUrl=https://kubernetes-sigs.github.io/metrics-server/ packageName=metrics-server
-  default = "3.12.2"
+  default = "3.13.0"
 }
 
 variable "system_upgrade_controller_version" {
