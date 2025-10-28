@@ -1,6 +1,22 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    ":disableRateLimiting",
+    ":configMigration",
+    "abandonments:recommended",
+    ":rebaseStalePrs",
+    ":prImmediately",
+    ":renovatePrefix"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update helm dependencies images in variables.tf, see https://docs.renovatebot.com/modules/manager/regex/",
+      "managerFilePatterns": ["/(^|/)variables\\.tf$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: registryUrl=(?<registryUrl>[.:/A-Za-z-]+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s+default\\s+=\\s+\"(?<currentValue>\\S+?)\""
+      ]
+    }
   ]
 }

@@ -808,7 +808,7 @@ helm upgrade --reuse-values metrics-server metrics-server/metrics-server -n kube
 ### Update System Upgrade Controller
 
 - Available versions:
-  <https://github.com/rancher/charts/tree/release-v2.10/charts/system-upgrade-controller>
+  <https://github.com/rancher/charts/tree/release-v2.12/charts/system-upgrade-controller>
 - Update instructions: <https://github.com/rancher/system-upgrade-controller>
 
 ```bash

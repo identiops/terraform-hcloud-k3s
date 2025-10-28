@@ -179,13 +179,15 @@ variable "registries" {
 variable "cilium_version" {
   description = "Cilium version, see https://github.com/cilium/cilium"
   type        = string
-  default     = "1.17.5"
+  # renovate: datasource=helm registryUrl=https://helm.cilium.io/ packageName=cilium
+  default = "1.17.5"
 }
 
 variable "kured_chart_version" {
   description = "Kured chart version, see https://artifacthub.io/packages/helm/kured/kured"
   type        = string
-  default     = "5.6.1"
+  # renovate: datasource=helm registryUrl=https://kubereboot.github.io/charts packageName=kured
+  default = "5.6.1"
 }
 
 variable "kured_reboot_days" {
@@ -209,37 +211,43 @@ variable "kured_end_time" {
 variable "hcloud_ccm_driver_chart_version" {
   description = "Hetzner CCM chart version, see https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy"
   type        = string
-  default     = "1.25.1"
+  # renovate: datasource=helm registryUrl=https://charts.hetzner.cloud packageName=hcloud-cloud-controller-manager
+  default = "1.25.1"
 }
 
 variable "hcloud_csi_driver_chart_version" {
   description = "Hetzner CSI driver chart version, see https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy"
   type        = string
-  default     = "2.15.1"
+  # renovate: datasource=helm registryUrl=https://charts.hetzner.cloud packageName=hcloud-csi
+  default = "2.15.1"
 }
 
 variable "metrics_server_chart_version" {
   description = "Metrics server chart version, see https://artifacthub.io/packages/helm/metrics-server/metrics-server"
   type        = string
-  default     = "3.12.2"
+  # renovate: datasource=helm registryUrl=https://kubernetes-sigs.github.io/metrics-server/ packageName=metrics-server
+  default = "3.12.2"
 }
 
 variable "system_upgrade_controller_version" {
-  description = "System Upgarde Controller version, see available versions https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.10/charts/system-upgrade-controller"
+  description = "System Upgarde Controller version, see available versions https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.12/charts/system-upgrade-controller"
   type        = string
-  default     = "106.0.0"
+  # renovate: datasource=helm registryUrl=https://charts.rancher.io packageName=system-upgrade-controller
+  default = "106.0.0"
 }
 
 variable "system_upgrade_controller_app_version" {
-  description = "System Upgarde Controller app version, must be in sync with variable system_upgrade_controller_version. See Chart.yaml/appVersion in https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.10/charts/system-upgrade-controller"
+  description = "System Upgarde Controller app version, must be in sync with variable system_upgrade_controller_version. See Chart.yaml/appVersion in https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.12/charts/system-upgrade-controller"
   type        = string
-  default     = "v0.14.2"
+  # renovate: datasource=github-releases packageName=rancher/system-upgrade-controller
+  default = "v0.14.2"
 }
 
 variable "nu_version" {
   description = "NuShell version, see available version https://github.com/nushell/nushell/releases"
   type        = string
-  default     = "0.104.1"
+  # renovate: datasource=github-releases packageName=nushell/nushell
+  default = "0.104.1"
 }
 
 variable "additional_packages" {
