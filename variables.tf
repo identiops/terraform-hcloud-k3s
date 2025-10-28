@@ -212,7 +212,7 @@ variable "hcloud_ccm_driver_chart_version" {
   description = "Hetzner CCM chart version, see https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy"
   type        = string
   # renovate: datasource=helm registryUrl=https://charts.hetzner.cloud packageName=hcloud-cloud-controller-manager
-  default = "1.25.1"
+  default = "1.27.0"
 }
 
 variable "hcloud_csi_driver_chart_version" {
