@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.2.3] - 2025-10-29
+
+### Miscellaneous Tasks
+
+- [699b477](https://github.com/identiops/terraform-hcloud-k3s/commit/699b47762d463d05ecff3dbfdb3ebfaa0166e5b9) Update helm release hcloud-cloud-controller-manager to v1.28.0
+
 ## [6.2.2] - 2025-10-28
 
 ### Added Features
