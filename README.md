@@ -38,6 +38,20 @@ What changed in the latest version? See
   [pull secrets](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/).
 - Creation of placement groups for to improve availability.
 - Multi-region deployments.
+
+## Variables
+
+### `k3s_feature_list` and `k3s_disable_flags`
+
+The variable `k3s_feature_list` defines which features are evaluated for enabling or disabling within the cluster.
+
+Terraform generates `k3s_disable_flags` automatically from this list combined with the `local.k3s_features` map:
+
+- If a feature is listed in `k3s_feature_list` but *not* defined in `local.k3s_features`, it will be **disabled by default**.
+- If a feature is defined in `local.k3s_features` with `enabled = false`, it will also be disabled.
+- Only features explicitly defined in `local.k3s_features` with `enabled = true` remain enabled.
+
+This ensures all features in `k3s_feature_list` are disabled by default unless they are explicitly enabled.
 - Secured default configuration:
   - Deletion protection for all cloud resources.
   - SSH key required for remote access.
@@ -80,12 +94,13 @@ What changed in the latest version? See
    3. [Installation](#installation)
    4. [Usage](#usage)
 2. [Configuration](#configuration)
-   1. [Store terraform state in S3 bucket](#store-terraform-state-in-s3-bucket)
-   2. [Enable etcd backup to S3](#enable-etcd-backup-to-s3)
-   3. [OpenID Connect (OIDC) Authentication](#openid-connect-oidc-authentication)
-   4. [Persistent Volume Encryption](#persistent-volume-encryption)
-   5. [Adjust Sysctl Parameters](#adjust-sysctl-parameters)
-   6. [Private Registry Access](#private-registry-access)
+   1. [Enabling k3s Features](#enabling-k3s-features)
+   2. [Store terraform state in S3 bucket](#store-terraform-state-in-s3-bucket)
+   3. [Enable etcd backup to S3](#enable-etcd-backup-to-s3)
+   4. [OpenID Connect (OIDC) Authentication](#openid-connect-oidc-authentication)
+   5. [Persistent Volume Encryption](#persistent-volume-encryption)
+   6. [Adjust Sysctl Parameters](#adjust-sysctl-parameters)
+   7. [Private Registry Access](#private-registry-access)
 3. [Maintenance](#maintenance)
    1. [Access Kubernetes API via Port-Forwarding from Gateway](#access-kubernetes-api-via-port-forwarding-from-gateway)
    2. [Ansible: Execute Commands on Nodes](#ansible-execute-commands-on-nodes)
@@ -266,6 +281,67 @@ In addition, a few convenience scripts were created to help with maintenance:
 
 ## Configuration
 
+### Enabling k3s Features
+
+k3s comes with various features by default, which are **disabled by default** in this Terraform module to ensure maximum control and flexibility. These features can be enabled as needed using the `k3s_features` variable:
+
+**Available Features:**
+- **Traefik Ingress Controller**: Can be enabled for ingress management
+- **ServiceLB Load Balancer**: Can be enabled for simple load balancing
+- **Local Storage Provider**: Can be enabled for local storage provisioning
+- **Metrics Server**: Installed separately as Helm Chart for better control
+- **Network Policy Controller**: Cilium is used as network plugin
+- **Kube-proxy**, **Helm Controller**, **Cloud Controller**: Additional configurable features
+
+**Enabling Features:**
+
+To enable features, configure the `k3s_features` variable in your `main.tf`:
+
+```terraform
+module "cluster" {
+  # ...
+  
+  # Enable specific k3s features
+  k3s_features = {
+    # Enable Traefik as Ingress Controller
+    traefik = {
+      enabled       = true
+      custom_config = ""
+    }
+    
+    # Enable ServiceLB Load Balancer
+    servicelb = {
+      enabled       = true
+      custom_config = ""
+    }
+    
+    # Enable Local Storage Provider
+    "local-storage" = {
+      enabled       = true
+      custom_config = ""
+    }
+    
+    # You can also provide custom configuration
+    "kube-proxy" = {
+      enabled = true
+      custom_config = <<-EOF
+        # Custom kube-proxy configuration
+        mode: "iptables"
+      EOF
+    }
+  }
+  
+  # ...
+}
+```
+
+**Notes:**
+- Most features are intentionally disabled to avoid conflicts with external solutions
+- Traefik can be used as an alternative to external ingress controllers like NGINX
+- ServiceLB can be used for simple load balancing scenarios
+- Each feature can have custom configuration via the `custom_config` field
+- Verify compatibility with other cluster components before enabling
+
 ### Store terraform state in S3 bucket
 
 - Add an "s3" backend section to `main.tf`, with the appropriate parameters. See
@@ -442,6 +518,20 @@ starting points for an ingress controller are:
 
 - [traefik](https://artifacthub.io/packages/helm/traefik/traefik)
 - [ingress-nginx](https://artifacthub.io/packages/helm/ingress-nginx/ingress-nginx)
+
+Alternatively, you can use the **internal Traefik** that comes bundled with k3s:
+
+- k3s includes Traefik as the default ingress controller, but it's disabled by default in this setup
+- To enable the internal Traefik, configure the `k3s_features` variable in your configuration:
+  ```terraform
+  k3s_features = {
+    traefik = {
+      enabled       = true
+      custom_config = ""
+    }
+  }
+  ```
+- This provides a lightweight ingress solution without requiring additional Helm deployments
 
 The ingress controller, like the rest of the cluster, is not directly exposed to
 the Internet. Therefore, it is necessary to add a load balancer that is directly
