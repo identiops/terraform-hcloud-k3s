@@ -219,7 +219,7 @@ variable "hcloud_csi_driver_chart_version" {
   description = "Hetzner CSI driver chart version, see https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy"
   type        = string
   # renovate: datasource=helm registryUrl=https://charts.hetzner.cloud packageName=hcloud-csi
-  default = "2.18.0"
+  default = "2.18.1"
 }
 
 variable "metrics_server_chart_version" {
