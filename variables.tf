@@ -230,17 +230,17 @@ variable "metrics_server_chart_version" {
 }
 
 variable "system_upgrade_controller_version" {
-  description = "System Upgarde Controller version, see available versions https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.12/charts/system-upgrade-controller"
+  description = "System Upgarde Controller version, see available versions https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.13/charts/system-upgrade-controller"
   type        = string
   # renovate: datasource=helm registryUrl=https://charts.rancher.io packageName=system-upgrade-controller
-  default = "107.0.1"
+  default = "108.0.0"
 }
 
 variable "system_upgrade_controller_app_version" {
-  description = "System Upgarde Controller app version, must be in sync with variable system_upgrade_controller_version. See Chart.yaml/appVersion in https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.12/charts/system-upgrade-controller"
+  description = "System Upgarde Controller app version, must be in sync with variable system_upgrade_controller_version. See Chart.yaml/appVersion in https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.13/charts/system-upgrade-controller"
   type        = string
   # renovate: datasource=github-releases packageName=rancher/system-upgrade-controller
-  default = "v0.16.3"
+  default = "v0.17.0"
 }
 
 variable "nu_version" {
