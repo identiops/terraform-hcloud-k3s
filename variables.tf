@@ -179,13 +179,15 @@ variable "registries" {
 variable "cilium_version" {
   description = "Cilium version, see https://github.com/cilium/cilium"
   type        = string
-  default     = "1.17.5"
+  # renovate: datasource=helm registryUrl=https://helm.cilium.io/ packageName=cilium
+  default = "1.18.5"
 }
 
 variable "kured_chart_version" {
   description = "Kured chart version, see https://artifacthub.io/packages/helm/kured/kured"
   type        = string
-  default     = "5.6.1"
+  # renovate: datasource=helm registryUrl=https://kubereboot.github.io/charts packageName=kured
+  default = "5.10.0"
 }
 
 variable "kured_reboot_days" {
@@ -209,37 +211,43 @@ variable "kured_end_time" {
 variable "hcloud_ccm_driver_chart_version" {
   description = "Hetzner CCM chart version, see https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy"
   type        = string
-  default     = "1.25.1"
+  # renovate: datasource=helm registryUrl=https://charts.hetzner.cloud packageName=hcloud-cloud-controller-manager
+  default = "1.29.0"
 }
 
 variable "hcloud_csi_driver_chart_version" {
   description = "Hetzner CSI driver chart version, see https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy"
   type        = string
-  default     = "2.15.1"
+  # renovate: datasource=helm registryUrl=https://charts.hetzner.cloud packageName=hcloud-csi
+  default = "2.18.3"
 }
 
 variable "metrics_server_chart_version" {
   description = "Metrics server chart version, see https://artifacthub.io/packages/helm/metrics-server/metrics-server"
   type        = string
-  default     = "3.12.2"
+  # renovate: datasource=helm registryUrl=https://kubernetes-sigs.github.io/metrics-server/ packageName=metrics-server
+  default = "3.13.0"
 }
 
 variable "system_upgrade_controller_version" {
-  description = "System Upgarde Controller version, see available versions https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.10/charts/system-upgrade-controller"
+  description = "System Upgarde Controller version, see available versions https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.13/charts/system-upgrade-controller"
   type        = string
-  default     = "106.0.0"
+  # renovate: datasource=helm registryUrl=https://charts.rancher.io packageName=system-upgrade-controller
+  default = "108.0.0"
 }
 
 variable "system_upgrade_controller_app_version" {
-  description = "System Upgarde Controller app version, must be in sync with variable system_upgrade_controller_version. See Chart.yaml/appVersion in https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.10/charts/system-upgrade-controller"
+  description = "System Upgarde Controller app version, must be in sync with variable system_upgrade_controller_version. See Chart.yaml/appVersion in https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.13/charts/system-upgrade-controller"
   type        = string
-  default     = "v0.14.2"
+  # renovate: datasource=github-releases packageName=rancher/system-upgrade-controller
+  default = "v0.17.0"
 }
 
 variable "nu_version" {
   description = "NuShell version, see available version https://github.com/nushell/nushell/releases"
   type        = string
-  default     = "0.104.1"
+  # renovate: datasource=github-releases packageName=nushell/nushell
+  default = "0.109.1"
 }
 
 variable "additional_packages" {
@@ -298,7 +306,7 @@ variable "gateway_server_type" {
   default     = "cpx11"
   validation {
     # http get --headers [Authorization $"Bearer ($env.TF_VAR_hcloud_token)"] https://api.hetzner.cloud/v1/server_types | $in.server_types | each {{deprecated: $in.deprecated, name: $in.name, cores: $in.cores, cpu_type: $in.cpu_type, memory: $in.memory, disk: $in.disk, prices: ($in.prices.location | str join ', ')}}
-    condition     = can(regex("^(cpx[1-5]1|cx[2-5]2|cax[1-4]1|ccx[1-6]3)$", var.gateway_server_type))
+    condition     = can(regex("^(cpx[1-6][1-2]|cx[2-5]3|cax[1-4]1|ccx[1-6]3)$", var.gateway_server_type))
     error_message = "Node type is not valid."
   }
 }
@@ -498,7 +506,7 @@ EOT
   }
   validation {
     # http get --headers [Authorization $"Bearer ($env.TF_VAR_hcloud_token)"] https://api.hetzner.cloud/v1/server_types | $in.server_types | each {{deprecated: $in.deprecated, name: $in.name, cores: $in.cores, cpu_type: $in.cpu_type, memory: $in.memory, disk: $in.disk, prices: ($in.prices.location | str join ', ')}}
-    condition     = alltrue([for pool in var.node_pools : can(regex("^(cpx[1-5]1|cx[2-5]2|cax[1-4]1|ccx[1-6]3)$", pool.type))])
+    condition     = alltrue([for pool in var.node_pools : can(regex("^(cpx[1-6][1-2]|cx[2-5]3|cax[1-4]1|ccx[1-6]3)$", pool.type))])
     error_message = "Node `type` is not valid."
   }
 }

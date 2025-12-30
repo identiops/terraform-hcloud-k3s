@@ -44,6 +44,7 @@
           opentofu # Terraform OSS https://opentofu.org/
           tflint # Terraform linter https://github.com/terraform-linters/tflint
           nushell # Nu Shell https://www.nushell.sh/
+          unstable.renovate # Renovate dependency updater https://docs.renovatebot.com/
 
           # Kubernetes tools
           # k9s # interactive kubectl interface  https://k9scli.io/
