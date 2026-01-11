@@ -100,6 +100,28 @@ locals {
   export K3S_TOKEN="${random_string.k3s_token.result}"
   wget -qO- https://get.k3s.io | \
   EOT
+  # Process k3s features from input variable
+  k3s_features = var.k3s_features
+  
+  # Generate disable flags for k3s features based on the variable list and config map
+  k3s_disable_flags = join(" ", [
+    for feature in var.k3s_feature_list : "--disable=${feature}"
+    if contains(keys(local.k3s_features), feature) ? !local.k3s_features[feature].enabled : true
+  ])
+  
+  # Generate custom config files for cloud-init
+  k3s_custom_config_cloudinit = [
+    for feature, config in local.k3s_features : {
+      path        = "/etc/rancher/k3s/${feature}-config.yaml"
+      content     = config.custom_config
+      permissions = "0644"
+    } if config.enabled && config.custom_config != ""
+  ]
+  
+  # Generate disable flags only for feature_list
+  feature_list = compact([
+    for feature, config in local.k3s_features : !config.enabled ? "--disable=${feature}" : null
+  ])
   common_arguments                 = <<-EOT
   --node-external-ip="${local.cmd_node_external_ip}" \
   --kubelet-arg 'cloud-provider=external' \
@@ -107,18 +129,11 @@ locals {
   control_plane_arguments          = <<-EOT
   --tls-san="${hcloud_server_network.gateway.ip}" \
   --flannel-backend=none \
-  --disable-kube-proxy \
-  --disable-network-policy \
-  --disable-cloud-controller \
-  --disable-helm-controller \
+  ${local.k3s_disable_flags} \
   --egress-selector-mode disabled \
   --cluster-cidr="${local.cluster_cidr_network}" \
   --service-cidr="${local.service_cidr_network}" \
   --embedded-registry \
-  --disable local-storage \
-  --disable metrics-server \
-  --disable servicelb \
-  --disable traefik \
   ${local.common_arguments~}
   EOT
   prices                           = jsondecode(data.http.prices.response_body).pricing
