@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.2.5] - 2026-01-24
+
+### Miscellaneous Tasks
+
+- [a4307ee](https://github.com/identiops/terraform-hcloud-k3s/commit/a4307ee4f99c14c4db1199447832f87424ebbe6f) Update helm release kured to v5.11.0
+- [7378284](https://github.com/identiops/terraform-hcloud-k3s/commit/7378284fe448dd3811c62fcd99d47bb193d1dd78) Update helm release hcloud-cloud-controller-manager to v1.29.2
+- [9bb543f](https://github.com/identiops/terraform-hcloud-k3s/commit/9bb543f0cfde2220afb43c18e77fcdda5da55175) Update dependency nushell/nushell to v0.110.0
+- [27ece8b](https://github.com/identiops/terraform-hcloud-k3s/commit/27ece8b67f64e43741e56ffdfb81d5351b3431b1) Update terraform random to ~> 3.8.0
+- [2806556](https://github.com/identiops/terraform-hcloud-k3s/commit/280655692cab709fd951cca124bbc2f528cf9727) Update helm release cilium to v1.18.6
+- [de50874](https://github.com/identiops/terraform-hcloud-k3s/commit/de508743ccb3d2290a0e0f01da9ae6fa7555b972) Update terraform hcloud to ~> 1.59.0
+
 ## [6.2.4] - 2025-12-19
 
 ### Miscellaneous Tasks
