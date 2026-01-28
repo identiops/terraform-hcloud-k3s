@@ -103,10 +103,21 @@ locals {
   # Process k3s features from input variable
   k3s_features = var.k3s_features
   
-  # Generate disable flags for k3s features based on the variable list and config map
+  # List of all supported k3s features (same as in validation)
+  k3s_supported_features = [
+    "kube-proxy",
+    "helm-controller",
+    "local-storage",
+    "metrics-server",
+    "servicelb",
+    "traefik"
+  ]
+  
+  # Generate disable flags for k3s features
+  # Disable all features that are either not configured OR configured with enabled = false
   k3s_disable_flags = join(" ", [
-    for feature in var.k3s_feature_list : "--disable=${feature}"
-    if contains(keys(local.k3s_features), feature) ? !local.k3s_features[feature].enabled : true
+    for feature in local.k3s_supported_features : "--disable=${feature}"
+    if !lookup(local.k3s_features, feature, { enabled = false }).enabled
   ])
   
   # Generate custom config files for cloud-init
@@ -117,11 +128,6 @@ locals {
       permissions = "0644"
     } if config.enabled && config.custom_config != ""
   ]
-  
-  # Generate disable flags only for feature_list
-  feature_list = compact([
-    for feature, config in local.k3s_features : !config.enabled ? "--disable=${feature}" : null
-  ])
   common_arguments                 = <<-EOT
   --node-external-ip="${local.cmd_node_external_ip}" \
   --kubelet-arg 'cloud-provider=external' \
