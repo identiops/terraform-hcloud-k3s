@@ -7,7 +7,7 @@ terraform {
     hcloud = {
       # Documentation; https://registry.terraform.io/providers/hetznercloud/hcloud
       source  = "hetznercloud/hcloud"
-      version = "~> 1.52.0"
+      version = "~> 1.59.0"
     }
     http = {
       source  = "hashicorp/http"
@@ -15,11 +15,11 @@ terraform {
     }
     local = {
       source  = "hashicorp/local"
-      version = "~> 2.5.2"
+      version = "~> 2.6.0"
     }
     random = {
       source  = "hashicorp/random"
-      version = "~> 3.7.0"
+      version = "~> 3.8.0"
     }
     time = {
       source  = "hashicorp/time"

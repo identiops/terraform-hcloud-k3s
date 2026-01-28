@@ -2,6 +2,63 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.2.5] - 2026-01-24
+
+### Miscellaneous Tasks
+
+- [a4307ee](https://github.com/identiops/terraform-hcloud-k3s/commit/a4307ee4f99c14c4db1199447832f87424ebbe6f) Update helm release kured to v5.11.0
+- [7378284](https://github.com/identiops/terraform-hcloud-k3s/commit/7378284fe448dd3811c62fcd99d47bb193d1dd78) Update helm release hcloud-cloud-controller-manager to v1.29.2
+- [9bb543f](https://github.com/identiops/terraform-hcloud-k3s/commit/9bb543f0cfde2220afb43c18e77fcdda5da55175) Update dependency nushell/nushell to v0.110.0
+- [27ece8b](https://github.com/identiops/terraform-hcloud-k3s/commit/27ece8b67f64e43741e56ffdfb81d5351b3431b1) Update terraform random to ~> 3.8.0
+- [2806556](https://github.com/identiops/terraform-hcloud-k3s/commit/280655692cab709fd951cca124bbc2f528cf9727) Update helm release cilium to v1.18.6
+- [de50874](https://github.com/identiops/terraform-hcloud-k3s/commit/de508743ccb3d2290a0e0f01da9ae6fa7555b972) Update terraform hcloud to ~> 1.59.0
+
+## [6.2.4] - 2025-12-19
+
+### Miscellaneous Tasks
+
+- [fb18778](https://github.com/identiops/terraform-hcloud-k3s/commit/fb1877804582caf75dec0dd414bea5108fdeae27) Update terraform hcloud to ~> 1.56.0
+- [741dd26](https://github.com/identiops/terraform-hcloud-k3s/commit/741dd261eb2c0947ea47ca3a4d97b04db8e35f33) Update helm release hcloud-csi to v2.18.1
+- [f2cc633](https://github.com/identiops/terraform-hcloud-k3s/commit/f2cc6335112809bf57c27744e2f54d6c157b25ae) Update terraform local to ~> 2.6.0
+- [0d48c12](https://github.com/identiops/terraform-hcloud-k3s/commit/0d48c12c392052110394ed05432c978b4dea01a1) Update helm release cilium to v1.18.4
+- [7211828](https://github.com/identiops/terraform-hcloud-k3s/commit/7211828a79345013172b64b4236b49fb37921518) Update helm release hcloud-cloud-controller-manager to v1.29.0
+- [df6d6fb](https://github.com/identiops/terraform-hcloud-k3s/commit/df6d6fbdede7de357333d51be4301894f8db8991) Update helm release cilium to v1.18.5
+- [6e1a168](https://github.com/identiops/terraform-hcloud-k3s/commit/6e1a16812dbc07f5abf7fb8b7a6e047c8a89bd80) Update dependency nushell/nushell to v0.109.1
+- [bd69d2b](https://github.com/identiops/terraform-hcloud-k3s/commit/bd69d2b69a617778e9466fec5fbdea8696cbcf53) Update terraform hcloud to ~> 1.57.0
+- [e85487e](https://github.com/identiops/terraform-hcloud-k3s/commit/e85487eac40187099292f8f9ec69d57f2636b13d) Update helm release hcloud-csi to v2.18.3
+- [6e4b50f](https://github.com/identiops/terraform-hcloud-k3s/commit/6e4b50f2e5abbf5c3bb5b246ce39b1f2141ddef7) Update system-upgrade-controller
+
+## [6.2.3] - 2025-10-29
+
+### Miscellaneous Tasks
+
+- [699b477](https://github.com/identiops/terraform-hcloud-k3s/commit/699b47762d463d05ecff3dbfdb3ebfaa0166e5b9) Update helm release hcloud-cloud-controller-manager to v1.28.0
+
+## [6.2.2] - 2025-10-28
+
+### Added Features
+
+- [432afe4](https://github.com/identiops/terraform-hcloud-k3s/commit/432afe4f02bcb59247306a564d433a635dfaa282) Add analytics to readme
+
+### Documentation
+
+- [a65e9ab](https://github.com/identiops/terraform-hcloud-k3s/commit/a65e9abfdf3e5ab6862016abd61a5bffff67193c) Add reference to identiops.com
+
+### Miscellaneous Tasks
+
+- [97f7db4](https://github.com/identiops/terraform-hcloud-k3s/commit/97f7db43ff5183f73182c080989b512beb6419a3) Update terraform hcloud to ~> 1.52.0
+- [623ea9c](https://github.com/identiops/terraform-hcloud-k3s/commit/623ea9c9818eb85bf4fa77bdf197e861e6c3432b) Update terraform hcloud to ~> 1.54.0
+- [3919f7a](https://github.com/identiops/terraform-hcloud-k3s/commit/3919f7ae74b035c13bac030ce221fdf0488f593f) Update available server_types
+- [9afff0d](https://github.com/identiops/terraform-hcloud-k3s/commit/9afff0d902b0704e9eddd431e9a03e15f9dc73bb) Update renovate configuration
+- [b0a4725](https://github.com/identiops/terraform-hcloud-k3s/commit/b0a4725f64956bf1bc717b52037b9d94a21596aa) Update helm release metrics-server to v3.13.0
+- [395f881](https://github.com/identiops/terraform-hcloud-k3s/commit/395f8813e11a2346d9b3c5a89bfb2a373abaa3ae) Update helm release kured to v5.10.0
+- [8cf2ab1](https://github.com/identiops/terraform-hcloud-k3s/commit/8cf2ab1b51718c535d34dba6afe4ba5d30324804) Update helm release hcloud-csi to v2.18.0
+- [bcde475](https://github.com/identiops/terraform-hcloud-k3s/commit/bcde475b876c3d6a2ef225dcb660d4897242b386) Update helm release hcloud-cloud-controller-manager to v1.27.0
+- [b471bcc](https://github.com/identiops/terraform-hcloud-k3s/commit/b471bccdcb912ce92442d552c85d00b2b4ddef4d) Update helm release cilium to v1.18.3
+- [fc74a7f](https://github.com/identiops/terraform-hcloud-k3s/commit/fc74a7fec6d251e224dd02ee98b949a62f97573c) Update helm release system-upgrade-controller to v107
+- [1aee05d](https://github.com/identiops/terraform-hcloud-k3s/commit/1aee05d40515e93cdc2530bc4ce9e6cd94b2c26e) Update system-upgrade-controller to version v0.16.3
+- [96221d2](https://github.com/identiops/terraform-hcloud-k3s/commit/96221d26274ca2d91c290f892ab79b12c60c828a) Update dependency nushell/nushell to v0.108.0
+
 ## [6.2.1] - 2025-06-27
 
 ### Documentation
@@ -20,6 +77,7 @@ All notable changes to this project will be documented in this file.
 
 ### Miscellaneous Tasks
 
+- [fa9fc8a](https://github.com/identiops/terraform-hcloud-k3s/commit/fa9fc8afb21a8dc8dfef46a19b0e04d80d206d2d) Update terraform hcloud to ~> 1.51.0
 - [632104a](https://github.com/identiops/terraform-hcloud-k3s/commit/632104a45f02f30b784765a9b3d749b0b595a8d0) Update cilium, hcloud-csi and hcloud-ccm
 
 ### Other
@@ -40,6 +98,7 @@ All notable changes to this project will be documented in this file.
 
 ### Miscellaneous Tasks
 
+- [598ff6a](https://github.com/identiops/terraform-hcloud-k3s/commit/598ff6aa3b8d384d1fa05e51cf84d719e1e358d5) Update terraform http to ~> 3.5.0
 - [be55d87](https://github.com/identiops/terraform-hcloud-k3s/commit/be55d87d9e36cf131eed592f0d64d7a03df665d3) Update chart versions
 
 ## [6.1.1] - 2025-04-09
@@ -75,6 +134,7 @@ All notable changes to this project will be documented in this file.
 
 ### Miscellaneous Tasks
 
+- [9a35c98](https://github.com/identiops/terraform-hcloud-k3s/commit/9a35c987d9ca528dcf9cf02f7f88373db3df0c84) Update terraform time to ~> 0.13.0
 - [29b9339](https://github.com/identiops/terraform-hcloud-k3s/commit/29b9339d831e02850bd4a9af7b64b6fb7cb64cb3) Correct typos
 - [cc204e5](https://github.com/identiops/terraform-hcloud-k3s/commit/cc204e5e7c8c0fb1e33f2ddeaac4d2d97fc637dc) Update kured to version 5.6.1
 - [a5c9670](https://github.com/identiops/terraform-hcloud-k3s/commit/a5c96706c0c0d01bb77b0141498435958e4611f6) Disable kube-proxy and disable k3s helm-controller
@@ -111,6 +171,8 @@ All notable changes to this project will be documented in this file.
 
 - [e3bbbee](https://github.com/identiops/terraform-hcloud-k3s/commit/e3bbbeef42071edbcf868efe25ea9733038006c8) Add gateway configuration
 - [2d0eb7b](https://github.com/identiops/terraform-hcloud-k3s/commit/2d0eb7b0c41266d35d572410d6675c6b2295f84d) Update to version 1.17.1
+- [9d70dbc](https://github.com/identiops/terraform-hcloud-k3s/commit/9d70dbc22b9993f829a0714e3606b173f3ae9979) Update terraform random to ~> 3.7.0
+- [9503ab0](https://github.com/identiops/terraform-hcloud-k3s/commit/9503ab0865cc6114054344182fc7e5aefbb03367) Update terraform hcloud to ~> 1.50.0
 
 ## [4.1.2] - 2025-02-12
 
@@ -157,7 +219,12 @@ All notable changes to this project will be documented in this file.
 
 ### Miscellaneous Tasks
 
+- [691defe](https://github.com/identiops/terraform-hcloud-k3s/commit/691defe67d04f51b34123b5fee1969839376b553) Update terraform hcloud to ~> 1.47.0
+- [cc036e8](https://github.com/identiops/terraform-hcloud-k3s/commit/cc036e8df945ebe1362a3a5aacf6fc75aebbabd1) Update terraform local to ~> 2.5.0
+- [9ed469e](https://github.com/identiops/terraform-hcloud-k3s/commit/9ed469e0a625b7198155469d644ab6e98b403274) Update terraform time to ~> 0.11.0
 - [924d6e6](https://github.com/identiops/terraform-hcloud-k3s/commit/924d6e604b714c15e49cf9279b37197fe3df435e) Lift required version to 0.12.0
+- [683b611](https://github.com/identiops/terraform-hcloud-k3s/commit/683b6110e8f72ef230a886eea7e98fff78455f50) Update terraform hcloud to ~> 1.48.0
+- [b12adcd](https://github.com/identiops/terraform-hcloud-k3s/commit/b12adcddf7b45a82810b45a594e85ce69a1b078c) Update terraform hcloud to ~> 1.49.0
 - [cc0a5c3](https://github.com/identiops/terraform-hcloud-k3s/commit/cc0a5c354ca2af778987e68f5a7ebea94b1b9027) Update dependencies
 - [2d44b9f](https://github.com/identiops/terraform-hcloud-k3s/commit/2d44b9fbbcd3b28aff156e0f53120f6ef8902a03) Cleanup links
 - [01573d1](https://github.com/identiops/terraform-hcloud-k3s/commit/01573d1a34c878c7a9fa5b9a63e2b4c9432c0dde) Increase time to live for upgrade jobs
