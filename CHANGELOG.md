@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.2.6] - 2026-02-05
+
+### Miscellaneous Tasks
+
+- [2a910b4](https://github.com/identiops/terraform-hcloud-k3s/commit/2a910b4fbf38e5e8f1306a8d610c0b5a493ebc61) Update helm release cilium to v1.19.0
+- [62102f5](https://github.com/identiops/terraform-hcloud-k3s/commit/62102f5f12a5faa48883e6985af5ef09f916c31b) Update terraform hcloud to ~> 1.60.0
+
 ## [6.2.5] - 2026-01-24
 
 ### Miscellaneous Tasks
