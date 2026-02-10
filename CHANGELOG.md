@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.2.7] - 2026-02-10
+
+### Bug Fixes
+
+- [ebe69e2](https://github.com/identiops/terraform-hcloud-k3s/commit/ebe69e25692119e3bb357151f9907a2be8109700) Remove default storage class from hcloud-volumes-delete
+
+### Miscellaneous Tasks
+
+- [f964957](https://github.com/identiops/terraform-hcloud-k3s/commit/f964957e7f3e1ae19fc5927695a595b0268a0ccf) Update hcloud server types
+
 ## [6.2.6] - 2026-02-05
 
 ### Miscellaneous Tasks
