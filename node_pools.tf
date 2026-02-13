@@ -35,6 +35,9 @@ module "node_pools" {
   is_control_plane       = each.value.any.is_control_plane
   k8s_ha_host            = local.k8s_ha_host
   k8s_ha_port            = local.k8s_ha_port
+  k3s_custom_config_files = local.k3s_custom_config_cloudinit
+
+  debug_cloudinit = var.debug_cloudinit
 
   runcmd = concat([
     local.security_setup,
