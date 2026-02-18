@@ -38,6 +38,7 @@ What changed in the latest version? See
   [pull secrets](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/).
 - Creation of placement groups for to improve availability.
 - Multi-region deployments.
+
 - Secured default configuration:
   - Deletion protection for all cloud resources.
   - SSH key required for remote access.
@@ -86,6 +87,7 @@ What changed in the latest version? See
    4. [Persistent Volume Encryption](#persistent-volume-encryption)
    5. [Adjust Sysctl Parameters](#adjust-sysctl-parameters)
    6. [Private Registry Access](#private-registry-access)
+   7. [Enabling additional k3s Features](#enabling-additional-k3s-features)
 3. [Maintenance](#maintenance)
    1. [Access Kubernetes API via Port-Forwarding from Gateway](#access-kubernetes-api-via-port-forwarding-from-gateway)
    2. [Ansible: Execute Commands on Nodes](#ansible-execute-commands-on-nodes)
@@ -397,6 +399,64 @@ variable "dockerio_access_token" {
 }
 ```
 
+### Enabling additional k3s Features
+
+terraform-hcloud-k3s provides a fully functional default configuration. Enabling additional features requires a comprehensive understanding of how k3s is configured and is an advanced use case! Features can be enabled as needed using the `k3s_features` variable:
+
+**Available Features:**
+- **traefik**: Enable to use the built-in Traefik ingress controller
+- **servicelb**: Enable to use the built-in service load balancer, which is useful for simple load balancing scenarios
+- **local-storage**: Enable to use the nodes' local storage provider for Persistent Volumes in addition to the cloud storage provider
+- **metrics-server**: Enable to install the built-in metrics server
+- **kube-proxy**: Is enabled by default, a custom configuration can be provided
+- **helm-controller**: Enable to install the built-in helm controller
+
+**Enabling Features:**
+
+To enable features, configure the `k3s_features` variable in your `main.tf`:
+
+```terraform
+module "cluster" {
+  # ...
+  
+  # Enable specific k3s features
+  k3s_features = {
+    # Enable Traefik as Ingress Controller
+    traefik = {
+      enabled = true
+    }
+    
+    # Enable ServiceLB Load Balancer
+    servicelb = {
+      enabled = true
+    }
+    
+    # Enable Local Storage Provider
+    "local-storage" = {
+      enabled = true
+    }
+    
+    # You can also provide custom configuration
+    "kube-proxy" = {
+      enabled = true
+      custom_config = <<-EOF
+        # Custom kube-proxy configuration
+        mode: "iptables"
+      EOF
+    }
+  }
+  
+  # ...
+}
+```
+
+**Notes:**
+- Most features are intentionally disabled to avoid conflicts with external solutions
+- Traefik can be used as an alternative to external ingress controllers like NGINX
+- ServiceLB can be used for simple load balancing scenarios
+- Each feature can have custom configuration via the `custom_config` field
+- Verify compatibility with other cluster components before enabling
+
 ## Maintenance
 
 ### Access Kubernetes API via Port-Forwarding from Gateway
@@ -442,6 +502,19 @@ starting points for an ingress controller are:
 
 - [traefik](https://artifacthub.io/packages/helm/traefik/traefik)
 - [ingress-nginx](https://artifacthub.io/packages/helm/ingress-nginx/ingress-nginx)
+
+Alternatively, you can use the **internal Traefik** that comes bundled with k3s:
+
+- k3s includes Traefik as the default ingress controller, but it's disabled by default in this setup
+- To enable the internal Traefik, configure the `k3s_features` variable in your configuration:
+  ```terraform
+  k3s_features = {
+    traefik = {
+      enabled = true
+    }
+  }
+  ```
+- This provides a lightweight ingress solution without requiring additional Helm deployments
 
 The ingress controller, like the rest of the cluster, is not directly exposed to
 the Internet. Therefore, it is necessary to add a load balancer that is directly
