@@ -102,7 +102,7 @@ locals {
   EOT
   # Process k3s features from input variable
   k3s_features = var.k3s_features
-  
+
   # List of all supported k3s features (same as in validation)
   k3s_supported_features = [
     "kube-proxy",
@@ -112,14 +112,14 @@ locals {
     "servicelb",
     "traefik"
   ]
-  
+
   # Generate disable flags for k3s features
   # Disable all features that are either not configured OR configured with enabled = false
   k3s_disable_flags = join(" ", [
     for feature in local.k3s_supported_features : "--disable=${feature}"
-    if !lookup(local.k3s_features, feature, { enabled = false }).enabled
+    if !lookup(local.k3s_features, feature, { enabled = false, custom_config = "" }).enabled
   ])
-  
+
   # Generate custom config files for cloud-init
   k3s_custom_config_cloudinit = [
     for feature, config in local.k3s_features : {
@@ -128,11 +128,11 @@ locals {
       permissions = "0644"
     } if config.enabled && config.custom_config != ""
   ]
-  common_arguments                 = <<-EOT
+  common_arguments        = <<-EOT
   --node-external-ip="${local.cmd_node_external_ip}" \
   --kubelet-arg 'cloud-provider=external' \
   EOT
-  control_plane_arguments          = <<-EOT
+  control_plane_arguments = <<-EOT
   --tls-san="${hcloud_server_network.gateway.ip}" \
   --flannel-backend=none \
   ${local.k3s_disable_flags} \
@@ -142,7 +142,7 @@ locals {
   --embedded-registry \
   ${local.common_arguments~}
   EOT
-  prices                           = jsondecode(data.http.prices.response_body).pricing
+  prices                  = jsondecode(data.http.prices.response_body).pricing
   costs_gateway = [for server_type in local.prices.server_types :
     [for price in server_type.prices :
       { net = tonumber(price.price_monthly.net), gross = tonumber(price.price_monthly.gross) } if price.location == var.default_location

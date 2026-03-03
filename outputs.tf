@@ -39,3 +39,8 @@ output "total_monthly_costs" {
     vat_rate = tonumber(local.prices.vat_rate)
   }
 }
+
+output "k3s_features" {
+  description = "Configured k3s features."
+  value       = var.k3s_features
+}
