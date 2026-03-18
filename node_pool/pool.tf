@@ -95,6 +95,11 @@ resource "hcloud_server" "pool" {
         path    = "/etc/systemd/system/haproxy-k8s.timer"
         content = file("${path.module}/../templates/haproxy-k8s.timer")
       },
+      {
+        path        = "/etc/rancher/k3s/config.yaml.d/00-default.yaml"
+        content     = yamlencode(local.k3s_config_merged)
+        permissions = "0644"
+      },
     ]
     }),
     yamlencode(var.additional_cloud_init)
@@ -131,6 +136,12 @@ locals {
       { net = tonumber(price.price_monthly.net), gross = tonumber(price.price_monthly.gross) } if price.location == var.location
     ][0] if server_type.name == var.node_type
   ][0]
+
+  k3s_config_merged = var.is_control_plane ? merge(
+    var.k3s_config_default,
+    var.k3s_config,
+    length(var.kube_apiserver_args) > 0 ? { kube-apiserver-arg = [for k, v in var.kube_apiserver_args : "${k}=${v}"] } : {}
+  ) : var.k3s_config_default
 }
 
 variable "name" {
@@ -298,6 +309,24 @@ variable "prices" {
 variable "is_control_plane" {
   description = "Does node pool contain control plane node?"
   type        = bool
+}
+
+variable "k3s_config_default" {
+  description = "Default k3s configuration for the module."
+  type        = any
+  default     = {}
+}
+
+variable "k3s_config" {
+  description = "User-provided k3s configuration (merged with defaults)."
+  type        = any
+  default     = {}
+}
+
+variable "kube_apiserver_args" {
+  description = "Kube API server arguments for OIDC configuration."
+  type        = map(string)
+  default     = {}
 }
 
 output "location" {

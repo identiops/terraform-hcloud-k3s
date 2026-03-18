@@ -12,7 +12,6 @@ locals {
   ]
   cluster_cidr_network = cidrsubnet(var.network_cidr, var.cluster_cidr_network_bits - 8, var.cluster_cidr_network_offset)
   service_cidr_network = cidrsubnet(var.network_cidr, var.service_cidr_network_bits - 8, var.service_cidr_network_offset)
-  # cmd_node_external_ip = "$(ip -4 -j a s dev eth0 | jq '.[0].addr_info[0].local' -r),$(ip -6 -j a s dev eth0 | jq '.[0].addr_info[0].local' -r)"
   cmd_node_external_ip = hcloud_server.gateway.ipv4_address
   kube-apiserver-args = var.oidc_enabled ? {
     oidc-username-claim = "email"
@@ -21,7 +20,19 @@ locals {
     oidc-client-id      = var.oidc_client_id
   } : {}
   default_gateway = cidrhost(var.network_cidr, 1)
-  haproxy_setup   = <<-EOT
+
+  k3s_config_default = {
+    cluster-cidr         = local.cluster_cidr_network
+    service-cidr         = local.service_cidr_network
+    embedded-registry    = true
+    kubelet-arg          = ["cloud-provider=external"]
+    disable              = ["cloud-controller", "network-policy", "local-storage", "metrics-server", "servicelb", "traefik", "helm-controller"]
+    flannel-backend      = "none"
+    disable-kube-proxy   = true
+    egress-selector-mode = "disabled"
+  }
+
+  haproxy_setup  = <<-EOT
   export NU_VERSION="${var.nu_version}"
   # Detect architecture and set nu_arch variable
   arch=$(uname -m)
@@ -51,7 +62,7 @@ locals {
   systemctl enable --now haproxy-k8s.timer
   systemctl start haproxy-k8s
   EOT
-  security_setup  = <<-EOT
+  security_setup = <<-EOT
   set -eu
   # Remove hc-utils package due to the conflict it causes between dhcpd and systemd-networkd https://github.com/identiops/terraform-hcloud-k3s/issues/27
   dpkg -r hc-utils
@@ -98,29 +109,11 @@ locals {
   export INSTALL_K3S_CHANNEL="${var.k3s_channel}"
   export INSTALL_K3S_VERSION="${var.k3s_version}"
   export K3S_TOKEN="${random_string.k3s_token.result}"
+  mkdir -p /etc/rancher/k3s/config.yaml.d
   wget -qO- https://get.k3s.io | \
   EOT
-  common_arguments                 = <<-EOT
-  --node-external-ip="${local.cmd_node_external_ip}" \
-  --kubelet-arg 'cloud-provider=external' \
-  EOT
-  control_plane_arguments          = <<-EOT
-  --tls-san="${hcloud_server_network.gateway.ip}" \
-  --flannel-backend=none \
-  --disable-kube-proxy \
-  --disable-network-policy \
-  --disable-cloud-controller \
-  --disable-helm-controller \
-  --egress-selector-mode disabled \
-  --cluster-cidr="${local.cluster_cidr_network}" \
-  --service-cidr="${local.service_cidr_network}" \
-  --embedded-registry \
-  --disable local-storage \
-  --disable metrics-server \
-  --disable servicelb \
-  --disable traefik \
-  ${local.common_arguments~}
-  EOT
+  common_arguments                 = "--node-external-ip=\"${local.cmd_node_external_ip}\""
+  control_plane_arguments          = "--tls-san=\"${hcloud_server_network.gateway.ip}\""
   prices                           = jsondecode(data.http.prices.response_body).pricing
   costs_gateway = [for server_type in local.prices.server_types :
     [for price in server_type.prices :
