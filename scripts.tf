@@ -94,3 +94,26 @@ resource "local_file" "unsetkubeconfig" {
     command = "./unsetkubeconfig"
   }
 }
+
+resource "terraform_data" "known_hosts_cleanup" {
+  count = var.create_scripts ? 1 : 0
+  triggers_replace = [
+    hcloud_server.gateway.id,
+    join(",", [for pool in merge(module.node_pool_cluster_init, module.node_pools) : join(",", pool.server_ids)])
+  ]
+  provisioner "local-exec" {
+    command = "rm -f ${path.cwd}/.ssh/known_hosts"
+  }
+}
+
+resource "local_file" "ansible_vars" {
+  count    = var.create_scripts ? 1 : 0
+  filename = "./ansible-vars.yaml"
+  content = templatefile(
+    "${path.module}/templates/ansible_vars.yaml", {
+      cluster_name = var.cluster_name
+      gateway_ip   = hcloud_server.gateway.ipv4_address
+    }
+  )
+  file_permission = "0600"
+}

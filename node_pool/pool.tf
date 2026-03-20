@@ -330,18 +330,18 @@ variable "kube_apiserver_args" {
 }
 
 output "location" {
-  description = "Node pool location."
+  description = "Location of the node pool."
   value       = var.location
 }
 
 output "node_count" {
-  description = "Number of nodes."
+  description = "Number of nodes in the pool."
   value       = var.node_count
 }
 
 output "labels" {
   description = "Node pool labels."
-  value       = { for k, v in var.node_labels : k => v }
+  value       = var.node_labels
 }
 
 output "type" {
@@ -355,19 +355,8 @@ output "is_control_plane" {
 }
 
 output "nodes" {
-  description = "Node details."
-  value = {
-    for n in hcloud_server.pool :
-    n.name => {
-      image = n.image
-      public = {
-        ipv4 = var.enable_public_net_ipv4 ? n.ipv4_address : "",
-        ipv6 = var.enable_public_net_ipv6 ? n.ipv6_address : ""
-      },
-      private = [for network in n.network : network.ip]
-      costs   = local.costs_node
-    }
-  }
+  description = "Map of servers keyed by server name."
+  value       = { for server in hcloud_server.pool : server.name => server }
 }
 
 output "costs" {
@@ -376,4 +365,9 @@ output "costs" {
     net   = local.costs_node.net * var.node_count
     gross = local.costs_node.gross * var.node_count
   }
+}
+
+output "server_ids" {
+  description = "List of server IDs for this node pool."
+  value       = hcloud_server.pool[*].id
 }

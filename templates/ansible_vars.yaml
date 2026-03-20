@@ -1,0 +1,2 @@
+cluster_name: ${cluster_name}
+gateway_ip: ${gateway_ip}
