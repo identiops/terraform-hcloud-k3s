@@ -82,10 +82,11 @@ What changed in the latest version? See
 2. [Configuration](#configuration)
    1. [Store terraform state in S3 bucket](#store-terraform-state-in-s3-bucket)
    2. [Enable etcd backup to S3](#enable-etcd-backup-to-s3)
-   3. [OpenID Connect (OIDC) Authentication](#openid-connect-oidc-authentication)
-   4. [Persistent Volume Encryption](#persistent-volume-encryption)
-   5. [Adjust Sysctl Parameters](#adjust-sysctl-parameters)
-   6. [Private Registry Access](#private-registry-access)
+   3. [k3s Config Merge Behavior](#k3s-config-merge-behavior)
+   4. [OpenID Connect (OIDC) Authentication](#openid-connect-oidc-authentication)
+   5. [Persistent Volume Encryption](#persistent-volume-encryption)
+   6. [Adjust Sysctl Parameters](#adjust-sysctl-parameters)
+   7. [Private Registry Access](#private-registry-access)
 3. [Maintenance](#maintenance)
    1. [Access Kubernetes API via Port-Forwarding from Gateway](#access-kubernetes-api-via-port-forwarding-from-gateway)
    2. [Ansible: Execute Commands on Nodes](#ansible-execute-commands-on-nodes)
@@ -341,6 +342,16 @@ control_plane_k3s_init_additional_options = "--etcd-s3 --etcd-s3-region=${var.et
 
 - Etcd will automatically create a snapshot every day and keep it for three
   days.
+
+### k3s Config Merge Behavior
+
+- The module ships safe defaults in `k3s_config_default`, including
+  `disable-cloud-controller = true`.
+- User-provided `k3s_config` values are merged into these defaults.
+- `disable-cloud-controller = true` is always enforced for control plane nodes,
+  even if `k3s_config` is overridden in an example or user config.
+- This avoids port conflicts with the Hetzner Cloud Controller Manager (HCCM),
+  which is deployed by this module.
 
 ### OpenID Connect (OIDC) Authentication
 

@@ -137,11 +137,39 @@ locals {
     ][0] if server_type.name == var.node_type
   ][0]
 
-  k3s_config_merged = var.is_control_plane ? merge(
+  k3s_server_only_keys = toset([
+    "cluster-cidr",
+    "service-cidr",
+    "disable",
+    "disable+",
+    "disable-cloud-controller",
+    "disable-kube-proxy",
+    "egress-selector-mode",
+    "embedded-registry",
+    "flannel-backend",
+    "kube-apiserver-arg",
+  ])
+
+  k3s_config_agent_base = {
+    for key, value in merge(var.k3s_config_default, var.k3s_config) : key => value
+    if !contains(local.k3s_server_only_keys, key)
+  }
+
+  k3s_config_control_plane = merge(
     var.k3s_config_default,
     var.k3s_config,
     length(var.kube_apiserver_args) > 0 ? { kube-apiserver-arg = [for k, v in var.kube_apiserver_args : "${k}=${v}"] } : {}
-  ) : var.k3s_config_default
+  )
+
+  k3s_config_merged_base = merge(
+    local.k3s_config_agent_base,
+    { for key, value in local.k3s_config_control_plane : key => value if var.is_control_plane }
+  )
+
+  k3s_config_merged = merge(
+    local.k3s_config_merged_base,
+    { for key, value in { disable-cloud-controller = true } : key => value if var.is_control_plane }
+  )
 }
 
 variable "name" {

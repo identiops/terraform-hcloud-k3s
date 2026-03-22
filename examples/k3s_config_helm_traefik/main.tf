@@ -38,11 +38,14 @@ module "cluster" {
   ssh_keys = {
     "admin" = file("~/.ssh/id_ed25519.pub")
   }
+  ssh_keys_kubeapi = {
+    "admin" = file("~/.ssh/id_ed25519.pub")
+  }
 
   # Gateway Settings
   # ----------------
   gateway_firewall_k8s_open = false
-  gateway_server_type       = "cpx11"
+  gateway_server_type       = "cpx22"
 
   additional_cloud_init = {
     timezone = "Europe/Berlin"
@@ -52,8 +55,9 @@ module "cluster" {
   # ------------------------------------------------------
   # This overrides the module defaults that disable helm-controller and traefik.
   # The module default disable list is:
-  #   ["cloud-controller", "network-policy", "local-storage", "metrics-server", "servicelb", "traefik", "helm-controller"]
-  # By setting disable = [], we re-enable all components that were disabled.
+  #   ["network-policy", "local-storage", "metrics-server", "servicelb", "traefik", "helm-controller"]
+  # Note: disable-cloud-controller remains true; the module enforces that setting
+  # to avoid conflicts with the external Hetzner CCM.
   k3s_config = {
     disable = []
   }
@@ -114,6 +118,7 @@ output "gateway" {
 output "node_pools" {
   depends_on  = [module.cluster]
   description = "IP Addresses of the node pools."
+  sensitive   = true
   value       = module.cluster.node_pools
 }
 

@@ -347,10 +347,13 @@ See https://docs.k3s.io/installation/configuration for available options.
 Example:
 ```hcl
 k3s_config = {
-  disable = []  # Re-enable helm-controller and traefik (overrides defaults)
+  disable = []  # Re-enable components from the default disable list
   node-label = ["custom=label"]
 }
 ```
+
+Note: `disable-cloud-controller = true` is always enforced by the module to
+prevent conflicts with the external Hetzner Cloud Controller Manager.
 EOT
   type        = any
   default     = {}

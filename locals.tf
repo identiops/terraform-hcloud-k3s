@@ -22,14 +22,15 @@ locals {
   default_gateway = cidrhost(var.network_cidr, 1)
 
   k3s_config_default = {
-    cluster-cidr         = local.cluster_cidr_network
-    service-cidr         = local.service_cidr_network
-    embedded-registry    = true
-    kubelet-arg          = ["cloud-provider=external"]
-    disable              = ["cloud-controller", "network-policy", "local-storage", "metrics-server", "servicelb", "traefik", "helm-controller"]
-    flannel-backend      = "none"
-    disable-kube-proxy   = true
-    egress-selector-mode = "disabled"
+    cluster-cidr             = local.cluster_cidr_network
+    service-cidr             = local.service_cidr_network
+    embedded-registry        = true
+    kubelet-arg              = ["cloud-provider=external"]
+    disable                  = ["network-policy", "local-storage", "metrics-server", "servicelb", "traefik", "helm-controller"]
+    disable-cloud-controller = true
+    flannel-backend          = "none"
+    disable-kube-proxy       = true
+    egress-selector-mode     = "disabled"
   }
 
   haproxy_setup  = <<-EOT
