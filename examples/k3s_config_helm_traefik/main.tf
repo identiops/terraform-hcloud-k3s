@@ -53,11 +53,11 @@ module "cluster" {
 
   # k3s Configuration - Enable helm-controller and traefik
   # ------------------------------------------------------
-  # This overrides the module defaults that disable helm-controller and traefik.
+  # This overrides the module defaults that disable all bundled components.
   # The module default disable list is:
-  #   ["network-policy", "local-storage", "metrics-server", "servicelb", "traefik", "helm-controller"]
-  # Note: disable-cloud-controller remains true; the module enforces that setting
-  # to avoid conflicts with the external Hetzner CCM.
+  #   ["cloud-controller", "network-policy", "kube-proxy", "local-storage", "metrics-server", "servicelb", "traefik", "helm-controller"]
+  # Note: cloud-controller, network-policy, and kube-proxy remain disabled via
+  # 99-critical.yaml to keep compatibility with HCCM and Cilium.
   k3s_config = {
     disable = []
   }

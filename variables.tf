@@ -352,8 +352,14 @@ k3s_config = {
 }
 ```
 
-Note: `disable-cloud-controller = true` is always enforced by the module to
-prevent conflicts with the external Hetzner Cloud Controller Manager.
+Note: the module always enforces critical settings in
+`/etc/rancher/k3s/config.yaml.d/99-critical.yaml`:
+- `disable+: [cloud-controller, network-policy, kube-proxy]`
+- `flannel-backend: none`
+- `egress-selector-mode: disabled`
+
+This keeps the cluster compatible with Cilium and the external Hetzner Cloud
+Controller Manager (HCCM), even if user config tries to override these values.
 EOT
   type        = any
   default     = {}

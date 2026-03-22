@@ -345,13 +345,23 @@ control_plane_k3s_init_additional_options = "--etcd-s3 --etcd-s3-region=${var.et
 
 ### k3s Config Merge Behavior
 
-- The module ships safe defaults in `k3s_config_default`, including
-  `disable-cloud-controller = true`.
-- User-provided `k3s_config` values are merged into these defaults.
-- `disable-cloud-controller = true` is always enforced for control plane nodes,
-  even if `k3s_config` is overridden in an example or user config.
-- This avoids port conflicts with the Hetzner Cloud Controller Manager (HCCM),
-  which is deployed by this module.
+- The module writes k3s config files in `/etc/rancher/k3s/config.yaml.d/` and
+  relies on k3s merge order:
+  1. `00-default.yaml` (module defaults)
+  2. `10-user.yaml` (optional user config from `k3s_config`)
+  3. `99-critical.yaml` (module-enforced critical settings)
+- By default, `00-default.yaml` disables the same components as the previous
+  CLI-based setup: `cloud-controller`, `network-policy`, `kube-proxy`,
+  `local-storage`, `metrics-server`, `servicelb`, `traefik`, and
+  `helm-controller`.
+- Users can still re-enable non-critical components through `k3s_config`, for
+  example `disable = []`.
+- `99-critical.yaml` always enforces:
+  - `disable+: [cloud-controller, network-policy, kube-proxy]`
+  - `flannel-backend: none`
+  - `egress-selector-mode: disabled`
+- This keeps the cluster compatible with Cilium and avoids conflicts with the
+  external Hetzner Cloud Controller Manager (HCCM).
 
 ### OpenID Connect (OIDC) Authentication
 

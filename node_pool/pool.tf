@@ -50,7 +50,7 @@ resource "hcloud_server" "pool" {
     package_update  = false
     package_upgrade = false
     runcmd          = count.index == 0 && length(var.runcmd_first) > 0 ? var.runcmd_first : var.runcmd
-    write_files = [
+    write_files = concat([
       {
         path        = "/usr/local/bin/check-cluster-readiness"
         content     = file("${path.module}/../templates/check-cluster-readiness")
@@ -95,12 +95,7 @@ resource "hcloud_server" "pool" {
         path    = "/etc/systemd/system/haproxy-k8s.timer"
         content = file("${path.module}/../templates/haproxy-k8s.timer")
       },
-      {
-        path        = "/etc/rancher/k3s/config.yaml.d/00-default.yaml"
-        content     = yamlencode(local.k3s_config_merged)
-        permissions = "0644"
-      },
-    ]
+    ], local.k3s_config_files)
     }),
     yamlencode(var.additional_cloud_init)
   )
@@ -150,26 +145,59 @@ locals {
     "kube-apiserver-arg",
   ])
 
+  k3s_critical_keys = toset([
+    "disable-cloud-controller",
+    "disable-kube-proxy",
+    "flannel-backend",
+    "egress-selector-mode",
+  ])
+
+  k3s_config_user = {
+    for key, value in var.k3s_config : key => value
+    if !contains(local.k3s_critical_keys, key)
+  }
+
+  k3s_config_critical = {
+    "disable+"             = ["cloud-controller", "network-policy", "kube-proxy"]
+    "flannel-backend"      = "none"
+    "egress-selector-mode" = "disabled"
+  }
+
   k3s_config_agent_base = {
-    for key, value in merge(var.k3s_config_default, var.k3s_config) : key => value
+    for key, value in merge(var.k3s_config_default, local.k3s_config_user) : key => value
     if !contains(local.k3s_server_only_keys, key)
   }
 
-  k3s_config_control_plane = merge(
+  k3s_config_control_plane_default = merge(
     var.k3s_config_default,
-    var.k3s_config,
     length(var.kube_apiserver_args) > 0 ? { kube-apiserver-arg = [for k, v in var.kube_apiserver_args : "${k}=${v}"] } : {}
   )
 
-  k3s_config_merged_base = merge(
-    local.k3s_config_agent_base,
-    { for key, value in local.k3s_config_control_plane : key => value if var.is_control_plane }
-  )
-
-  k3s_config_merged = merge(
-    local.k3s_config_merged_base,
-    { for key, value in { disable-cloud-controller = true } : key => value if var.is_control_plane }
-  )
+  k3s_config_files = var.is_control_plane ? concat([
+    {
+      path        = "/etc/rancher/k3s/config.yaml.d/00-default.yaml"
+      content     = yamlencode(local.k3s_config_control_plane_default)
+      permissions = "0644"
+    }
+    ], length(local.k3s_config_user) > 0 ? [
+    {
+      path        = "/etc/rancher/k3s/config.yaml.d/10-user.yaml"
+      content     = yamlencode(local.k3s_config_user)
+      permissions = "0644"
+    }
+    ] : [], [
+    {
+      path        = "/etc/rancher/k3s/config.yaml.d/99-critical.yaml"
+      content     = yamlencode(local.k3s_config_critical)
+      permissions = "0644"
+    }
+    ]) : [
+    {
+      path        = "/etc/rancher/k3s/config.yaml.d/00-default.yaml"
+      content     = yamlencode(local.k3s_config_agent_base)
+      permissions = "0644"
+    }
+  ]
 }
 
 variable "name" {
