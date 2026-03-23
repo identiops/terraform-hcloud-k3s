@@ -180,7 +180,7 @@ variable "cilium_version" {
   description = "Cilium version, see https://github.com/cilium/cilium"
   type        = string
   # renovate: datasource=helm registryUrl=https://helm.cilium.io/ packageName=cilium
-  default = "1.19.1"
+  default = "1.19.2"
 }
 
 variable "kured_chart_version" {
