@@ -1,0 +1,13 @@
+# Auto-generated file: don't modify!
+# Copyright 2024, identinet GmbH. All rights reserved.
+# SPDX-License-Identifier: MIT
+
+[Match]
+Name=${network_interface}
+
+[Network]
+DHCP=yes
+IPForward=ipv4
+IPMasquerade=ipv4
+
+# vi: ft=ini:tw=80:sw=2:ts=4:sts=4:et
