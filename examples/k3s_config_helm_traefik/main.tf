@@ -27,9 +27,9 @@ module "cluster" {
 
   # Cluster Settings
   # ----------------
-  delete_protection = true
+  delete_protection = false
   cluster_name      = "helm-traefik"
-  default_location  = "nbg1"
+  default_location  = "fsn1"
   default_image     = "ubuntu-24.04"
   k3s_version       = "v1.32.1+k3s1"
 

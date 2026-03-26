@@ -158,9 +158,15 @@ locals {
   }
 
   k3s_config_critical = {
-    "disable+"             = ["cloud-controller", "network-policy", "kube-proxy"]
-    "flannel-backend"      = "none"
-    "egress-selector-mode" = "disabled"
+    "disable" = distinct(concat(
+      contains(keys(local.k3s_config_user), "disable") ? try(local.k3s_config_user["disable"], []) : try(var.k3s_config_default["disable"], []),
+      try(local.k3s_config_user["disable+"], []),
+      ["cloud-controller", "network-policy", "kube-proxy"],
+    ))
+    "disable-cloud-controller" = true
+    "disable-kube-proxy"       = true
+    "flannel-backend"          = "none"
+    "egress-selector-mode"     = "disabled"
   }
 
   k3s_config_agent_base = {

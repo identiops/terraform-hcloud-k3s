@@ -1,1 +1,15 @@
 .terraform/
+.terraform.lock.hcl
+.ansible/
+.ssh/
+ansible-vars.yaml
+.terraform.tfstate.lock.info
+terraform.tfstate
+terraform.tfstate.backup
+tfplan
+sequential.tfvars
+ls-nodes
+scp-node
+setkubeconfig
+ssh-node
+unsetkubeconfig

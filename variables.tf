@@ -354,7 +354,10 @@ k3s_config = {
 
 Note: the module always enforces critical settings in
 `/etc/rancher/k3s/config.yaml.d/99-critical.yaml`:
-- `disable+: [cloud-controller, network-policy, kube-proxy]`
+- `disable` is recalculated to always include `cloud-controller`,
+  `network-policy`, and `kube-proxy` while preserving user disable choices
+- `disable-cloud-controller: true`
+- `disable-kube-proxy: true`
 - `flannel-backend: none`
 - `egress-selector-mode: disabled`
 
