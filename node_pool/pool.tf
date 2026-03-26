@@ -417,8 +417,19 @@ output "is_control_plane" {
 }
 
 output "nodes" {
-  description = "Map of servers keyed by server name."
-  value       = { for server in hcloud_server.pool : server.name => server }
+  description = "Node details."
+  value = {
+    for n in hcloud_server.pool :
+    n.name => {
+      image = n.image
+      public = {
+        ipv4 = var.enable_public_net_ipv4 ? n.ipv4_address : "",
+        ipv6 = var.enable_public_net_ipv6 ? n.ipv6_address : ""
+      },
+      private = [for network in n.network : network.ip]
+      costs   = local.costs_node
+    }
+  }
 }
 
 output "costs" {

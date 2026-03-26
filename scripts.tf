@@ -21,7 +21,7 @@ resource "local_file" "ssh_config" {
     "${path.module}/templates/ssh_config", {
       cluster_name          = var.cluster_name
       cluster_ip            = hcloud_server.gateway.ipv4_address
-      control_plane_init_ip = [for pool in module.node_pool_cluster_init : [for node in pool.nodes : one(node.network).ip][0]][0]
+      control_plane_init_ip = [for pool in module.node_pool_cluster_init : [for node in pool.nodes : node.private[0]][0]][0]
       node_pools            = merge(module.node_pool_cluster_init, module.node_pools)
       firewall_k8s_open     = var.gateway_firewall_k8s_open
       cwd                   = path.cwd

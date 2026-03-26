@@ -37,6 +37,6 @@ ProxyCommand ${cwd}/ssh-node gateway-proxy nc ${control_plane_init_ip} %p
 
 Host ${name}
 User root
-ProxyCommand ${cwd}/ssh-node gateway-proxy nc ${one(node.network).ip} %p
+ProxyCommand ${cwd}/ssh-node gateway-proxy nc ${node.private.0} %p
 %{ endfor ~}
 %{ endfor ~}
