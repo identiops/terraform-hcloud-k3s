@@ -119,6 +119,7 @@ module "node_pool_cluster_init" {
     local.dist_upgrade,
   ], var.additional_runcmd)
   additional_cloud_init = var.additional_cloud_init
+  debug_cloudinit       = var.debug_cloudinit
   prices                = local.prices
 }
 

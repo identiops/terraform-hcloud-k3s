@@ -125,6 +125,21 @@ resource "hcloud_placement_group" "pool" {
   labels = var.node_labels
 }
 
+resource "local_file" "debug_cloud_init" {
+  count = var.debug_cloudinit ? var.node_count : 0
+
+  filename = format(
+    "%s/.debug/cloud-init-%s-%s-%s.yaml",
+    path.root,
+    var.cluster_name,
+    var.name,
+    format("%0${var.node_count_width}d", count.index),
+  )
+  content              = local.debug_rendered_user_data_per_node[count.index]
+  file_permission      = "0600"
+  directory_permission = "0700"
+}
+
 locals {
   costs_node = [for server_type in var.prices.server_types :
     [for price in server_type.prices :
@@ -158,11 +173,7 @@ locals {
   }
 
   k3s_config_critical = {
-    "disable" = distinct(concat(
-      contains(keys(local.k3s_config_user), "disable") ? try(local.k3s_config_user["disable"], []) : try(var.k3s_config_default["disable"], []),
-      try(local.k3s_config_user["disable+"], []),
-      ["cloud-controller", "network-policy", "kube-proxy"],
-    ))
+    "disable+"                 = ["cloud-controller", "network-policy", "kube-proxy"]
     "disable-cloud-controller" = true
     "disable-kube-proxy"       = true
     "flannel-backend"          = "none"
@@ -204,6 +215,60 @@ locals {
       permissions = "0644"
     }
   ]
+
+  debug_rendered_user_data_per_node = [for i in range(var.node_count) : format("%s\n%s\n%s", "#cloud-config", yamlencode({
+    package_update  = false
+    package_upgrade = false
+    runcmd          = i == 0 && length(var.runcmd_first) > 0 ? var.runcmd_first : var.runcmd
+    write_files = concat([
+      {
+        path        = "/usr/local/bin/check-cluster-readiness"
+        content     = file("${path.module}/../templates/check-cluster-readiness")
+        permissions = "0755"
+      },
+      {
+        path = "/etc/systemd/network/00-default-route.network"
+        content = templatefile("${path.module}/../templates/default-route.network",
+          {
+            default_gateway   = var.default_gateway
+            network_interface = var.network_interface
+        })
+      },
+      {
+        path        = "/etc/rancher/k3s/registries.yaml"
+        content     = yamlencode(var.registries)
+        permissions = "0600"
+      },
+      {
+        path    = "/etc/sysctl.d/90-kubelet.conf"
+        content = file("${path.module}/../templates/90-kubelet.conf")
+      },
+      {
+        path        = "/etc/sysctl.d/98-settings.conf"
+        content     = join("\n", formatlist("%s=%s", keys(var.sysctl_settings), values(var.sysctl_settings)))
+        permissions = "0644"
+      },
+      {
+        path = "/usr/local/bin/haproxy-k8s.nu"
+        content = templatefile("${path.module}/../templates/haproxy-k8s.nu", {
+          token = var.hcloud_token_read_only
+          host  = var.k8s_ha_host
+          port  = var.k8s_ha_port
+        })
+        permissions = "0700"
+      },
+      {
+        path    = "/etc/systemd/system/haproxy-k8s.service"
+        content = file("${path.module}/../templates/haproxy-k8s.service")
+      },
+      {
+        path    = "/etc/systemd/system/haproxy-k8s.timer"
+        content = file("${path.module}/../templates/haproxy-k8s.timer")
+      },
+    ], local.k3s_config_files)
+    }),
+    yamlencode(var.additional_cloud_init)
+  )]
 }
 
 variable "name" {
@@ -356,6 +421,12 @@ variable "additional_cloud_init" {
     locale   = ""
     users    = []
   }
+}
+
+variable "debug_cloudinit" {
+  description = "Write rendered cloud-init files to .debug/ on the local machine for troubleshooting."
+  type        = bool
+  default     = false
 }
 
 variable "network_interface" {

@@ -279,6 +279,12 @@ variable "additional_cloud_init" {
   })
 }
 
+variable "debug_cloudinit" {
+  description = "Write rendered cloud-init files to .debug/ on the local machine for troubleshooting."
+  type        = bool
+  default     = false
+}
+
 # Gateway Settings
 # ----------------
 
@@ -354,8 +360,8 @@ k3s_config = {
 
 Note: the module always enforces critical settings in
 `/etc/rancher/k3s/config.yaml.d/99-critical.yaml`:
-- `disable` is recalculated to always include `cloud-controller`,
-  `network-policy`, and `kube-proxy` while preserving user disable choices
+- `disable+` appends `cloud-controller`, `network-policy`, and `kube-proxy`
+  to the effective disable list
 - `disable-cloud-controller: true`
 - `disable-kube-proxy: true`
 - `flannel-backend: none`

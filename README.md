@@ -351,21 +351,27 @@ control_plane_k3s_init_additional_options = "--etcd-s3 --etcd-s3-region=${var.et
   1. `00-default.yaml` (module defaults)
   2. `10-user.yaml` (optional user config from `k3s_config`)
   3. `99-critical.yaml` (module-enforced critical settings)
-- By default, `00-default.yaml` disables the same components as the previous
-  CLI-based setup: `cloud-controller`, `network-policy`, `kube-proxy`,
+- By default, `00-default.yaml` disables non-critical optional components:
   `local-storage`, `metrics-server`, `servicelb`, `traefik`, and
   `helm-controller`.
 - Users can still re-enable non-critical components through `k3s_config`, for
   example `disable = []`.
 - `99-critical.yaml` always enforces:
-  - `disable` is recalculated to always include `cloud-controller`,
-    `network-policy`, and `kube-proxy` while preserving user disable choices
+  - `disable+` appends `cloud-controller`, `network-policy`, and `kube-proxy`
+    to the effective disable list
   - `disable-cloud-controller: true`
   - `disable-kube-proxy: true`
   - `flannel-backend: none`
   - `egress-selector-mode: disabled`
 - This keeps the cluster compatible with Cilium and avoids conflicts with the
   external Hetzner Cloud Controller Manager (HCCM).
+
+### Cloud-init Debug Files
+
+- Set `debug_cloudinit = true` to write rendered node cloud-init files locally
+  under `.debug/` before and during apply.
+- Files are named `cloud-init-<cluster>-<pool>-<index>.yaml` and can be used to
+  inspect `runcmd` and `write_files` content if nodes become unreachable.
 
 ### OpenID Connect (OIDC) Authentication
 

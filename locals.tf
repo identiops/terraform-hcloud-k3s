@@ -26,7 +26,7 @@ locals {
     service-cidr         = local.service_cidr_network
     embedded-registry    = true
     kubelet-arg          = ["cloud-provider=external"]
-    disable              = ["cloud-controller", "network-policy", "kube-proxy", "local-storage", "metrics-server", "servicelb", "traefik", "helm-controller"]
+    disable              = ["local-storage", "metrics-server", "servicelb", "traefik", "helm-controller"]
     flannel-backend      = "none"
     egress-selector-mode = "disabled"
   }
