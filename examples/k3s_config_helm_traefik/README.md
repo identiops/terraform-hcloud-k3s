@@ -56,6 +56,64 @@ kubectl -n kube-system get svc traefik -o wide
 kubectl -n kube-system logs deploy/hcloud-cloud-controller-manager --tail=100
 ```
 
+## Expected k3s config files on nodes
+
+This example uses file-based k3s configuration in
+`/etc/rancher/k3s/config.yaml.d/`.
+
+Control plane nodes (`helm-traefik-system-*`) should have:
+
+- `00-default.yaml`
+- `10-user.yaml`
+- `99-critical.yaml`
+
+`00-default.yaml`:
+
+```yaml
+"cluster-cidr": "10.244.0.0/16"
+"disable":
+- "local-storage"
+- "metrics-server"
+- "servicelb"
+- "traefik"
+- "helm-controller"
+"egress-selector-mode": "disabled"
+"embedded-registry": true
+"flannel-backend": "none"
+"kubelet-arg":
+- "cloud-provider=external"
+"service-cidr": "10.43.0.0/16"
+```
+
+`10-user.yaml`:
+
+```yaml
+"disable":
+- "local-storage"
+- "metrics-server"
+- "servicelb"
+```
+
+`99-critical.yaml`:
+
+```yaml
+"disable+":
+- "cloud-controller"
+- "network-policy"
+- "kube-proxy"
+"disable-cloud-controller": true
+"disable-kube-proxy": true
+"egress-selector-mode": "disabled"
+"flannel-backend": "none"
+```
+
+Worker nodes (`helm-traefik-workers-*`) should only have `00-default.yaml`:
+
+```yaml
+"kubelet-arg":
+- "cloud-provider=external"
+```
+
 ## Teardown and cleanup
 
 If `terraform destroy` hangs, the CCM-managed Hetzner LoadBalancer may still be
