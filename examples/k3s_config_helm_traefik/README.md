@@ -55,3 +55,17 @@ Verify:
 kubectl -n kube-system get svc traefik -o wide
 kubectl -n kube-system logs deploy/hcloud-cloud-controller-manager --tail=100
 ```
+
+## Teardown and cleanup
+
+If `terraform destroy` hangs, the CCM-managed Hetzner LoadBalancer may still be
+present and block cleanup.
+
+List and delete the Traefik load balancer, then run destroy again:
+
+```bash
+hcloud load-balancer list
+hcloud load-balancer delete helm-traefik-ingress
+
+terraform destroy -auto-approve
+```
