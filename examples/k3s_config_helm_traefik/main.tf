@@ -51,15 +51,16 @@ module "cluster" {
     timezone = "Europe/Berlin"
   }
 
-  # k3s Configuration - Enable helm-controller and traefik
-  # ------------------------------------------------------
-  # This overrides the module defaults that disable all bundled components.
-  # The module default disable list is:
-  #   ["cloud-controller", "network-policy", "kube-proxy", "local-storage", "metrics-server", "servicelb", "traefik", "helm-controller"]
-  # Note: cloud-controller, network-policy, and kube-proxy remain disabled via
-  # 99-critical.yaml to keep compatibility with HCCM and Cilium.
+  debug_cloudinit = true
+
+  # k3s configuration for this example
+  # ----------------------------------
+  # Keep only the bundled components disabled that are managed via Helm or
+  # intentionally not used. This enables bundled traefik + helm-controller,
+  # while keeping metrics-server disabled to avoid conflicts with Helm install
+  # during cluster init.
   k3s_config = {
-    disable = []
+    disable = ["local-storage", "metrics-server", "servicelb"]
   }
 
   # Node Pool Settings

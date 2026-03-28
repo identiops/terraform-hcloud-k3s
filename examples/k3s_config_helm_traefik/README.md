@@ -19,3 +19,39 @@ If `gateway_firewall_k8s_open = false`, open an SSH tunnel before `kubectl`:
 ```bash
 ./ssh-node kubeapi
 ```
+
+## Configure Traefik LoadBalancer (HCCM)
+
+After the cluster is running and kubeconfig is available locally, create a
+`HelmChartConfig` for the bundled Traefik chart so HCCM can provision a
+Hetzner LoadBalancer.
+
+Use the same location as `default_location` from `main.tf` (currently `fsn1`):
+
+```bash
+LOCATION="fsn1"
+
+kubectl apply -f - <<EOF
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    service:
+      annotations:
+        load-balancer.hetzner.cloud/name: "helm-traefik-ingress"
+        load-balancer.hetzner.cloud/protocol: "tcp"
+        load-balancer.hetzner.cloud/location: "${LOCATION}"
+        load-balancer.hetzner.cloud/use-private-ip: "true"
+        load-balancer.hetzner.cloud/type: "lb11"
+EOF
+```
+
+Verify:
+
+```bash
+kubectl -n kube-system get svc traefik -o wide
+kubectl -n kube-system logs deploy/hcloud-cloud-controller-manager --tail=100
+```
