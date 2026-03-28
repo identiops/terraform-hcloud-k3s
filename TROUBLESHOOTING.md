@@ -7,8 +7,9 @@ This guide covers common issues and troubleshooting steps for the Terraform HClo
 1. [SSH Connection Issues](#ssh-connection-issues)
 2. [Ansible Connection Issues](#ansible-connection-issues)
 3. [Cluster Initialization](#cluster-initialization)
-4. [Kubernetes API Access](#kubernetes-api-access)
-5. [Common Errors](#common-errors)
+4. [Cloud-init Debug Files](#cloud-init-debug-files)
+5. [Kubernetes API Access](#kubernetes-api-access)
+6. [Common Errors](#common-errors)
 
 ## SSH Connection Issues
 
@@ -189,6 +190,49 @@ ssh -A root@<gateway-ip> 'ssh 10.0.1.2 "systemctl status k3s"'
    ```bash
    ssh -A root@<gateway-ip> 'ssh 10.0.1.2 "journalctl -u k3s -n 50"'
    ```
+
+## Cloud-init Debug Files
+
+When `debug_cloudinit = true` is set in Terraform, rendered node cloud-init
+files are written locally under `.debug/`.
+
+### Verify debug files exist
+
+```bash
+ls -la .debug/
+```
+
+Expected file name format:
+
+- `cloud-init-<cluster>-<pool>-<index>.yaml`
+
+### What to inspect in debug files
+
+1. **k3s config layering on control plane nodes:**
+   - `/etc/rancher/k3s/config.yaml.d/00-default.yaml`
+   - `/etc/rancher/k3s/config.yaml.d/10-user.yaml`
+   - `/etc/rancher/k3s/config.yaml.d/99-critical.yaml`
+
+2. **Join and install commands:**
+   - `sh -s - server` / `sh -s - agent`
+   - `K3S_URL` and token usage
+
+3. **Network and routing setup:**
+   - default route commands
+   - gateway IP references (`10.0.0.1` / `10.0.1.1` depending on config)
+
+### Useful checks
+
+```bash
+# Show k3s config file writes in rendered cloud-init
+grep -n "config.yaml.d" .debug/cloud-init-*.yaml
+
+# Show join/install commands in rendered cloud-init
+grep -n "sh -s - server\|sh -s - agent\|K3S_URL" .debug/cloud-init-*.yaml
+```
+
+If SSH access to nodes fails, these files help confirm what each node was
+supposed to execute before trying remote inspection.
 
 ## Kubernetes API Access
 

@@ -370,8 +370,8 @@ control_plane_k3s_init_additional_options = "--etcd-s3 --etcd-s3-region=${var.et
 
 - Set `debug_cloudinit = true` to write rendered node cloud-init files locally
   under `.debug/` before and during apply.
-- Files are named `cloud-init-<cluster>-<pool>-<index>.yaml` and can be used to
-  inspect `runcmd` and `write_files` content if nodes become unreachable.
+- For step-by-step troubleshooting with these files, see
+  [TROUBLESHOOTING.md](TROUBLESHOOTING.md#cloud-init-debug-files).
 
 ### OpenID Connect (OIDC) Authentication
 
