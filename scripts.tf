@@ -7,8 +7,11 @@ resource "local_file" "ansible_inventory" {
   filename = "./.ansible/hosts"
   content = templatefile(
     "${path.module}/templates/ansible_inventory.yaml", {
-      node_pools = merge(module.node_pool_cluster_init, module.node_pools)
-      cwd        = path.cwd
+      node_pools                = merge(module.node_pool_cluster_init, module.node_pools)
+      cluster_name              = var.cluster_name
+      gateway_ip                = hcloud_server.gateway.ipv4_address
+      gateway_firewall_k8s_open = var.gateway_firewall_k8s_open
+      cwd                       = path.cwd
     }
   )
   file_permission = "0600"
@@ -104,17 +107,4 @@ resource "terraform_data" "known_hosts_cleanup" {
   provisioner "local-exec" {
     command = "rm -f ${path.cwd}/.ssh/known_hosts"
   }
-}
-
-resource "local_file" "ansible_vars" {
-  count    = var.create_scripts ? 1 : 0
-  filename = "./ansible-vars.yaml"
-  content = templatefile(
-    "${path.module}/templates/ansible_vars.yaml", {
-      cluster_name              = var.cluster_name
-      gateway_ip                = hcloud_server.gateway.ipv4_address
-      gateway_firewall_k8s_open = var.gateway_firewall_k8s_open
-    }
-  )
-  file_permission = "0600"
 }

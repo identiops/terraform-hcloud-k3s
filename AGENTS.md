@@ -36,7 +36,7 @@ When encountering Ansible connection issues with the cluster:
 
 2. **Verify generated files exist**:
    ```bash
-   ls -la .ansible/hosts ansible-vars.yaml .ssh/config
+   ls -la .ansible/hosts .ssh/config
    ```
 
 3. **Test SSH connection to control plane node**:

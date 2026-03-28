@@ -47,21 +47,6 @@ This installs the `kubernetes.core` collection which is required for kubectl-rel
 
 After running `terraform apply`, the following files are generated in your working directory:
 
-### `ansible-vars.yaml`
-
-Contains cluster-specific variables used by playbooks:
-
-```yaml
-cluster_name: <cluster-name>
-gateway_ip: <gateway-ip>
-gateway_firewall_k8s_open: <true|false>
-```
-
-**Variables:**
-- `cluster_name`: Name of your k3s cluster
-- `gateway_ip`: Public IP address of the gateway node
-- `gateway_firewall_k8s_open`: Whether the Kubernetes API is exposed (default: `false`)
-
 ### `.ansible/hosts`
 
 Ansible inventory file with pre-configured host groups:
@@ -71,6 +56,16 @@ Ansible inventory file with pre-configured host groups:
 - **`all_worker_nodes`**: All worker nodes
 - **`gateway`**: Gateway node only
 - **`<pool_name>`**: Nodes belonging to a specific pool
+
+The inventory also includes `all.vars` with cluster metadata used by playbooks:
+
+```yaml
+all:
+  vars:
+    cluster_name: <cluster-name>
+    gateway_ip: <gateway-ip>
+    gateway_firewall_k8s_open: <true|false>
+```
 
 The inventory automatically references the `.ssh/config` file for connection settings and disables strict host key checking for convenience when connecting to newly provisioned nodes.
 
@@ -96,7 +91,6 @@ Fetches and configures the Kubernetes kubeconfig from the cluster.
 - Supports both public and private API modes
 
 **Variables:**
-- `ansible_vars_file`: Path to `ansible-vars.yaml` (default: `$PWD/ansible-vars.yaml`)
 - `known_hosts_file`: Path to SSH known hosts file (default: `$PWD/.ssh/known_hosts`)
 - `clean_known_hosts`: When to clear known hosts (`auto`, `always`, `never`)
 
@@ -109,7 +103,7 @@ From your cluster directory:
 ```bash
 ANSIBLE_INVENTORY="$PWD/.ansible/hosts" \
 ansible-playbook playbooks/get-kubeconfig.yaml \
-  -e "ansible_vars_file=$PWD/ansible-vars.yaml known_hosts_file=$PWD/.ssh/known_hosts"
+  -e "known_hosts_file=$PWD/.ssh/known_hosts"
 ```
 
 ### With Variable Overrides
@@ -119,7 +113,7 @@ You can override any playbook variable:
 ```bash
 ANSIBLE_INVENTORY="$PWD/.ansible/hosts" \
 ansible-playbook playbooks/get-kubeconfig.yaml \
-  -e "ansible_vars_file=$PWD/ansible-vars.yaml known_hosts_file=$PWD/.ssh/known_hosts clean_known_hosts=always"
+  -e "known_hosts_file=$PWD/.ssh/known_hosts clean_known_hosts=always"
 ```
 
 ### Understanding the Parameters
@@ -136,7 +130,7 @@ ansible-playbook playbooks/get-kubeconfig.yaml \
 ```bash
 ANSIBLE_INVENTORY="$PWD/.ansible/hosts" \
 ansible-playbook playbooks/get-kubeconfig.yaml \
-  -e "ansible_vars_file=$PWD/ansible-vars.yaml known_hosts_file=$PWD/.ssh/known_hosts"
+  -e "known_hosts_file=$PWD/.ssh/known_hosts"
 ```
 
 After fetching, verify cluster access:
@@ -270,7 +264,7 @@ Or run the playbook with `clean_known_hosts=always`:
 ```bash
 ANSIBLE_INVENTORY="$PWD/.ansible/hosts" \
 ansible-playbook playbooks/get-kubeconfig.yaml \
-  -e "ansible_vars_file=$PWD/ansible-vars.yaml known_hosts_file=$PWD/.ssh/known_hosts clean_known_hosts=always"
+  -e "known_hosts_file=$PWD/.ssh/known_hosts clean_known_hosts=always"
 ```
 
 ### Kubeconfig Not Working

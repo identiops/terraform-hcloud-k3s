@@ -3,6 +3,12 @@
 # Copyright 2024, identinet GmbH. All rights reserved.
 # SPDX-License-Identifier: MIT
 
+all:
+  vars:
+    cluster_name: ${cluster_name}
+    gateway_ip: ${gateway_ip}
+    gateway_firewall_k8s_open: ${gateway_firewall_k8s_open}
+
 ungrouped:
   hosts:
     gateway:

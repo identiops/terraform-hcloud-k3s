@@ -96,7 +96,7 @@ rm -f .ssh/known_hosts
 
 2. **Check if generated files exist:**
    ```bash
-   ls -la .ansible/hosts ansible-vars.yaml .ssh/config
+   ls -la .ansible/hosts .ssh/config
    ```
 
 3. **Verify SSH connection to gateway:**
@@ -200,11 +200,11 @@ ssh -A root@<gateway-ip> 'ssh 10.0.1.2 "systemctl status k3s"'
 
 **Solution:**
 
-Check if `gateway_firewall_k8s_open` is set:
+Check if `gateway_firewall_k8s_open` is set in `.ansible/hosts` (`all.vars`):
 
 ```bash
-# Check ansible-vars.yaml
-cat ansible-vars.yaml
+# Check generated inventory vars
+awk '/^all:/{flag=1} flag{print} /^ungrouped:/{exit}' .ansible/hosts
 # If gateway_firewall_k8s_open: false, you need SSH tunnel
 ```
 
@@ -234,9 +234,11 @@ cat ansible-vars.yaml
    kubectl config current-context
    ```
 
-3. **Use setkubeconfig script:**
+3. **Run kubeconfig playbook:**
    ```bash
-   ./setkubeconfig
+   ANSIBLE_INVENTORY="$PWD/.ansible/hosts" \
+   ansible-playbook playbooks/get-kubeconfig.yaml \
+     -e "known_hosts_file=$PWD/.ssh/known_hosts"
    ```
 
 ## Common Errors
@@ -325,7 +327,7 @@ ANSIBLE_INVENTORY="$PWD/.ansible/hosts" ansible all_control_plane_nodes -m ping
 # Run kubeconfig playbook
 ANSIBLE_INVENTORY="$PWD/.ansible/hosts" \
 ansible-playbook playbooks/get-kubeconfig.yaml \
-  -e "ansible_vars_file=$PWD/ansible-vars.yaml known_hosts_file=$PWD/.ssh/known_hosts"
+  -e "known_hosts_file=$PWD/.ssh/known_hosts"
 
 # Check cluster status
 ./ssh-node kubeapi
@@ -335,14 +337,13 @@ kubectl get nodes
 ### File Locations
 
 - `.ansible/hosts` - Ansible inventory
-- `ansible-vars.yaml` - Cluster variables
 - `.ssh/config` - SSH configuration
 - `.ssh/known_hosts` - SSH known hosts
 - `terraform.tfstate` - Terraform state file
 
 ### Common IPs
 
-- Gateway IP: `<gateway-ip>` (from ansible-vars.yaml)
+- Gateway IP: `<gateway-ip>` (from `.ansible/hosts` `all.vars`)
 - Control Plane Nodes: `10.0.1.2`, `10.0.1.3`, `10.0.1.4`
 - Worker Nodes: `10.0.1.5`, `10.0.1.6`, `10.0.1.7`
 - Kubernetes API: `localhost:6443` (via tunnel) or `<gateway-ip>:6443`
