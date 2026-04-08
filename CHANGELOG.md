@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.2.9] - 2026-04-08
+
+### Miscellaneous Tasks
+
+- [86e0bcd](https://github.com/identiops/terraform-hcloud-k3s/commit/86e0bcd630076648857c6bebe71d1bc7679e9058) Update terraform local to ~> 2.8.0
+- [bff14ec](https://github.com/identiops/terraform-hcloud-k3s/commit/bff14ec74f325cf718bc3c93b7a6073c1889a449) Update helm release cilium to v1.19.2
+- [30ab700](https://github.com/identiops/terraform-hcloud-k3s/commit/30ab70091555d9ffb7ff37c002a490cf82944be2) Update to version 109.0.0
+
 ## [6.2.8] - 2026-03-19
 
 ### Bug Fixes
