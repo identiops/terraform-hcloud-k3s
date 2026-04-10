@@ -112,7 +112,7 @@ locals {
   wget -qO- https://get.k3s.io | \
   EOT
   common_arguments                 = "--node-external-ip=\"${local.cmd_node_external_ip}\""
-  control_plane_arguments          = "--tls-san=\"${hcloud_server_network.gateway.ip}\""
+  control_plane_arguments          = "--tls-san=\"${hcloud_server_network.gateway.ip}\" --tls-san=\"${hcloud_server.gateway.ipv4_address}\""
   prices                           = jsondecode(data.http.prices.response_body).pricing
   costs_gateway = [for server_type in local.prices.server_types :
     [for price in server_type.prices :
