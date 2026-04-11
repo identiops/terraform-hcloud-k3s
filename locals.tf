@@ -106,6 +106,7 @@ locals {
   EOT
   control_plane_arguments          = <<-EOT
   --tls-san="${hcloud_server_network.gateway.ip}" \
+  --tls-san="${hcloud_server.gateway.ipv4_address}" \
   --flannel-backend=none \
   --disable-kube-proxy \
   --disable-network-policy \
