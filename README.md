@@ -79,13 +79,15 @@ What changed in the latest version? See
    2. [Recommended Tools](#recommended-tools)
    3. [Installation](#installation)
    4. [Usage](#usage)
+   - [Ansible Integration](ANSIBLE.md)
 2. [Configuration](#configuration)
    1. [Store terraform state in S3 bucket](#store-terraform-state-in-s3-bucket)
    2. [Enable etcd backup to S3](#enable-etcd-backup-to-s3)
-   3. [OpenID Connect (OIDC) Authentication](#openid-connect-oidc-authentication)
-   4. [Persistent Volume Encryption](#persistent-volume-encryption)
-   5. [Adjust Sysctl Parameters](#adjust-sysctl-parameters)
-   6. [Private Registry Access](#private-registry-access)
+   3. [k3s Config Merge Behavior](#k3s-config-merge-behavior)
+   4. [OpenID Connect (OIDC) Authentication](#openid-connect-oidc-authentication)
+   5. [Persistent Volume Encryption](#persistent-volume-encryption)
+   6. [Adjust Sysctl Parameters](#adjust-sysctl-parameters)
+   7. [Private Registry Access](#private-registry-access)
 3. [Maintenance](#maintenance)
    1. [Access Kubernetes API via Port-Forwarding from Gateway](#access-kubernetes-api-via-port-forwarding-from-gateway)
    2. [Ansible: Execute Commands on Nodes](#ansible-execute-commands-on-nodes)
@@ -136,7 +138,7 @@ modules, see <https://github.com/identiops/terraform-hcloud-k3s/issues/19>.
 - `bash` for executing the generated scripts.
 - `jq` for executing the generated scripts.
 - `kubectl` for interacting with the Kubernetes cluster.
-- `ssh` for connecting to cluster nodes.
+- `ssh` for connecting to cluster nodes. Cluster nodes are only reachable via the gateway node, so **SSH agent forwarding must be enabled** (`ssh -A`).
 
 ### Recommended Tools
 
@@ -342,6 +344,35 @@ control_plane_k3s_init_additional_options = "--etcd-s3 --etcd-s3-region=${var.et
 - Etcd will automatically create a snapshot every day and keep it for three
   days.
 
+### k3s Config Merge Behavior
+
+- The module writes k3s config files in `/etc/rancher/k3s/config.yaml.d/` and
+  relies on k3s merge order:
+  1. `00-default.yaml` (module defaults)
+  2. `10-user.yaml` (optional user config from `k3s_config`)
+  3. `99-critical.yaml` (module-enforced critical settings)
+- By default, `00-default.yaml` disables non-critical optional components:
+  `local-storage`, `metrics-server`, `servicelb`, `traefik`, and
+  `helm-controller`.
+- Users can still re-enable non-critical components through `k3s_config`, for
+  example `disable = []`.
+- `99-critical.yaml` always enforces:
+  - `disable+` appends `cloud-controller`, `network-policy`, and `kube-proxy`
+    to the effective disable list
+  - `disable-cloud-controller: true`
+  - `disable-kube-proxy: true`
+  - `flannel-backend: none`
+  - `egress-selector-mode: disabled`
+- This keeps the cluster compatible with Cilium and avoids conflicts with the
+  external Hetzner Cloud Controller Manager (HCCM).
+
+### Cloud-init Debug Files
+
+- Set `debug_cloudinit = true` to write rendered node cloud-init files locally
+  under `.debug/` before and during apply.
+- For step-by-step troubleshooting with these files, see
+  [TROUBLESHOOTING.md](TROUBLESHOOTING.md#cloud-init-debug-files).
+
 ### OpenID Connect (OIDC) Authentication
 
 TODO: add example
@@ -428,11 +459,15 @@ This module automatically generates an
 in file `.ansible/hosts`. It can be leveraged to interact with the nodes and
 node pools of the cluster.
 
+For detailed documentation on Ansible integration, available playbooks, and usage examples, see [ANSIBLE.md](ANSIBLE.md).
+
 Example: Execute a command on all control plane nodes
 
 ```bash
-ANSIBLE_INVENTORY="$PWD/.ansible/hosts" ansible all_control_plane_nodes -a "kubectl cluster-info"
+ANSIBLE_INVENTORY="$PWD/.ansible/hosts" ansible all_control_plane_nodes -a "k3s kubectl cluster-info"
 ```
+
+**Note:** On cluster nodes, use `k3s kubectl` instead of `kubectl`. The module playbooks automatically use the correct command.
 
 ### Add Ingress Controller and Load Balancer
 
@@ -840,6 +875,8 @@ LoadBalancers that you no longer require.
 
 ## Troubleshooting
 
+For comprehensive troubleshooting guidance, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
+
 ### Gateway
 
 Ensure gateway is set up correctly: `./ssh-node gateway`
@@ -880,6 +917,15 @@ ufw status
 # Anywhere on eth0           ALLOW FWD   Anywhere on enp7s0
 # Anywhere (v6) on eth0      ALLOW FWD   Anywhere (v6) on enp7s0
 ```
+
+#### Common Issues
+
+| Issue | Solution |
+|-------|----------|
+| SSH to cluster hangs | Wait for cluster initialization (~5 min) |
+| Port 6443 in use | Kill existing SSH tunnel: `pkill -f "ssh.*6443"` |
+| Known hosts conflict | `ssh-keygen -f .ssh/known_hosts -R <gateway-ip>` |
+| Cannot connect to cluster nodes | Ensure SSH agent forwarding is enabled: `ssh -A root@<gateway-ip>` |
 
 ### Nodes
 
@@ -1018,6 +1064,38 @@ systemctl status k3s.service
 
 journalctl -u k3s.service
 ```
+
+### Ansible
+
+When encountering Ansible connection issues with the cluster:
+
+1. **Check SSH agent forwarding is enabled**:
+   ```bash
+   eval "$(ssh-agent -s)"
+   ssh-add ~/.ssh/id_ed25519
+   ```
+
+2. **Verify generated files exist**:
+   ```bash
+   ls -la .ansible/hosts .ssh/config
+   ```
+
+3. **Test SSH connection to control plane node**:
+   ```bash
+   ssh -A root@<gateway-ip> 'ssh -o StrictHostKeyChecking=no <node-ip> hostname'
+   ```
+
+4. **Verify k3s is installed on nodes**:
+   ```bash
+   ANSIBLE_INVENTORY="$PWD/.ansible/hosts" ansible all_control_plane_nodes -a "which k3s"
+   ```
+
+5. **Use k3s kubectl instead of kubectl**:
+   ```bash
+   ANSIBLE_INVENTORY="$PWD/.ansible/hosts" ansible all_control_plane_nodes -a "k3s kubectl get nodes"
+   ```
+
+For detailed Ansible documentation, see [ANSIBLE.md](ANSIBLE.md).
 
 ## Related Documentation
 
