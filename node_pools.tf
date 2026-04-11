@@ -64,6 +64,5 @@ module "node_pools" {
     local.dist_upgrade,
   ], var.additional_runcmd)
   additional_cloud_init = var.additional_cloud_init
-  debug_cloudinit       = var.debug_cloudinit
   prices                = local.prices
 }

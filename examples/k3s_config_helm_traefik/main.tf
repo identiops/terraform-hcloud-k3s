@@ -51,8 +51,6 @@ module "cluster" {
     timezone = "Europe/Berlin"
   }
 
-  debug_cloudinit = true
-
   # k3s configuration for this example
   # ----------------------------------
   # Keep only the bundled components disabled that are managed via Helm or

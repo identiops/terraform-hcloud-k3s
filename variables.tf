@@ -279,12 +279,6 @@ variable "additional_cloud_init" {
   })
 }
 
-variable "debug_cloudinit" {
-  description = "Write rendered cloud-init files to .debug/ on the local machine for troubleshooting."
-  type        = bool
-  default     = false
-}
-
 # Gateway Settings
 # ----------------
 
