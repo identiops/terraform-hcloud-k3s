@@ -366,13 +366,6 @@ control_plane_k3s_init_additional_options = "--etcd-s3 --etcd-s3-region=${var.et
 - This keeps the cluster compatible with Cilium and avoids conflicts with the
   external Hetzner Cloud Controller Manager (HCCM).
 
-### Cloud-init Debug Files
-
-- Set `debug_cloudinit = true` to write rendered node cloud-init files locally
-  under `.debug/` before and during apply.
-- For step-by-step troubleshooting with these files, see
-  [TROUBLESHOOTING.md](TROUBLESHOOTING.md#cloud-init-debug-files).
-
 ### OpenID Connect (OIDC) Authentication
 
 TODO: add example
