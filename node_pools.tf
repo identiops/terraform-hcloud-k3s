@@ -35,6 +35,9 @@ module "node_pools" {
   is_control_plane       = each.value.any.is_control_plane
   k8s_ha_host            = local.k8s_ha_host
   k8s_ha_port            = local.k8s_ha_port
+  k3s_config_default     = local.k3s_config_default
+  k3s_config             = merge(var.k3s_config, each.value.any.k3s_config)
+  kube_apiserver_args    = local.kube-apiserver-args
 
   runcmd = concat([
     local.security_setup,
@@ -50,7 +53,7 @@ module "node_pools" {
       ${local.control_plane_arguments~}
       --node-ip="$(ip -4 -j a s dev ${each.value.network_interface} | jq '.[0].addr_info[0].local' -r)" \
       ${!each.value.any.schedule_workloads ? "--node-taint CriticalAddonsOnly=true:NoExecute" : ""}  %{for k, v in each.value.any.taints} --node-taint "${k}:${v}" %{endfor}  \
-      ${var.control_plane_k3s_additional_options}  %{for key, value in merge(each.value.any.labels, each.value.any.is_control_plane ? { "control-plane" = "true" } : {})} --node-label=${key}=${value} %{endfor} %{for key, value in local.kube-apiserver-args} --kube-apiserver-arg=${key}=${value} %{endfor}
+      ${var.control_plane_k3s_additional_options}  %{for key, value in merge(each.value.any.labels, each.value.any.is_control_plane ? { "control-plane" = "true" } : {})} --node-label=${key}=${value} %{endfor}
       EOT
     :
     <<-EOT

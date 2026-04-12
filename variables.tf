@@ -338,6 +338,36 @@ variable "control_plane_k3s_additional_options" {
   default     = ""
 }
 
+variable "k3s_config" {
+  description = <<EOT
+Global k3s configuration as YAML that will be written to /etc/rancher/k3s/config.yaml.d/10-user.yaml.
+This allows full use of k3s's value merge behavior including the `+` prefix for list appending.
+See https://docs.k3s.io/installation/configuration for available options.
+
+Example:
+```hcl
+k3s_config = {
+  disable = []  # Re-enable components from the default disable list
+  node-label = ["custom=label"]
+}
+```
+
+Note: the module always enforces critical settings in
+`/etc/rancher/k3s/config.yaml.d/99-critical.yaml`:
+- `disable+` appends `cloud-controller`, `network-policy`, and `kube-proxy`
+  to the effective disable list
+- `disable-cloud-controller: true`
+- `disable-kube-proxy: true`
+- `flannel-backend: none`
+- `egress-selector-mode: disabled`
+
+This keeps the cluster compatible with Cilium and the external Hetzner Cloud
+Controller Manager (HCCM), even if user config tries to override these values.
+EOT
+  type        = any
+  default     = {}
+}
+
 # Node Pool Settings
 # ------------------
 
@@ -379,15 +409,17 @@ The value is an object with the following properties:
   can initialize the cluster. Exactly one node pool must set this variable to
   `true`.
 - `cluster_init_action`: defines the initialization action that shall be performed
-  - `init`, required for the first run of `terraform apply`. For later runs it
-     should be set to `false` to prevent any accidential reinitialization of the
-     cluster, e.g. when the first node of this pool is manually deleted via
-     the management console. Note: changes to this variable won't affect
-     existing nodes. So, if a reinitialization shall be performed, first delete
-     the node from the cluster and then run `terraform apply` again.
-  - `reset`: required for reinitializing the cluster to an older state.
-  - `reset_restore_path`: is the name or path to the etcd backup, see
-     https://docs.k3s.io/cli/etcd-snapshot?_highlight=reset
+   - `init`, required for the first run of `terraform apply`. For later runs it
+      should be set to `false` to prevent any accidential reinitialization of the
+      cluster, e.g. when the first node of this pool is manually deleted via
+      the management console. Note: changes to this variable won't affect
+      existing nodes. So, if a reinitialization shall be performed, first delete
+      the node from the cluster and then run `terraform apply` again.
+   - `reset`: required for reinitializing the cluster to an older state.
+   - `reset_restore_path`: is the name or path to the etcd backup, see
+      https://docs.k3s.io/cli/etcd-snapshot?_highlight=reset
+- `k3s_config`: optional k3s configuration that overrides the global `k3s_config`
+  variable for this node pool. See the `k3s_config` variable for details.
 
 Example:
 
@@ -445,7 +477,8 @@ EOT
     count              = number,
     count_width        = optional(number, 1),
     labels             = map(string),
-    taints             = map(string)
+    taints             = map(string),
+    k3s_config         = optional(any, {})
   }))
   default = {}
   validation {
