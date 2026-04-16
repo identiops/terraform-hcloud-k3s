@@ -247,7 +247,7 @@ variable "nu_version" {
   description = "NuShell version, see available version https://github.com/nushell/nushell/releases"
   type        = string
   # renovate: datasource=github-releases packageName=nushell/nushell
-  default = "0.111.0"
+  default = "0.112.2"
 }
 
 variable "additional_packages" {
