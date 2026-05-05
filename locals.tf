@@ -21,7 +21,7 @@ locals {
   } : {}
   default_gateway = cidrhost(var.network_cidr, 1)
 
-  k3s_config_default = {
+  k3s_control_plane_config_default = {
     cluster-cidr         = local.cluster_cidr_network
     service-cidr         = local.service_cidr_network
     embedded-registry    = true
