@@ -354,8 +354,8 @@ control_plane_k3s_additional_config = {
 
 WARNING: Making changes to the default configuration might break the cluster!
 
-The module always enforces enforced options in `node_pool/pool.tf` and writes
-them to `/etc/rancher/k3s/config.yaml.d/99-enforced.yaml`:
+The module always enforces these options in `node_pool/pool.tf` and writes them
+to `/etc/rancher/k3s/config.yaml.d/99-enforced.yaml`:
 - `disable+` appends `cloud-controller`, `network-policy`, and `kube-proxy`
   to the effective disable list
 - `disable-cloud-controller: true`

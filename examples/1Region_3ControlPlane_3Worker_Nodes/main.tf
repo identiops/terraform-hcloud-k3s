@@ -41,9 +41,9 @@ terraform {
 ###########################
 
 module "cluster" {
-  # source       = "github.com/identiops/terraform-hcloud-k3s?ref=6.2.9"
-  source                 = "identiops/k3s/hcloud"
-  version                = "6.2.9"
+  # source       = "identiops/k3s/hcloud"
+  # version      = "6.2.9"
+  source                 = "../.."
   hcloud_token           = var.hcloud_token           # INFO: Set via `export TF_VAR_hcloud_token=xyz`
   hcloud_token_read_only = var.hcloud_token_read_only # INFO: Set via `export TF_VAR_hcloud_token_read_only=abc`
 
@@ -75,6 +75,10 @@ module "cluster" {
 
   # Control Plane Settings
   # ----------------------
+  control_plane_k3s_additional_config = {
+    disable = [] # Re-enable traefik
+  }
+
   # Example s3 configuration:
   # S3 documentation  https://docs.k3s.io/cli/server
   # control_plane_k3s_init_additional_options = "--etcd-s3 --etcd-s3-region=${var.etcd_s3_region} --etcd-s3-endpoint=s3.${var.etcd_s3_endpoint} --etcd-s3-access-key=${var.etcd_s3_access_key} --etcd-s3-secret-key=${var.etcd_s3_secret_key} --etcd-s3-bucket=${var.etcd_s3_bucket} --etcd-s3-folder=etcd/$(hostname)"
