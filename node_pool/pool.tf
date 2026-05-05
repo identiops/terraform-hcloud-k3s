@@ -132,7 +132,7 @@ locals {
     ][0] if server_type.name == var.node_type
   ][0]
 
-  k3s_server_only_keys = toset([
+  k3s_server_only_options = toset([
     "cluster-cidr",
     "service-cidr",
     "disable",
@@ -145,16 +145,16 @@ locals {
     "kube-apiserver-arg",
   ])
 
-  k3s_critical_keys = toset([
+  k3s_enforced_options = toset([
     "disable-cloud-controller",
     "disable-kube-proxy",
     "flannel-backend",
     "egress-selector-mode",
   ])
 
-  k3s_config_user = {
+  k3s_additional_options = {
     for key, value in var.k3s_config : key => value
-    if !contains(local.k3s_critical_keys, key)
+    if !contains(local.k3s_enforced_options, key)
   }
 
   k3s_config_critical = {
@@ -166,12 +166,12 @@ locals {
   }
 
   k3s_config_agent_base = {
-    for key, value in merge(var.k3s_config_default, local.k3s_config_user) : key => value
-    if !contains(local.k3s_server_only_keys, key)
+    for key, value in merge(var.k3s_control_plane_config_default, local.k3s_additional_options) : key => value
+    if !contains(local.k3s_server_only_options, key)
   }
 
   k3s_config_control_plane_default = merge(
-    var.k3s_config_default,
+    var.k3s_control_plane_config_default,
     length(var.kube_apiserver_args) > 0 ? { kube-apiserver-arg = [for k, v in var.kube_apiserver_args : "${k}=${v}"] } : {}
   )
 
@@ -181,15 +181,15 @@ locals {
       content     = yamlencode(local.k3s_config_control_plane_default)
       permissions = "0644"
     }
-    ], length(local.k3s_config_user) > 0 ? [
+    ], length(local.k3s_additional_options) > 0 ? [
     {
-      path        = "/etc/rancher/k3s/config.yaml.d/10-user.yaml"
-      content     = yamlencode(local.k3s_config_user)
+      path        = "/etc/rancher/k3s/config.yaml.d/10-additional.yaml"
+      content     = yamlencode(local.k3s_additional_options)
       permissions = "0644"
     }
     ] : [], [
     {
-      path        = "/etc/rancher/k3s/config.yaml.d/99-critical.yaml"
+      path        = "/etc/rancher/k3s/config.yaml.d/99-enforced.yaml"
       content     = yamlencode(local.k3s_config_critical)
       permissions = "0644"
     }
@@ -370,14 +370,14 @@ variable "is_control_plane" {
   type        = bool
 }
 
-variable "k3s_config_default" {
-  description = "Default k3s configuration for the module."
+variable "k3s_control_plane_config_default" {
+  description = "Default k3s configuration for the module. See https://docs.k3s.io/installation/configuration. Configuration options apply to all nodes."
   type        = any
   default     = {}
 }
 
 variable "k3s_config" {
-  description = "User-provided k3s configuration (merged with defaults)."
+  description = "User-provided k3s configuration (merged with defaults). See https://docs.k3s.io/installation/configuration. Configuration options apply to all nodes."
   type        = any
   default     = {}
 }
