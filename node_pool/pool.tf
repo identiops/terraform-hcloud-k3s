@@ -153,7 +153,7 @@ locals {
   ])
 
   k3s_additional_options = {
-    for key, value in var.k3s_config : key => value
+    for key, value in var.control_plane_k3s_additional_config : key => value
     if !contains(local.k3s_enforced_options, key)
   }
 
@@ -376,7 +376,7 @@ variable "k3s_control_plane_config_default" {
   default     = {}
 }
 
-variable "k3s_config" {
+variable "control_plane_k3s_additional_config" {
   description = "User-provided k3s configuration (merged with defaults). See https://docs.k3s.io/installation/configuration. Configuration options apply to all nodes."
   type        = any
   default     = {}

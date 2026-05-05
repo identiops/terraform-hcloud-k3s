@@ -38,8 +38,8 @@ module "node_pool_cluster_init" {
   is_control_plane                 = each.value.any.is_control_plane
   k8s_ha_host                      = local.k8s_ha_host
   k8s_ha_port                      = local.k8s_ha_port
-  k3s_control_plane_config_default = local.k3s_control_plane_config_default
-  k3s_config                       = merge(var.k3s_config, each.value.any.k3s_config)
+  k3s_control_plane_config_default    = local.k3s_control_plane_config_default
+  control_plane_k3s_additional_config = merge(var.control_plane_k3s_additional_config, each.value.any.control_plane_k3s_additional_config)
   kube_apiserver_args              = local.kube-apiserver-args
 
   runcmd_first = (each.value.any.cluster_init_action.init || each.value.any.cluster_init_action.reset) ? concat([

@@ -338,7 +338,7 @@ variable "control_plane_k3s_additional_options" {
   default     = ""
 }
 
-variable "k3s_config" {
+variable "control_plane_k3s_additional_config" {
   description = <<EOT
 Global k3s configuration as YAML that will be written to /etc/rancher/k3s/config.yaml.d/10-user.yaml.
 This allows full use of k3s's value merge behavior including the `+` prefix for list appending.
@@ -346,14 +346,16 @@ See https://docs.k3s.io/installation/configuration for available options.
 
 Example:
 ```hcl
-k3s_config = {
-  disable = []  # Re-enable components from the default disable list
+control_plane_k3s_additional_config = {
+  disable = []  # Re-enable traefik and other components from the default disable list
   node-label = ["custom=label"]
 }
 ```
 
-Note: the module always enforces critical settings in
-`/etc/rancher/k3s/config.yaml.d/99-critical.yaml`:
+WARNING: Making changes to the default configuration might break the cluster!
+
+The module always enforces enforced options in `node_pool/pool.tf` and writes
+them to `/etc/rancher/k3s/config.yaml.d/99-enforced.yaml`:
 - `disable+` appends `cloud-controller`, `network-policy`, and `kube-proxy`
   to the effective disable list
 - `disable-cloud-controller: true`
@@ -418,8 +420,9 @@ The value is an object with the following properties:
    - `reset`: required for reinitializing the cluster to an older state.
    - `reset_restore_path`: is the name or path to the etcd backup, see
       https://docs.k3s.io/cli/etcd-snapshot?_highlight=reset
-- `k3s_config`: optional k3s configuration that overrides the global `k3s_config`
-  variable for this node pool. See the `k3s_config` variable for details.
+- `control_plane_k3s_additional_config`: optional k3s configuration that
+  augments the global `control_plane_k3s_additional_config` variable for this
+  node pool. See `node_pool/pool.tf` for the enforced options.
 
 Example:
 
@@ -478,7 +481,7 @@ EOT
     count_width        = optional(number, 1),
     labels             = map(string),
     taints             = map(string),
-    k3s_config         = optional(any, {})
+    control_plane_k3s_additional_config = optional(any, {})
   }))
   default = {}
   validation {
