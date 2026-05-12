@@ -111,10 +111,10 @@ locals {
   mkdir -p /etc/rancher/k3s/config.yaml.d
   wget -qO- https://get.k3s.io | \
   EOT
-  common_arguments                 = <<- EOT
+  common_arguments                 = <<-EOT
   --node-external-ip="${local.cmd_node_external_ip}"
   EOT
-  control_plane_arguments          = <<- EOT
+  control_plane_arguments          = <<-EOT
   --tls-san="${hcloud_server_network.gateway.ip}" \
   --tls-san="${hcloud_server.gateway.ipv4_address}" \
   --tls-san="${hcloud_server.gateway.ipv6_address}"
