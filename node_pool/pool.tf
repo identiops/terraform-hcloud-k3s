@@ -157,7 +157,7 @@ locals {
     if !contains(local.k3s_enforced_options, key)
   }
 
-  k3s_config_critical = {
+  k3s_config_enforced = {
     "disable+"                 = ["cloud-controller", "network-policy", "kube-proxy"]
     "disable-cloud-controller" = true
     "disable-kube-proxy"       = true
@@ -190,7 +190,7 @@ locals {
     ] : [], [
     {
       path        = "/etc/rancher/k3s/config.yaml.d/99-enforced.yaml"
-      content     = yamlencode(local.k3s_config_critical)
+      content     = yamlencode(local.k3s_config_enforced)
       permissions = "0644"
     }
     ]) : [
