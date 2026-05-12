@@ -117,7 +117,7 @@ locals {
   control_plane_arguments          = <<- EOT
   --tls-san="${hcloud_server_network.gateway.ip}" \
   --tls-san="${hcloud_server.gateway.ipv4_address}" \
-  --tls-san="${hcloud_server.gateway.ipv6_address}" \
+  --tls-san="${hcloud_server.gateway.ipv6_address}"
   EOT
   prices                           = jsondecode(data.http.prices.response_body).pricing
   costs_gateway = [for server_type in local.prices.server_types :
