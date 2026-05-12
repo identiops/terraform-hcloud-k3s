@@ -411,15 +411,15 @@ The value is an object with the following properties:
   can initialize the cluster. Exactly one node pool must set this variable to
   `true`.
 - `cluster_init_action`: defines the initialization action that shall be performed
-   - `init`, required for the first run of `terraform apply`. For later runs it
-      should be set to `false` to prevent any accidential reinitialization of the
-      cluster, e.g. when the first node of this pool is manually deleted via
-      the management console. Note: changes to this variable won't affect
-      existing nodes. So, if a reinitialization shall be performed, first delete
-      the node from the cluster and then run `terraform apply` again.
-   - `reset`: required for reinitializing the cluster to an older state.
-   - `reset_restore_path`: is the name or path to the etcd backup, see
-      https://docs.k3s.io/cli/etcd-snapshot?_highlight=reset
+  - `init`, required for the first run of `terraform apply`. For later runs it
+     should be set to `false` to prevent any accidential reinitialization of the
+     cluster, e.g. when the first node of this pool is manually deleted via
+     the management console. Note: changes to this variable won't affect
+     existing nodes. So, if a reinitialization shall be performed, first delete
+     the node from the cluster and then run `terraform apply` again.
+  - `reset`: required for reinitializing the cluster to an older state.
+  - `reset_restore_path`: is the name or path to the etcd backup, see
+     https://docs.k3s.io/cli/etcd-snapshot?_highlight=reset
 - `control_plane_k3s_additional_config`: optional k3s configuration that
   augments the global `control_plane_k3s_additional_config` variable for this
   node pool. See `node_pool/pool.tf` for the enforced options.
