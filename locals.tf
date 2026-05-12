@@ -111,8 +111,14 @@ locals {
   mkdir -p /etc/rancher/k3s/config.yaml.d
   wget -qO- https://get.k3s.io | \
   EOT
-  common_arguments                 = "--node-external-ip=\"${local.cmd_node_external_ip}\""
-  control_plane_arguments          = "--tls-san=\"${hcloud_server_network.gateway.ip}\""
+  common_arguments                 = <<- EOT
+  --node-external-ip="${local.cmd_node_external_ip}"
+  EOT
+  control_plane_arguments          = <<- EOT
+  --tls-san="${hcloud_server_network.gateway.ip}" \
+  --tls-san="${hcloud_server.gateway.ipv4_address}" \
+  --tls-san="${hcloud_server.gateway.ipv6_address}" \
+  EOT
   prices                           = jsondecode(data.http.prices.response_body).pricing
   costs_gateway = [for server_type in local.prices.server_types :
     [for price in server_type.prices :

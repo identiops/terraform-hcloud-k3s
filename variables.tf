@@ -180,7 +180,7 @@ variable "cilium_version" {
   description = "Cilium version, see https://github.com/cilium/cilium"
   type        = string
   # renovate: datasource=helm registryUrl=https://helm.cilium.io/ packageName=cilium
-  default = "1.19.2"
+  default = "1.19.3"
 }
 
 variable "kured_chart_version" {
@@ -212,14 +212,14 @@ variable "hcloud_ccm_driver_chart_version" {
   description = "Hetzner CCM chart version, see https://github.com/hetznercloud/hcloud-cloud-controller-manager#versioning-policy"
   type        = string
   # renovate: datasource=helm registryUrl=https://charts.hetzner.cloud packageName=hcloud-cloud-controller-manager
-  default = "1.30.1"
+  default = "1.31.0"
 }
 
 variable "hcloud_csi_driver_chart_version" {
   description = "Hetzner CSI driver chart version, see https://github.com/hetznercloud/csi-driver/blob/main/docs/kubernetes/README.md#versioning-policy"
   type        = string
   # renovate: datasource=helm registryUrl=https://charts.hetzner.cloud packageName=hcloud-csi
-  default = "2.20.0"
+  default = "2.20.2"
 }
 
 variable "metrics_server_chart_version" {
@@ -233,21 +233,21 @@ variable "system_upgrade_controller_version" {
   description = "System Upgarde Controller version, see available versions https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.15/charts/system-upgrade-controller"
   type        = string
   # renovate: datasource=helm registryUrl=https://charts.rancher.io packageName=system-upgrade-controller
-  default = "109.0.0"
+  default = "109.0.1"
 }
 
 variable "system_upgrade_controller_app_version" {
   description = "System Upgarde Controller app version, must be in sync with variable system_upgrade_controller_version. See Chart.yaml/appVersion in https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.13/charts/system-upgrade-controller"
   type        = string
   # renovate: datasource=github-releases packageName=rancher/system-upgrade-controller
-  default = "v0.17.0"
+  default = "v0.19.1"
 }
 
 variable "nu_version" {
   description = "NuShell version, see available version https://github.com/nushell/nushell/releases"
   type        = string
   # renovate: datasource=github-releases packageName=nushell/nushell
-  default = "0.111.0"
+  default = "0.112.2"
 }
 
 variable "additional_packages" {
