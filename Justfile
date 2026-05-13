@@ -17,9 +17,10 @@ set shell := ['nu', "-c"]
 default:
     @just -l
 
-# Format Justfile
+# Format code
 format:
-    @just --fmt --unstable
+    just --fmt --unstable
+    tofu fmt
 
 # Install git commit hooks
 githooks:
