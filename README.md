@@ -139,7 +139,7 @@ modules, see <https://github.com/identiops/terraform-hcloud-k3s/issues/19>.
 - `bash` for executing the generated scripts.
 - `jq` for executing the generated scripts.
 - `kubectl` for interacting with the Kubernetes cluster.
-- `ssh` for connecting to cluster nodes.
+- `ssh` for connecting to cluster nodes. Cluster nodes are only reachable via the gateway node, so **SSH agent forwarding must be enabled** (`ssh -A`).
 
 ### Recommended Tools
 
@@ -345,6 +345,28 @@ control_plane_k3s_init_additional_options = "--etcd-s3 --etcd-s3-region=${var.et
 - Etcd will automatically create a snapshot every day and keep it for three
   days.
 
+### k3s Config Merge Behavior
+
+- The module writes k3s config files in `/etc/rancher/k3s/config.yaml.d/` and
+  relies on k3s merge order:
+  1. `00-default.yaml` (module defaults)
+  2. `10-user.yaml` (optional user config from `k3s_config`)
+  3. `99-critical.yaml` (module-enforced critical settings)
+- By default, `00-default.yaml` disables non-critical optional components:
+  `local-storage`, `metrics-server`, `servicelb`, `traefik`, and
+  `helm-controller`.
+- Users can still re-enable non-critical components through `k3s_config`, for
+  example `disable = []`.
+- `99-critical.yaml` always enforces:
+  - `disable+` appends `cloud-controller`, `network-policy`, and `kube-proxy`
+    to the effective disable list
+  - `disable-cloud-controller: true`
+  - `disable-kube-proxy: true`
+  - `flannel-backend: none`
+  - `egress-selector-mode: disabled`
+- This keeps the cluster compatible with Cilium and avoids conflicts with the
+  external Hetzner Cloud Controller Manager (HCCM).
+
 ### OpenID Connect (OIDC) Authentication
 
 TODO: add example
@@ -434,8 +456,10 @@ node pools of the cluster.
 Example: Execute a command on all control plane nodes
 
 ```bash
-ANSIBLE_INVENTORY="$PWD/.ansible/hosts" ansible all_control_plane_nodes -a "kubectl cluster-info"
+ANSIBLE_INVENTORY="$PWD/.ansible/hosts" ansible all_control_plane_nodes -a "k3s kubectl cluster-info"
 ```
+
+**Note:** On cluster nodes, use `k3s kubectl` instead of `kubectl`.
 
 ### Add Ingress Controller and Load Balancer
 
@@ -1021,6 +1045,36 @@ systemctl status k3s.service
 
 journalctl -u k3s.service
 ```
+
+### Ansible
+
+When encountering Ansible connection issues with the cluster:
+
+1. **Check SSH agent forwarding is enabled**:
+   ```bash
+   eval "$(ssh-agent -s)"
+   ssh-add ~/.ssh/id_ed25519
+   ```
+
+2. **Verify generated files exist**:
+   ```bash
+   ls -la .ansible/hosts .ssh/config
+   ```
+
+3. **Test SSH connection to control plane node**:
+   ```bash
+   ssh -A root@<gateway-ip> 'ssh -o StrictHostKeyChecking=no <node-ip> hostname'
+   ```
+
+4. **Verify k3s is installed on nodes**:
+   ```bash
+   ANSIBLE_INVENTORY="$PWD/.ansible/hosts" ansible all_control_plane_nodes -a "which k3s"
+   ```
+
+5. **Use k3s kubectl instead of kubectl**:
+   ```bash
+   ANSIBLE_INVENTORY="$PWD/.ansible/hosts" ansible all_control_plane_nodes -a "k3s kubectl get nodes"
+   ```
 
 ## Related Documentation
 
