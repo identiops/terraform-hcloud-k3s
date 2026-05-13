@@ -36,6 +36,9 @@ What changed in the latest version? See
 - [Private registry configuration](https://docs.k3s.io/installation/private-registry?_highlight=registries#configs)
   to avoid manual configuration of
   [pull secrets](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/).
+- Additional k3s options can be set via `control_plane_k3s_additional_config`;
+  see the [k3s configuration docs](https://docs.k3s.io/installation/configuration)
+  for the available options.
 - Creation of placement groups for to improve availability.
 - Multi-region deployments.
 - Secured default configuration:

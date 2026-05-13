@@ -338,6 +338,38 @@ variable "control_plane_k3s_additional_options" {
   default     = ""
 }
 
+variable "control_plane_k3s_additional_config" {
+  description = <<EOT
+Global k3s configuration as YAML that will be written to /etc/rancher/k3s/config.yaml.d/10-user.yaml.
+This allows full use of k3s's value merge behavior including the `+` prefix for list appending.
+See https://docs.k3s.io/installation/configuration for available options.
+
+Example:
+```hcl
+control_plane_k3s_additional_config = {
+  disable = []  # Re-enable traefik and other components from the default disable list
+  node-label = ["custom=label"]
+}
+```
+
+WARNING: Making changes to the default configuration might break the cluster!
+
+The module always enforces these options in `node_pool/pool.tf` and writes them
+to `/etc/rancher/k3s/config.yaml.d/99-enforced.yaml`:
+- `disable+` appends `cloud-controller`, `network-policy`, and `kube-proxy`
+  to the effective disable list
+- `disable-cloud-controller: true`
+- `disable-kube-proxy: true`
+- `flannel-backend: none`
+- `egress-selector-mode: disabled`
+
+This keeps the cluster compatible with Cilium and the external Hetzner Cloud
+Controller Manager (HCCM), even if user config tries to override these values.
+EOT
+  type        = any
+  default     = {}
+}
+
 # Node Pool Settings
 # ------------------
 
@@ -388,6 +420,9 @@ The value is an object with the following properties:
   - `reset`: required for reinitializing the cluster to an older state.
   - `reset_restore_path`: is the name or path to the etcd backup, see
      https://docs.k3s.io/cli/etcd-snapshot?_highlight=reset
+- `control_plane_k3s_additional_config`: optional k3s configuration that
+  augments the global `control_plane_k3s_additional_config` variable for this
+  node pool. See `node_pool/pool.tf` for the enforced options.
 
 Example:
 
@@ -437,15 +472,16 @@ EOT
       reset              = optional(bool, false)
       reset_restore_path = optional(string, "")
     }), {}),
-    is_control_plane   = optional(bool, false),
-    schedule_workloads = optional(bool, true),
-    location           = optional(string, ""),
-    image              = optional(string, ""),
-    type               = string,
-    count              = number,
-    count_width        = optional(number, 1),
-    labels             = map(string),
-    taints             = map(string)
+    is_control_plane                    = optional(bool, false),
+    schedule_workloads                  = optional(bool, true),
+    location                            = optional(string, ""),
+    image                               = optional(string, ""),
+    type                                = string,
+    count                               = number,
+    count_width                         = optional(number, 1),
+    labels                              = map(string),
+    taints                              = map(string),
+    control_plane_k3s_additional_config = optional(any, {})
   }))
   default = {}
   validation {

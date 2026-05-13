@@ -15,29 +15,32 @@ module "node_pool_cluster_init" {
   source     = "./node_pool"
   depends_on = [time_sleep.wait_for_gateway_to_become_ready]
 
-  for_each               = module.node_pool_cluster_init_network_interface
-  cluster_name           = var.cluster_name
-  name                   = each.key
-  hcloud_token_read_only = var.hcloud_token_read_only
-  location               = each.value.any.location != "" ? each.value.any.location : var.default_location
-  delete_protection      = var.delete_protection
-  sysctl_settings        = var.sysctl_settings
-  registries             = var.registries
-  node_type              = each.value.any.type
-  node_count             = each.value.any.count
-  node_count_width       = each.value.any.count_width
-  node_labels            = merge(each.value.any.labels, each.value.any.is_control_plane ? { "control-plane" = "true" } : {})
-  image                  = each.value.image
-  network_interface      = each.value.network_interface
-  ssh_keys               = [for k in hcloud_ssh_key.pub_keys : k.name]
-  firewall_ids           = each.value.any.is_control_plane ? var.control_plane_firewall_ids : var.worker_node_firewall_ids
-  hcloud_network_id      = hcloud_network.private.id
-  enable_public_net_ipv4 = var.enable_public_net_ipv4
-  enable_public_net_ipv6 = var.enable_public_net_ipv6
-  default_gateway        = local.default_gateway
-  is_control_plane       = each.value.any.is_control_plane
-  k8s_ha_host            = local.k8s_ha_host
-  k8s_ha_port            = local.k8s_ha_port
+  for_each                            = module.node_pool_cluster_init_network_interface
+  cluster_name                        = var.cluster_name
+  name                                = each.key
+  hcloud_token_read_only              = var.hcloud_token_read_only
+  location                            = each.value.any.location != "" ? each.value.any.location : var.default_location
+  delete_protection                   = var.delete_protection
+  sysctl_settings                     = var.sysctl_settings
+  registries                          = var.registries
+  node_type                           = each.value.any.type
+  node_count                          = each.value.any.count
+  node_count_width                    = each.value.any.count_width
+  node_labels                         = merge(each.value.any.labels, each.value.any.is_control_plane ? { "control-plane" = "true" } : {})
+  image                               = each.value.image
+  network_interface                   = each.value.network_interface
+  ssh_keys                            = [for k in hcloud_ssh_key.pub_keys : k.name]
+  firewall_ids                        = each.value.any.is_control_plane ? var.control_plane_firewall_ids : var.worker_node_firewall_ids
+  hcloud_network_id                   = hcloud_network.private.id
+  enable_public_net_ipv4              = var.enable_public_net_ipv4
+  enable_public_net_ipv6              = var.enable_public_net_ipv6
+  default_gateway                     = local.default_gateway
+  is_control_plane                    = each.value.any.is_control_plane
+  k8s_ha_host                         = local.k8s_ha_host
+  k8s_ha_port                         = local.k8s_ha_port
+  k3s_control_plane_config_default    = local.k3s_control_plane_config_default
+  control_plane_k3s_additional_config = merge(var.control_plane_k3s_additional_config, each.value.any.control_plane_k3s_additional_config)
+  kube_apiserver_args                 = local.kube-apiserver-args
 
   runcmd_first = (each.value.any.cluster_init_action.init || each.value.any.cluster_init_action.reset) ? concat([
     local.security_setup,
@@ -52,7 +55,7 @@ module "node_pool_cluster_init" {
       ${each.value.any.cluster_init_action.reset ? "--cluster-reset --cluster-reset-restore-path='${each.value.any.cluster_init_action.reset_restore_path}'" : ""} \
       ${local.control_plane_arguments~}
       ${!each.value.any.schedule_workloads ? "--node-taint CriticalAddonsOnly=true:NoExecute" : ""}  %{for k, v in each.value.any.taints} --node-taint "${k}:${v}" %{endfor}  \
-      ${var.control_plane_k3s_init_additional_options} ${var.control_plane_k3s_additional_options}  %{for key, value in merge(each.value.any.labels, each.value.any.is_control_plane ? { "control-plane" = "true" } : {})} --node-label=${key}=${value} %{endfor} %{for key, value in local.kube-apiserver-args} --kube-apiserver-arg=${key}=${value} %{endfor}
+      ${var.control_plane_k3s_init_additional_options} ${var.control_plane_k3s_additional_options}  %{for key, value in merge(each.value.any.labels, each.value.any.is_control_plane ? { "control-plane" = "true" } : {})} --node-label=${key}=${value} %{endfor}
       while ! test -d /var/lib/rancher/k3s/server/manifests; do
         echo "Waiting for '/var/lib/rancher/k3s/server/manifests'"
         sleep 1
@@ -105,7 +108,7 @@ module "node_pool_cluster_init" {
       ${local.control_plane_arguments~}
       --node-ip="$(ip -4 -j a s dev ${each.value.network_interface} | jq '.[0].addr_info[0].local' -r)" \
       ${!each.value.any.schedule_workloads ? "--node-taint CriticalAddonsOnly=true:NoExecute" : ""}  %{for k, v in each.value.any.taints} --node-taint "${k}:${v}" %{endfor}  \
-      ${var.control_plane_k3s_additional_options}  %{for key, value in merge(each.value.any.labels, each.value.any.is_control_plane ? { "control-plane" = "true" } : {})} --node-label=${key}=${value} %{endfor} %{for key, value in local.kube-apiserver-args} --kube-apiserver-arg=${key}=${value} %{endfor}
+      ${var.control_plane_k3s_additional_options}  %{for key, value in merge(each.value.any.labels, each.value.any.is_control_plane ? { "control-plane" = "true" } : {})} --node-label=${key}=${value} %{endfor}
       EOT
     :
     <<-EOT
