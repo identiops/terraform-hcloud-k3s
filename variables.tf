@@ -472,15 +472,15 @@ EOT
       reset              = optional(bool, false)
       reset_restore_path = optional(string, "")
     }), {}),
-    is_control_plane   = optional(bool, false),
-    schedule_workloads = optional(bool, true),
-    location           = optional(string, ""),
-    image              = optional(string, ""),
-    type               = string,
-    count              = number,
-    count_width        = optional(number, 1),
-    labels             = map(string),
-    taints             = map(string),
+    is_control_plane                    = optional(bool, false),
+    schedule_workloads                  = optional(bool, true),
+    location                            = optional(string, ""),
+    image                               = optional(string, ""),
+    type                                = string,
+    count                               = number,
+    count_width                         = optional(number, 1),
+    labels                              = map(string),
+    taints                              = map(string),
     control_plane_k3s_additional_config = optional(any, {})
   }))
   default = {}
