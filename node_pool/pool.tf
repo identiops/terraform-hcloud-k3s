@@ -108,7 +108,7 @@ resource "hcloud_server" "pool" {
   }
 
   network {
-    network_id = var.hcloud_network_id
+    subnet_id = var.hcloud_subnet_id
   }
 }
 
@@ -318,8 +318,8 @@ variable "ssh_keys" {
   type        = list(string)
 }
 
-variable "hcloud_network_id" {
-  description = "IP Network id."
+variable "hcloud_subnet_id" {
+  description = "ID of the network subnet to attach the server to."
   type        = string
 }
 

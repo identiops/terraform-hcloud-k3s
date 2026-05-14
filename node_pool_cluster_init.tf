@@ -31,7 +31,7 @@ module "node_pool_cluster_init" {
   network_interface                   = each.value.network_interface
   ssh_keys                            = [for k in hcloud_ssh_key.pub_keys : k.name]
   firewall_ids                        = each.value.any.is_control_plane ? var.control_plane_firewall_ids : var.worker_node_firewall_ids
-  hcloud_network_id                   = hcloud_network.private.id
+  hcloud_subnet_id                    = hcloud_network_subnet.subnet.id
   enable_public_net_ipv4              = var.enable_public_net_ipv4
   enable_public_net_ipv6              = var.enable_public_net_ipv6
   default_gateway                     = local.default_gateway
