@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.3.1] - 2026-05-15
+
+### Bug Fixes
+
+- [1dc5793](https://github.com/identiops/terraform-hcloud-k3s/commit/1dc57935819727f8522249224be92379f3cf74a6) Migrate node pool server networks to subnet_id
+- [9ac532f](https://github.com/identiops/terraform-hcloud-k3s/commit/9ac532f253ae5bf8773bb2f9f91da95742f1dec8) Migrate gateway server network attachment to subnet_id
+
+### Miscellaneous Tasks
+
+- [1aaeb22](https://github.com/identiops/terraform-hcloud-k3s/commit/1aaeb22194c3f2f28de726ea518823dd372f1000) Update helm release cilium to v1.19.4 (#108)
+
 ## [6.3.0] - 2026-05-13
 
 ### Added Features
