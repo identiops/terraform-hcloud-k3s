@@ -111,8 +111,8 @@ resource "hcloud_server" "gateway" {
 
   # Network needs to be present twice for some unknown reason :-/
   network {
-    network_id = hcloud_network.private.id
-    ip         = cidrhost(hcloud_network_subnet.subnet.ip_range, 1)
+    subnet_id = hcloud_network_subnet.subnet.id
+    ip        = cidrhost(hcloud_network_subnet.subnet.ip_range, 1)
   }
 }
 
