@@ -7,7 +7,7 @@ terraform {
     hcloud = {
       # Documentation; https://registry.terraform.io/providers/hetznercloud/hcloud
       source  = "hetznercloud/hcloud"
-      version = "~> 1.63.0"
+      version = "~> 1.66.0"
     }
     http = {
       source  = "hashicorp/http"
