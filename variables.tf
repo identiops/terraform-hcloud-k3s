@@ -187,7 +187,7 @@ variable "kured_chart_version" {
   description = "Kured chart version, see https://artifacthub.io/packages/helm/kured/kured"
   type        = string
   # renovate: datasource=helm registryUrl=https://kubereboot.github.io/charts packageName=kured
-  default = "6.0.0"
+  default = "6.1.0"
 }
 
 variable "kured_reboot_days" {
