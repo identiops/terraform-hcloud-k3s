@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.3.2] - 2026-08-04
+
+### Miscellaneous Tasks
+
+- [6809468](https://github.com/identiops/terraform-hcloud-k3s/commit/68094685f3837b5a92d7745538dd4baaa4d20de6) Update helm release hcloud-cloud-controller-manager to v1.31.1
+- [50c0d09](https://github.com/identiops/terraform-hcloud-k3s/commit/50c0d090ba0ae5d94e882451deae97bae11acbce) Update helm release hcloud-csi to v2.21.1
+- [9985ec7](https://github.com/identiops/terraform-hcloud-k3s/commit/9985ec788c6956afd987aae8b81b8a17b5668680) Update helm release system-upgrade-controller to v109.0.2
+- [e371f59](https://github.com/identiops/terraform-hcloud-k3s/commit/e371f5973b805e0379518cff4880802b38cb796e) Update helm release cilium to v1.19.5
+- [6d61dc0](https://github.com/identiops/terraform-hcloud-k3s/commit/6d61dc0cf06f527a41174ec258ca8c36eca5bd5c) Update helm release hcloud-cloud-controller-manager to v1.33.0
+- [bcd9153](https://github.com/identiops/terraform-hcloud-k3s/commit/bcd915378bc0e2d847584bfc16355fec25b493fe) Update helm release metrics-server to v3.13.1
+- [85b03ef](https://github.com/identiops/terraform-hcloud-k3s/commit/85b03ef895d6ef1c4560b34c9bf648484428b312) Update helm release kured to v6
+- [faa3fa2](https://github.com/identiops/terraform-hcloud-k3s/commit/faa3fa2b581f981f5d252caacf517de364842b0b) Update helm release hcloud-csi to v2.21.2
+- [bdaea06](https://github.com/identiops/terraform-hcloud-k3s/commit/bdaea06fd93284a223c7567281528b7ad89d8389) Update terraform hcloud to ~> 1.66.0
+- [8d151c3](https://github.com/identiops/terraform-hcloud-k3s/commit/8d151c331ce98e96e0150e7f7c5e4a2b6e458a8f) Update dependency nushell/nushell to v0.113.1
+- [ae92cca](https://github.com/identiops/terraform-hcloud-k3s/commit/ae92ccad6ba6c2afd0f4094bf925b19b8408bce5) Update terraform hcloud to ~> 1.68.0
+- [3dfe50c](https://github.com/identiops/terraform-hcloud-k3s/commit/3dfe50c5265fcafccc22a8feb5a7e6f6063d5d25) Update helm release hcloud-cloud-controller-manager to v1.34.0
+- [4422e08](https://github.com/identiops/terraform-hcloud-k3s/commit/4422e08122f02bc38f98b397a3f10b1b1b8778aa) Update helm release cilium to v1.20.0
+- [e000fef](https://github.com/identiops/terraform-hcloud-k3s/commit/e000fefcc4ea0236e23adc10c654d8b39d06d616) Lock file maintenance
+- [2899bde](https://github.com/identiops/terraform-hcloud-k3s/commit/2899bde0cdbb7028b1105b86d6fa2bbc1bf7618f) Update system-upgrade-controller
+
 ## [6.3.1] - 2026-05-15
 
 ### Bug Fixes
