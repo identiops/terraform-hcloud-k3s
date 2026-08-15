@@ -1,3 +1,4 @@
 [submodule ".justlib"]
 	path = .justlib
 	url = https://github.com/identinet/justlib.git
+	branch = main
