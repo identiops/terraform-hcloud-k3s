@@ -126,11 +126,13 @@ resource "hcloud_placement_group" "pool" {
 }
 
 locals {
-  costs_node = [for server_type in var.prices.server_types :
+  # Fall back to zero costs when the pricing API has no entry for the
+  # (server type, location) pair, instead of failing the plan with "Invalid index".
+  costs_node = try([for server_type in var.prices.server_types :
     [for price in server_type.prices :
       { net = tonumber(price.price_monthly.net), gross = tonumber(price.price_monthly.gross) } if price.location == var.location
     ][0] if server_type.name == var.node_type
-  ][0]
+  ][0], { net = 0, gross = 0 })
 
   k3s_server_only_options = toset([
     "cluster-cidr",
