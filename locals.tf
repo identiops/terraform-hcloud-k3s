@@ -120,10 +120,12 @@ locals {
   --tls-san="${hcloud_server.gateway.ipv6_address}"
   EOT
   prices                           = jsondecode(data.http.prices.response_body).pricing
-  costs_gateway = [for server_type in local.prices.server_types :
+  # Fall back to zero costs when the pricing API has no entry for the
+  # (server type, location) pair, instead of failing the plan with "Invalid index".
+  costs_gateway = try([for server_type in local.prices.server_types :
     [for price in server_type.prices :
       { net = tonumber(price.price_monthly.net), gross = tonumber(price.price_monthly.gross) } if price.location == var.default_location
-  ][0] if server_type.name == var.gateway_server_type][0]
+  ][0] if server_type.name == var.gateway_server_type][0], { net = 0, gross = 0 })
 }
 
 data "http" "prices" {
