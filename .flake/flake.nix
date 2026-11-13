@@ -5,7 +5,7 @@
   description = "Dependencies";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
@@ -39,7 +39,7 @@
           deno # JS interpreter https://deno.land/
           gh # GitHub CLI https://cli.github.com/
           unstable.git-cliff # Changelog generator https://github.com/orhun/git-cliff
-          unstable.just # Simple make replacement https://just.systems/
+          just # Simple make replacement https://just.systems/
           # terraform # Infrastructure as code https://www.terraform.io/
           opentofu # Terraform OSS https://opentofu.org/
           tflint # Terraform linter https://github.com/terraform-linters/tflint
