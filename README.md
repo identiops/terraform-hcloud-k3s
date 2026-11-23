@@ -37,8 +37,9 @@ What changed in the latest version? See
   to avoid manual configuration of
   [pull secrets](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/).
 - Additional k3s options can be set via `control_plane_k3s_additional_config`;
-  see the [k3s configuration docs](https://docs.k3s.io/installation/configuration)
-  for the available options.
+  see the
+  [k3s configuration docs](https://docs.k3s.io/installation/configuration) for
+  the available options.
 - Creation of placement groups for to improve availability.
 - Multi-region deployments.
 - Secured default configuration:
@@ -139,7 +140,8 @@ modules, see <https://github.com/identiops/terraform-hcloud-k3s/issues/19>.
 - `bash` for executing the generated scripts.
 - `jq` for executing the generated scripts.
 - `kubectl` for interacting with the Kubernetes cluster.
-- `ssh` for connecting to cluster nodes. Cluster nodes are only reachable via the gateway node, so **SSH agent forwarding must be enabled** (`ssh -A`).
+- `ssh` for connecting to cluster nodes. Cluster nodes are only reachable via
+  the gateway node, so **SSH agent forwarding must be enabled** (`ssh -A`).
 
 ### Recommended Tools
 
@@ -358,8 +360,8 @@ control_plane_k3s_init_additional_options = "--etcd-s3 --etcd-s3-region=${var.et
 - Users can still re-enable non-critical components through `k3s_config`, for
   example `disable = []`.
 - `99-critical.yaml` always enforces:
-  - `disable+` appends `cloud-controller`, `network-policy`, and `kube-proxy`
-    to the effective disable list
+  - `disable+` appends `cloud-controller`, `network-policy`, and `kube-proxy` to
+    the effective disable list
   - `disable-cloud-controller: true`
   - `disable-kube-proxy: true`
   - `flannel-backend: none`
@@ -1115,4 +1117,8 @@ When encountering Ansible connection issues with the cluster:
 - And to God for providing and enabling me to do my share of this work. Solo Deo
   Gloria.
 
-<script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+<img
+  src="https://analytics.41ppl.com/backend/log/noscript?pid=x8o3LHvUSIa3"
+  alt=""
+  referrerpolicy="no-referrer-when-downgrade"
+/>
