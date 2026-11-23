@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.4.1] - 2026-11-23
+
+### Miscellaneous Tasks
+
+- [3a39d90](https://github.com/identiops/terraform-hcloud-k3s/commit/3a39d90dc3e2a1004d495396343b6b5acf58fb58) Update dependencies
+- [68afc5f](https://github.com/identiops/terraform-hcloud-k3s/commit/68afc5f597201ca52f851bc30ac72310184275b7) Update analytics
+
 ## [6.4.0] - 2026-11-13
 
 ### Bug Fixes
