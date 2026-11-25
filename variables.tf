@@ -240,7 +240,7 @@ variable "system_upgrade_controller_app_version" {
   description = "System Upgarde Controller app version, must be in sync with variable system_upgrade_controller_version. See Chart.yaml/appVersion in https://github.com/rancher/system-upgrade-controller and https://github.com/rancher/charts/tree/dev-v2.16/charts/system-upgrade-controller"
   type        = string
   # renovate: datasource=github-releases packageName=rancher/system-upgrade-controller
-  default = "v0.20.2"
+  default = "v0.21.1"
 }
 
 variable "nu_version" {
